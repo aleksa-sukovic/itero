@@ -1,0 +1,10 @@
+[mgr]
+prepend_keymap = [
+    { on = "<C-u>", run = "seek -5", desc = "Scroll preview up" },
+    { on = "<C-d>", run = "seek 5", desc = "Scroll preview down" },
+    { on = [ "n", "c" ], run = "plugin vcs-files", desc = "Show Git file changes" },
+    { on = "p", run = "plugin smart-paste", desc = "Paste into the hovered directory or CWD" },
+    { on = ["g", "d"], run = "cd ~/Downloads/", desc = "Go to Downloads" },
+    { on = ["g", "t"], run = "cd ~/.local/share/Trash/files/", desc = "Go to Trash" },
+    { on = ["M"], run = "plugin mount", desc = "Mount manager" },
+]

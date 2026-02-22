@@ -1,0 +1,69 @@
+[[plugin.deps]]
+use = "yazi-rs/plugins:full-border"
+rev = "03cdd4b"
+hash = "3996fc74044bc44144b323686f887e1"
+
+[[plugin.deps]]
+use = "yazi-rs/plugins:vcs-files"
+rev = "03cdd4b"
+hash = "4ee57085277d616acfa0ef1fef37dc00"
+
+[[plugin.deps]]
+use = "yazi-rs/plugins:smart-paste"
+rev = "03cdd4b"
+hash = "75fd60b2df7115e0a6ca31a6a804d320"
+
+[[plugin.deps]]
+use = "yazi-rs/plugins:mount"
+rev = "88990a6"
+hash = "9ad20d763df07ce40fd09de549d914b0"
+
+[[flavor.deps]]
+use = "yazi-rs/flavors:catppuccin-mocha"
+rev = "9276ffa"
+hash = "b951d27afe197d154f6da9683b46c5f8"
+
+[[flavor.deps]]
+use = "yazi-rs/flavors:catppuccin-latte"
+rev = "9276ffa"
+hash = "525675a9180ed23a097b07399627294a"
+
+[[flavor.deps]]
+use = "yazi-rs/flavors:catppuccin-frappe"
+rev = "9276ffa"
+hash = "6f261f00e5235001b8d6bcd7464d3077"
+
+[[flavor.deps]]
+use = "yazi-rs/flavors:catppuccin-macchiato"
+rev = "9276ffa"
+hash = "b069dba45e199684b16fa12d385642ed"
+
+[[flavor.deps]]
+use = "BennyOe/tokyo-night"
+rev = "8e6296f"
+hash = "d9da921c3bd37ba32ee27a8a7a40461f"
+
+[[flavor.deps]]
+use = "dangooddd/kanagawa"
+rev = "04985d1"
+hash = "c69a63981e254a3a06a11c2bf0e6af1d"
+
+[[flavor.deps]]
+use = "bennyyip/gruvbox-dark"
+rev = "2c61c90"
+hash = "3685f7557e7425381b65c883c688f593"
+
+[[flavor.deps]]
+use = "Mintass/rose-pine"
+rev = "8343340"
+hash = "d92db727dc16db9357f0dcda2758170c"
+
+[[flavor.deps]]
+use = "AdithyanA2005/nord"
+rev = "3a791e9"
+hash = "8c0450f0966288d1ad3173ed2502e3dd"
+
+[[flavor.deps]]
+use = "Mintass/rose-pine-dawn"
+rev = "5c6d353"
+hash = "1f9b1fa79a11ae9f9255b47380b98775"

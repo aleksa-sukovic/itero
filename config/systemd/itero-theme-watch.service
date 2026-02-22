@@ -1,0 +1,11 @@
+[Unit]
+Description=Watch GNOME accent color and apply theme changes
+After=graphical-session.target
+
+[Service]
+ExecStart=%h/.local/share/itero/bin/itero-theme-watch
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=default.target

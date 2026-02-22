@@ -1,0 +1,13 @@
+# Automatic Btrfs snapshots on dnf transactions via libdnf5-plugin-actions.
+# Creates a pre/post snapshot pair for every dnf install, update, or remove.
+# Format: callback:pkg_filter:direction:options:command
+# See: https://dnf5.readthedocs.io/en/latest/libdnf5_plugins/actions.8.html
+
+# Capture the dnf command that triggered this transaction
+pre_transaction::::/usr/bin/sh -c echo "tmp.cmd=$(ps -o command --no-headers -p ${pid})"
+
+# Create a "before" snapshot and store its number for pairing
+pre_transaction::::/usr/bin/sh -c echo "tmp.snapper_pre_number=$(snapper create -c number -t pre -p -d \"${tmp.cmd}\")"
+
+# Create a matching "after" snapshot so snapper can diff what changed
+post_transaction::::/usr/bin/sh -c [ -n "${tmp.snapper_pre_number}" ] && snapper create -t post --pre-number "${tmp.snapper_pre_number}" -d "${tmp.cmd}"; echo tmp.snapper_pre_number; echo tmp.cmd

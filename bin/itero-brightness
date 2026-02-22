@@ -1,0 +1,48 @@
+#!/bin/bash
+
+# External monitor brightness control via DDC/CI.
+# GNOME handles the built-in display; this script is only for external monitors.
+
+STEP=10
+EXCLUDE_BUS="11"
+CACHE_VAL="/dev/shm/brightness_val"
+CACHE_BUS="/dev/shm/brightness_bus"
+
+case "$1" in
+    --up)   direction="up" ;;
+    --down) direction="down" ;;
+    *)
+        echo "Usage: itero-brightness --up|--down"
+        exit 1
+        ;;
+esac
+
+if [ -f "$CACHE_BUS" ] && [ -s "$CACHE_BUS" ]; then
+    BUS=$(cat "$CACHE_BUS")
+else
+    # Find first I2C bus that isn't the built-in display
+    BUS=$(ddcutil detect --terse 2>/dev/null \
+        | grep "I2C bus:" \
+        | awk -F'/dev/i2c-' '{print $2}' \
+        | grep -vE "^${EXCLUDE_BUS}$" \
+        | head -n 1)
+    echo "$BUS" > "$CACHE_BUS"
+fi
+
+if [ -f "$CACHE_VAL" ] && [ -s "$CACHE_VAL" ]; then
+    CURRENT=$(cat "$CACHE_VAL")
+else
+    CURRENT=$(ddcutil getvcp 10 --bus "$BUS" --terse 2>/dev/null | cut -d' ' -f4)
+    [ -z "$CURRENT" ] && CURRENT=50
+fi
+
+if [ "$direction" = "up" ]; then
+    NEW=$(( CURRENT + STEP ))
+    [ "$NEW" -gt 100 ] && NEW=100
+else
+    NEW=$(( CURRENT - STEP ))
+    [ "$NEW" -lt 0 ] && NEW=0
+fi
+
+ddcutil setvcp 10 "$NEW" --bus "$BUS" --noverify --sleep-multiplier 0.1
+echo "$NEW" > "$CACHE_VAL"

@@ -1,0 +1,61 @@
+#!/bin/bash
+set -e
+
+ITERO_PATH="${ITERO_PATH:-$HOME/.local/share/itero}"
+source "$ITERO_PATH/lib/helpers.sh"
+
+GDRIVE_HOME="${GDRIVE_HOME:-$HOME/Drive}"
+REMOTE="gdrive"
+FILTER_FILE="$HOME/.config/rclone/filters.txt"
+LOG_FILE="$HOME/.local/state/itero/gdrive-sync.log"
+SERVICE="itero-gdrive.service"
+TIMER="itero-gdrive.timer"
+
+cmd_sync() {
+    systemctl --user start --no-block "$SERVICE"
+    log_ok "Sync triggered"
+}
+
+cmd_status() {
+    systemctl --user status "$TIMER" --no-pager 2>/dev/null || log_warn "Timer not installed"
+    echo ""
+    if [ -f "$LOG_FILE" ]; then
+        if [[ "${1:-}" == "--full" || "${1:-}" == "-f" ]]; then
+            less +G "$LOG_FILE"
+        else
+            log_info "Recent activity (use --full for scrollable log):"
+            tail -n 15 "$LOG_FILE"
+        fi
+    fi
+}
+
+cmd_reinit() {
+    log_warn "This re-establishes the bisync baseline (remote wins)."
+    read -rp "Continue? [y/N] " confirm
+    [[ "$confirm" != [yY] ]] && exit 0
+
+    log_info "Running resync..."
+    rclone bisync "${REMOTE}:" "$GDRIVE_HOME" \
+        --resync \
+        --create-empty-src-dirs \
+        --filter-from "$FILTER_FILE" \
+        --drive-skip-gdocs \
+        --verbose \
+        --log-file "$LOG_FILE"
+
+    touch "$HOME/.local/state/itero/gdrive-initialized"
+    log_ok "Bisync re-initialized"
+}
+
+case "${1:-}" in
+    sync)    cmd_sync ;;
+    status)  cmd_status "$2" ;;
+    reinit)  cmd_reinit ;;
+    *)
+        echo "Usage: itero-gdrive <sync|status|reinit>"
+        echo ""
+        echo "  sync     Trigger a sync now"
+        echo "  status   Show timer status and recent log"
+        echo "  reinit   Re-establish bisync baseline"
+        ;;
+esac

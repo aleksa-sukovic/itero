@@ -1,0 +1,5 @@
+{
+    "float": [{ "class": "vicinae" }, { "class": "org.gnome.Settings" }, { "class": "com.mattjakeman.ExtensionManager" }],
+    "log_on_focus": false,
+    "disable_active_border_on_float": true
+}

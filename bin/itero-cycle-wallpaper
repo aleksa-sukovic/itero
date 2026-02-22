@@ -1,0 +1,49 @@
+#!/bin/bash
+
+WALLPAPERS_DIR="$HOME/.local/share/itero/wallpapers"
+CURRENT_LINK="$HOME/.local/state/itero/current_wallpaper"
+
+if command -v fd >/dev/null; then
+    mapfile -t WALLPAPERS < <(fd . "$WALLPAPERS_DIR" -e png -e jpg -e jpeg | sort)
+else
+    mapfile -t WALLPAPERS < <(find "$WALLPAPERS_DIR" -type f \( -name "*.png" -o -name "*.jpg" -o -name "*.jpeg" \) | sort)
+fi
+
+if [ ${#WALLPAPERS[@]} -eq 0 ]; then
+    echo "No wallpapers found in $WALLPAPERS_DIR"
+    exit 1
+fi
+
+mkdir -p "$(dirname "$CURRENT_LINK")"
+
+# Find current wallpaper from symlink
+CURRENT=""
+if [ -L "$CURRENT_LINK" ]; then
+    CURRENT=$(readlink "$CURRENT_LINK")
+fi
+
+# Find current wallpaper's index
+INDEX=-1
+if [ -n "$CURRENT" ]; then
+    for i in "${!WALLPAPERS[@]}"; do
+        if [[ "${WALLPAPERS[$i]}" == "$CURRENT" ]]; then
+            INDEX=$i
+            break
+        fi
+    done
+fi
+
+# Find next wallpaper
+NEXT_INDEX=$(( (INDEX + 1) % ${#WALLPAPERS[@]} ))
+NEXT_WALLPAPER="${WALLPAPERS[$NEXT_INDEX]}"
+
+echo "Cycling to: $NEXT_WALLPAPER"
+
+# Update symlink
+ln -nsf "$NEXT_WALLPAPER" "$CURRENT_LINK"
+
+# Apply wallpaper via GNOME
+if command -v gsettings &>/dev/null; then
+    gsettings set org.gnome.desktop.background picture-uri "file://$NEXT_WALLPAPER"
+    gsettings set org.gnome.desktop.background picture-uri-dark "file://$NEXT_WALLPAPER"
+fi

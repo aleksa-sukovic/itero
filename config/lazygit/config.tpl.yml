@@ -1,0 +1,25 @@
+os:
+    editPreset: "nvim"
+gui:
+    theme:
+        activeBorderColor:
+            - "{{ accent }}"
+            - bold
+        inactiveBorderColor:
+            - "{{ color15 }}"
+        optionsTextColor:
+            - "{{ accent }}"
+        selectedLineBgColor:
+            - "{{ color0 }}"
+        cherryPickedCommitBgColor:
+            - "{{ color8 }}"
+        cherryPickedCommitFgColor:
+            - "{{ accent }}"
+        unstagedChangesColor:
+            - "{{ color1 }}"
+        defaultFgColor:
+            - "{{ foreground }}"
+        searchingActiveBorderColor:
+            - "{{ color3 }}"
+    authorColors:
+        "*": "{{ color5 }}"

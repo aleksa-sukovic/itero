@@ -1,0 +1,11 @@
+[tools]
+node = "24"
+pre-commit = "latest"
+uv = "latest"
+rust = "latest"
+python = ["3.13", "3.14"]
+
+[settings]
+python.uv_venv_auto = "create|source"
+rust.cargo_home = "{{ $HOME }}/.local/share/rust/cargo"
+rust.rustup_home = "{{ $HOME }}/.local/share/rust/rustup"

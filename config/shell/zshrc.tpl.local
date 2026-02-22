@@ -1,0 +1,16 @@
+#!/bin/bash
+
+# Constants
+export HOST="{{ $HOST }}"
+
+# Python & CUDA environment (if applicable)
+export LD_LIBRARY_PATH=/usr/local/cuda/lib64:$LD_LIBRARY_PATH
+export UV_LINK_MODE=symlink
+
+# Rust environment
+export RUSTUP_HOME="$HOME/.config/rust/rustup"
+export CARGO_HOME="$HOME/.config/rust/cargo"
+
+# Path modifications
+export PATH="$CARGO_HOME/bin:$PATH"
+export PATH="/home/$USER/.local/bin:$PATH"

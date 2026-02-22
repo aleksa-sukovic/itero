@@ -1,0 +1,11 @@
+[Desktop Entry]
+Name=Yazi
+Comment=Terminal file manager
+Exec=wezterm start -- yazi %F
+Icon={{ $ITERO_PATH }}/config/yazi/yazi.png
+Type=Application
+Categories=System;FileTools;FileManager;
+Terminal=false
+StartupNotify=false
+MimeType=inode/directory;x-directory/normal;
+NoDisplay=false

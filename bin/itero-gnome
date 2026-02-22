@@ -1,0 +1,28 @@
+#!/bin/bash
+
+ITERO_PATH="${ITERO_PATH:-$HOME/.local/share/itero}"
+DCONF_FILE="$ITERO_PATH/config/gnome/dconf.ini"
+
+source "$ITERO_PATH/lib/helpers.sh"
+
+# Apply settings from config/gnome/dconf.ini.
+load_config() {
+    if [[ ! -f "$DCONF_FILE" ]]; then
+        log_warn "No dconf config found at $DCONF_FILE"
+        exit 1
+    fi
+
+    dconf load / < "$DCONF_FILE"
+    log_ok "GNOME config loaded from $DCONF_FILE"
+}
+
+usage() {
+    echo "Usage: itero-gnome <command>"
+    echo "  load    Apply settings from config/gnome/dconf.ini"
+    exit 1
+}
+
+case "$1" in
+    load) load_config ;;
+    *) usage ;;
+esac

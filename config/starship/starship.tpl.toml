@@ -1,0 +1,51 @@
+# Starship prompt configuration
+"$schema" = 'https://starship.rs/config-schema.json'
+
+# general settings
+add_newline = false
+palette = "theme"
+
+# prompt settings
+format = """$username$hostname$directory$python$cmd_duration$status$character
+"""
+
+[character]
+success_symbol = "[❯](fg:green bold)"
+error_symbol = "[✗](fg:red bold)"
+
+[directory]
+truncation_length = 3
+truncate_to_repo = false
+truncation_symbol = "…/"
+read_only_style = "fg:red bold"
+read_only = " 🔒"
+
+[python]
+symbol = "🐍 "
+style = "fg:yellow bold"
+python_binary = [["uv", "run", "--no-python-downloads", "--no-project", "python"]]
+
+[username]
+style_user = "fg:yellow bold"
+
+[hostname]
+style = "fg:cyan"
+
+[git_branch]
+style = "fg:purple bold"
+
+[git_state]
+style = "fg:yellow bold reverse"
+
+[git_status]
+style = "fg:yellow bold"
+
+[cmd_duration]
+style = "fg:yellow bold"
+
+[palettes.theme]
+green = "{{ color2 }}"
+red = "{{ color1 }}"
+yellow = "{{ color3 }}"
+cyan = "{{ color6 }}"
+purple = "{{ color5 }}"

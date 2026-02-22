@@ -1,0 +1,37 @@
+#!/bin/bash
+
+# Navigates to the source coude directory
+src() {
+    cd /work/source/
+}
+
+# Prints local IP address
+ip-local() {
+    myIP="$(ip route get 1.1.1.1 | awk '{print $7; exit}')"
+    echo "Local IP: $myIP"
+}
+
+# Prints public IP address
+ip-public() {
+    myIP="$(dig +short myip.opendns.com @resolver1.opendns.com)"
+    echo "Public IP: $myIP"
+}
+
+# Lazygit with optional path argument
+# Usage: lzg [path]
+#   lzg              - open lazygit in current directory
+#   lzg ~/project    - open lazygit in specified path
+lzg() {
+    lazygit -p "${1:-.}"
+}
+
+# Yazi file manager wrapper
+# Allows changing the cwd when exiting
+function y() {
+    local tmp="$(mktemp -t "yazi-cwd.XXXXXX")" cwd
+    command yazi "$@" --cwd-file="$tmp"
+    IFS= read -r -d '' cwd < "$tmp"
+    [ -n "$cwd" ] && [ "$cwd" != "$PWD" ] && builtin cd -- "$cwd"
+    rm -f -- "$tmp"
+}
+

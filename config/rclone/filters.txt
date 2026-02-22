@@ -1,0 +1,5 @@
+# rclone filter file (c.f., https://rclone.org/filtering/)
+# after editing this file, run: itero-gdrive reinit
+- .stversions/**
+- .stfolder/**
+- Documents/Knowledge/Personal/**

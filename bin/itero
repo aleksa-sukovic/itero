@@ -1,0 +1,110 @@
+#!/bin/bash
+
+export ITERO_PATH="$(cd "$(dirname "$0")/.." && pwd)"
+export ITERO_CONFIG="$ITERO_PATH/config"
+export ITERO_INSTALL="$ITERO_PATH/install"
+export ITERO_STATE="$HOME/.local/state/itero"
+
+for arg in "$@"; do
+    case "$arg" in
+        --update) export ITERO_UPDATE=true ;;
+    esac
+done
+
+source "$ITERO_PATH/lib/helpers.sh"
+
+# Check for .env file and setup environment variables
+if [ ! -f "$ITERO_PATH/.env" ]; then
+    if [ ! -f "$ITERO_PATH/.env.example" ]; then
+        log_warn ".env.example not found. Cannot proceed."
+        exit 1
+    fi
+
+    cp "$ITERO_PATH/.env.example" "$ITERO_PATH/.env"
+
+    log_warn "Created .env file from .env.example"
+    log_info "Please edit $ITERO_PATH/.env and fill in your machine-specific values"
+    log_info "Then re-run: itero"
+
+    exit 0
+fi
+
+# Load environment variables from .env
+set -a
+source "$ITERO_PATH/.env"
+set +a
+
+# Detect fresh install
+FRESH_INSTALL=false
+if [ ! -d "$ITERO_STATE" ]; then
+    FRESH_INSTALL=true
+    mkdir -p "$ITERO_STATE"
+fi
+
+if should_update; then
+    log_info "Running itero in update mode"
+fi
+
+log_info "Installing itero from $ITERO_PATH"
+
+# Request sudo access upfront for any scripts that need it
+sudo -v
+
+# Set the current theme, if not set already
+if [ -L "$ITERO_PATH/themes/current" ]; then
+    current="$(basename "$(readlink "$ITERO_PATH/themes/current")")"
+else
+    current="catppuccin-mocha"
+    ln -nsf "$current" "$ITERO_PATH/themes/current"
+fi
+
+# Resolve accent color from theme palette
+accent_name="$(map_accent_to_palette "$(get_accent_color)")"
+flavor="$(get_flavor "$current")"
+cursor_theme="catppuccin-${flavor}-${accent_name}"
+export accent_name cursor_theme
+
+# Compile theme and config templates from the canonical palette
+compile_theme_templates "$ITERO_PATH/themes/$current" "$accent_name" "$ITERO_CONFIG"
+
+# Handle migrations
+if [ "$FRESH_INSTALL" = true ]; then
+    "$ITERO_PATH/bin/itero-migrate" --mark-all
+else
+    "$ITERO_PATH/bin/itero-migrate"
+fi
+
+# Run install scripts
+run_install "$ITERO_INSTALL/common.sh"
+run_install "$ITERO_INSTALL/gnome.sh"
+run_install "$ITERO_INSTALL/nvidia.sh"
+run_install "$ITERO_INSTALL/wezterm.sh"
+run_install "$ITERO_INSTALL/starship.sh"
+run_install "$ITERO_INSTALL/shell.sh"
+run_install "$ITERO_INSTALL/fonts.sh"
+run_install "$ITERO_INSTALL/theme.sh"
+run_install "$ITERO_INSTALL/nvim.sh"
+run_install "$ITERO_INSTALL/tmux.sh"
+run_install "$ITERO_INSTALL/mise.sh"
+run_install "$ITERO_INSTALL/yazi.sh"
+run_install "$ITERO_INSTALL/lazygit.sh"
+run_install "$ITERO_INSTALL/docker.sh"
+run_install "$ITERO_INSTALL/lazydocker.sh"
+run_install "$ITERO_INSTALL/syncthing.sh"
+run_install "$ITERO_INSTALL/rclone.sh"
+run_install "$ITERO_INSTALL/gitkraken.sh"
+run_install "$ITERO_INSTALL/vscode.sh"
+run_install "$ITERO_INSTALL/snapshots.sh"
+run_install "$ITERO_INSTALL/apps.sh"
+run_install "$ITERO_INSTALL/fastfetch.sh"
+run_install "$ITERO_INSTALL/btop.sh"
+run_install "$ITERO_INSTALL/vicinae.sh"
+
+# Clean up legacy layout
+if [ -d "$ITERO_PATH/apps" ] || [ -d "$ITERO_PATH/scripts" ]; then
+    rm -rf "$ITERO_PATH/apps" "$ITERO_PATH/scripts"
+    log_info "Cleaned up legacy directories"
+fi
+
+log_ok "Done!"
+print_install_summary

@@ -1,0 +1,6 @@
+#!/bin/bash
+
+# Reboot to Windows partition
+lws-reboot-windows() {
+    sudo grub2-reboot "Windows Boot Manager (on /dev/{efi})" && sudo reboot
+}

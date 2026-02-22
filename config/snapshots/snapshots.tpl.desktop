@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=Snapshots
+Comment=Manage Btrfs snapshots and rollbacks
+Exec=btrfs-assistant-launcher
+Icon={{ $ITERO_PATH }}/config/snapshots/snapshots.png
+Type=Application
+Categories=System;Settings;
+Terminal=false
+StartupNotify=false

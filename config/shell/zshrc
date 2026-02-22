@@ -1,0 +1,76 @@
+export EDITOR=/usr/bin/nvim
+export ITERO_PATH="$HOME/.local/share/itero"
+export GDRIVE_HOME="$HOME/Drive"
+
+export EMOJI_FONT="JetBrainsMono Nerd Font" # or Twemoji; for Vicinae launcher
+
+# Path modifications
+export PATH="$HOME/.local/share/itero/bin:$PATH"
+export PATH="$HOME/.local/bin:$PATH"
+
+# Source machine-specific variables if they exist
+if [ -f "$HOME/.zshrc.local" ]; then
+    source "$HOME/.zshrc.local"
+fi
+
+# Source universal shell functions
+if [ -f "$HOME/.functions" ]; then
+    source "$HOME/.functions"
+fi
+
+# Source machine-specific functions if they exist
+if [ -f "$HOME/.functions.local" ]; then
+    source "$HOME/.functions.local"
+fi
+
+# Aliases
+alias ..="cd .."
+alias ...="cd ../.."
+alias ....="cd ../../.."
+
+alias sudo="sudo "
+
+alias l="ls -l"
+alias la="ls -la"
+alias lsd='ls -l | grep "^d"'
+alias rm='rm -i'
+
+alias fs="du -sh"
+
+alias dcont="docker container"
+alias dcomp="docker compose"
+
+alias lzd="lazydocker"
+
+alias v="nvim"
+
+# Tmux
+alias t="tmux attach -t main || tmux new -s main"
+alias ts="tmux new -A -s"
+alias ta="tmux attach -t"
+alias tl="tmux list-sessions"
+alias tk="tmux kill-server"
+
+# ZSH setup
+HISTFILE="$HOME/.zsh_history"
+HISTSIZE=50000
+SAVEHIST=50000
+
+setopt APPEND_HISTORY
+setopt HIST_IGNORE_DUPS
+setopt HIST_IGNORE_SPACE
+setopt SHARE_HISTORY
+
+# Vi keybindings
+bindkey -v
+
+# Enable reverse/forward history search via Ctrl+R/S and free up Ctrl+S from flow control
+bindkey '^R' history-incremental-search-backward
+bindkey '^S' history-incremental-search-forward
+stty -ixon
+
+# Shell setup
+eval "$(starship init zsh)"
+eval "$(zoxide init zsh --cmd cd)"
+eval "$(mise activate zsh)"
+

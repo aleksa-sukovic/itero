@@ -1,0 +1,87 @@
+#!/bin/bash
+
+ITERO_PATH="${ITERO_PATH:-$HOME/.local/share/itero}"
+THEMES_DIR="$ITERO_PATH/themes"
+CURRENT_LINK="$THEMES_DIR/current"
+
+source "$ITERO_PATH/lib/helpers.sh"
+
+# Load environment variables
+if [[ -f "$ITERO_PATH/.env" ]]; then
+    set -a
+    source "$ITERO_PATH/.env"
+    set +a
+fi
+
+list_themes() {
+    find -L "$THEMES_DIR" -mindepth 1 -maxdepth 1 -type d ! -name current 2>/dev/null | sort | xargs -r -n1 basename
+}
+
+current_theme() {
+    if [ -L "$CURRENT_LINK" ]; then
+        basename "$(readlink "$CURRENT_LINK")"
+    else
+        echo "none"
+    fi
+}
+
+set_theme() {
+    local theme="$1"
+
+    if [[ ! -d "$THEMES_DIR/$theme" ]]; then
+        echo "Theme '$theme' not found" >&2
+        exit 1
+    fi
+
+    local accent_name
+    accent_name="$(map_accent_to_palette "$(get_accent_color)")"
+    local flavor="$(get_flavor "$theme")"
+    local cursor_theme="catppuccin-${flavor}-${accent_name}"
+
+    # Link the chosen theme as 'current'
+    ln -nsf "$theme" "$CURRENT_LINK"
+
+    export accent_name cursor_theme
+
+    # Compile theme and config templates from the canonical palette
+    compile_theme_templates "$THEMES_DIR/$theme" "$accent_name" "$ITERO_PATH/config"
+
+    # Set cursor theme (reset first to force GNOME to reload)
+    if command_exists gsettings; then
+        gsettings set org.gnome.desktop.interface cursor-theme "default"
+        gsettings set org.gnome.desktop.interface cursor-theme "$cursor_theme"
+        gsettings set org.gnome.desktop.interface cursor-size 24
+    fi
+
+    # Copy yazi theme
+    local yazi_theme="$THEMES_DIR/$theme/yazi.toml"
+    if [[ -f "$yazi_theme" ]]; then
+        mkdir -p "$HOME/.config/yazi"
+        cp "$yazi_theme" "$HOME/.config/yazi/theme.toml"
+    fi
+
+    # Trigger wezterm config reload
+    touch ~/.config/wezterm/wezterm.lua 2>/dev/null || true
+
+    # Reload tmux for all sessions
+    if command_exists tmux && tmux list-sessions &>/dev/null; then
+        for session in $(tmux list-sessions -F '#{session_name}' 2>/dev/null); do
+            tmux source-file ~/.tmux.conf -t "$session" 2>/dev/null || true
+        done
+    fi
+
+    # Link btop theme
+    local btop_theme="$THEMES_DIR/$theme/btop.theme"
+    if [[ -f "$btop_theme" ]]; then
+        mkdir -p "$HOME/.config/btop/themes"
+        ln -nsf "$btop_theme" "$HOME/.config/btop/themes/current.theme"
+    fi
+
+    echo "Theme: $theme (accent: $accent_name)"
+}
+
+case "$1" in
+    --list|-l) list_themes ;;
+    --current|-c) current_theme ;;
+    *) set_theme "${1:-$(current_theme)}" ;;
+esac

@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=Syncthing Web UI
+Comment=Open Syncthing web interface
+Exec={{ $HOME }}/.local/share/itero/bin/itero-syncthing
+Icon={{ $ITERO_PATH }}/config/syncthing/syncthing.png
+Type=Application
+Categories=Network;FileTransfer;P2P;
+Terminal=false
+StartupNotify=false

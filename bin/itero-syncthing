@@ -1,0 +1,10 @@
+#!/bin/bash
+
+CONFIG_FILE="$HOME/.local/state/syncthing/config.xml"
+
+if [ -f "$CONFIG_FILE" ]; then
+    port=$(grep -oP '(?<=<address>127.0.0.1:)\d+' "$CONFIG_FILE")
+    [ -n "$port" ] && xdg-open "http://127.0.0.1:$port"
+else
+    xdg-open "http://127.0.0.1:8384"
+fi

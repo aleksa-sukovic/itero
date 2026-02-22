@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=Btop
+Comment=System resource monitor
+Exec=wezterm start --class btop -- btop
+Icon={{ $ITERO_PATH }}/config/btop/btop.png
+Type=Application
+Categories=System;Monitor;
+Terminal=false
+StartupNotify=false

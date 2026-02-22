@@ -1,0 +1,35 @@
+#!/bin/bash
+
+ITERO_PATH="${ITERO_PATH:-$HOME/.local/share/itero}"
+
+source "$ITERO_PATH/lib/helpers.sh"
+
+usage() {
+    echo "Usage: itero-backup <command>"
+    echo "  --create, -c [desc]  Create a snapshot (default: \"manual snapshot\")"
+    echo "  --gui, -g            Open Btrfs Assistant"
+    exit 1
+}
+
+create_snapshot() {
+    local description="${1:-manual snapshot}"
+    local number
+    number=$(sudo snapper -c root create -t single -c number -p -d "$description")
+    log_ok "Created snapshot #${number}: $description"
+}
+
+open_gui() {
+    if ! command_exists btrfs-assistant; then
+        echo "btrfs-assistant is not installed. Run 'itero' to install it." >&2
+        exit 1
+    fi
+
+    btrfs-assistant-launcher &>/dev/null &
+    disown
+}
+
+case "$1" in
+    --create|-c) shift; create_snapshot "$*" ;;
+    --gui|-g) open_gui ;;
+    *) usage ;;
+esac

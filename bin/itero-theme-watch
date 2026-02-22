@@ -1,0 +1,8 @@
+#!/bin/bash
+
+ITERO_PATH="${ITERO_PATH:-$HOME/.local/share/itero}"
+export ITERO_THEME_WATCH=1
+
+gsettings monitor org.gnome.desktop.interface accent-color | while read -r _key value; do
+    "$ITERO_PATH/bin/itero-theme"
+done

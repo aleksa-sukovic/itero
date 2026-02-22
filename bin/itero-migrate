@@ -1,0 +1,30 @@
+#!/bin/bash
+set -e
+
+ITERO_PATH="${ITERO_PATH:-$(cd "$(dirname "$0")/.." && pwd)}"
+STATE_DIR="$HOME/.local/state/itero/migrations"
+mkdir -p "$STATE_DIR"
+
+# Mark all migrations as done (used on fresh install)
+if [ "$1" = "--mark-all" ]; then
+    for file in "$ITERO_PATH"/migrations/*.sh; do
+        [ -f "$file" ] && touch "$STATE_DIR/$(basename "$file")"
+    done
+    exit 0
+fi
+
+# Run pending migrations
+for file in "$ITERO_PATH"/migrations/*.sh; do
+    [ -f "$file" ] || continue
+    filename="$(basename "$file")"
+
+    if [ ! -f "$STATE_DIR/$filename" ]; then
+        log_info "Running migration: ${filename%.sh}"
+        if bash "$file"; then
+            touch "$STATE_DIR/$filename"
+        else
+            echo -e "\033[0;31m!\033[0m Migration failed: ${filename%.sh}"
+            exit 1
+        fi
+    fi
+done

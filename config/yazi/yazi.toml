@@ -1,0 +1,10 @@
+[opener]
+open = [
+    { run = 'xdg-open "$@"', orphan = true, desc = "Open", for = "linux" },
+]
+
+[open]
+prepend_rules = [
+    { mime = "image/*", use = "open" },
+    { mime = "application/pdf", use = "open" },
+]
