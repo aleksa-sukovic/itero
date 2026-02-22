@@ -3,7 +3,8 @@
         { "class": "vicinae" },
         { "class": "org.gnome.Settings" },
         { "class": "org.gnome.Weather" },
-        { "class": "com.mattjakeman.ExtensionManager" }
+        { "class": "com.mattjakeman.ExtensionManager" },
+        { "class": "org.gnome.NautilusPreviewer" }
     ],
     "log_on_focus": false,
     "disable_active_border_on_float": true
