@@ -53,6 +53,13 @@ set_theme() {
         gsettings set org.gnome.desktop.interface cursor-size 24
     fi
 
+    # Update itero-wm active hint color
+    if command_exists dconf; then
+        local accent_hex="$(resolve_accent_hex "$THEMES_DIR/$theme/palette.toml" "$accent_name")"
+        local accent_rgb="$(hex_to_rgb "$accent_hex")"
+        dconf write /org/gnome/shell/extensions/pop-shell/hint-color-rgba "'rgba(${accent_rgb}, 1)'"
+    fi
+
     # Copy yazi theme
     local yazi_theme="$THEMES_DIR/$theme/yazi.toml"
     if [[ -f "$yazi_theme" ]]; then
