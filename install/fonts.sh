@@ -5,7 +5,7 @@ NERD_FONTS_URL="https://github.com/ryanoasis/nerd-fonts/releases/download/${NERD
 NERD_FONTS=("JetBrainsMono")
 
 CATPPUCCIN_CURSORS_VERSION="v2.0.0"
-CATPPUCCIN_CURSORS_URL="https://github.com/catppuccin/cursors/releases/tag/${CATPPUCCIN_CURSORS_VERSION}"
+CATPPUCCIN_CURSORS_URL="https://github.com/catppuccin/cursors/releases/download/${CATPPUCCIN_CURSORS_VERSION}"
 
 get_fonts_dir() {
     if is_linux; then
