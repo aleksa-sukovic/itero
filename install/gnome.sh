@@ -27,7 +27,7 @@ fi
 if [[ ! -d "$pop_shell_dest" ]] || should_update; then
     cd "$pop_shell_dir"
     git pull --ff-only
-    make compile
+    make
     make install
     cd "$ITERO_PATH"
     log_ok "Installed Pop Shell from fork"
