@@ -11,6 +11,15 @@ git clone https://github.com/aleksa-sukovic/itero ~/.local/share/itero
 
 On first run, itero will create a `.env` file from `.env.example` and prompt you to fill in machine-specific values. After editing `.env`, run `itero` again to complete the installation.
 
+## Partition Setup
+
+Before installing, set up your disk partitions following these:
+
+- **`/boot/efi`** (512 MB) - EFI system partition for UEFI boot (FAT32)
+- **`/`** (50-100 GB minimum) - Root partition for system files (btrfs)
+- **`/home`** (remaining space) - User data partition (ext4)
+- **swap** (optional) - For systems with ≤8 GB RAM, use swap equal to RAM size; for 8-16 GB RAM, use half the RAM size; for >16 GB RAM, swap is optional unless hibernation is needed (then use RAM size)
+
 ### Selective Install
 
 You can install only a selection of itero's features:
