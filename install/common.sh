@@ -3,6 +3,14 @@
 if is_linux; then
     log_info "Installing common dependencies..."
 
+    # Remove unwanted repositories
+    sudo rm -rf /etc/yum.repos.d/_copr:copr.fedorainfracloud.org:phracek:PyCharm.repo
+    sudo rm -rf /etc/yum.repos.d/google-chrome.repo
+
+    # Update system
+    sudo dnf makecache -q
+    sudo dnf upgrade -y
+
     # Install packages
     dnf_install \
         zsh \
