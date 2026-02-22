@@ -76,29 +76,33 @@ fi
 
 # Run install scripts
 run_install "$ITERO_INSTALL/common.sh"
-run_install "$ITERO_INSTALL/gnome.sh"
 run_install "$ITERO_INSTALL/nvidia.sh"
 run_install "$ITERO_INSTALL/wezterm.sh"
 run_install "$ITERO_INSTALL/starship.sh"
-run_install "$ITERO_INSTALL/shell.sh"
 run_install "$ITERO_INSTALL/fonts.sh"
-run_install "$ITERO_INSTALL/theme.sh"
+run_install "$ITERO_INSTALL/shell.sh"
+
+run_install "$ITERO_INSTALL/mise.sh"
 run_install "$ITERO_INSTALL/nvim.sh"
 run_install "$ITERO_INSTALL/tmux.sh"
-run_install "$ITERO_INSTALL/mise.sh"
 run_install "$ITERO_INSTALL/yazi.sh"
 run_install "$ITERO_INSTALL/lazygit.sh"
 run_install "$ITERO_INSTALL/docker.sh"
 run_install "$ITERO_INSTALL/lazydocker.sh"
+
+run_install "$ITERO_INSTALL/snapshots.sh"
 run_install "$ITERO_INSTALL/syncthing.sh"
 run_install "$ITERO_INSTALL/rclone.sh"
+
+run_install "$ITERO_INSTALL/apps.sh"
 run_install "$ITERO_INSTALL/gitkraken.sh"
 run_install "$ITERO_INSTALL/vscode.sh"
-run_install "$ITERO_INSTALL/snapshots.sh"
-run_install "$ITERO_INSTALL/apps.sh"
 run_install "$ITERO_INSTALL/fastfetch.sh"
 run_install "$ITERO_INSTALL/btop.sh"
 run_install "$ITERO_INSTALL/vicinae.sh"
+
+run_install "$ITERO_INSTALL/theme.sh"
+run_install "$ITERO_INSTALL/gnome.sh"
 
 # Clean up legacy layout
 if [ -d "$ITERO_PATH/apps" ] || [ -d "$ITERO_PATH/scripts" ]; then

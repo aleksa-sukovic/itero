@@ -9,7 +9,15 @@ git clone https://github.com/aleksa-sukovic/itero ~/.local/share/itero
 ~/.local/share/itero/bin/itero
 ```
 
-On first run, itero will create a `.env` file from `.env.example` and prompt you to fill in machine-specific values. After editing `.env`, run `itero` again to complete the installation.
+On first run, itero will create a `.env` file from `.env.example` and prompt you to fill in machine-specific values. After editing `.env`, it is recommended to proceed with incremental setup, restarting the system after each step:
+
+```
+ITERO_COMPONENTS=common,nvidia,wezterm,starship,fonts,shell itero
+ITERO_COMPONENTS=mise,nvim,tmux,yazi,lazygit,docker,lazydocker itero
+ITERO_COMPONENTS=apps,gitkraken,vscode,fastfetch,btop,vicinae itero
+ITERO_COMPONENTS=snapshots,syncthing,rclone itero
+ITERO_COMPONENTS=theme,gnome itero
+```
 
 ## Partition Setup
 
