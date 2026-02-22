@@ -63,5 +63,4 @@ if is_linux; then
     fi
 
     chmod +x "$ITERO_PATH/bin/itero-backup"
-    install_desktop "$ITERO_CONFIG/snapshots/snapshots.desktop"
 fi
