@@ -28,7 +28,11 @@ if is_linux; then
     # Mount .snapshots subvolume via fstab so grub-btrfs can monitor it
     if ! grep -q '/.snapshots' /etc/fstab; then
         root_uuid=$(grep ' / ' /etc/fstab | grep btrfs | awk '{print $1}')
-        echo "${root_uuid} /.snapshots btrfs subvol=root/.snapshots,compress=zstd:1 0 0" | sudo tee -a /etc/fstab > /dev/null
+        fs_root=$(findmnt / -o FSROOT -n)
+        snapshots_subvol="${fs_root%/}/.snapshots"
+        snapshots_subvol="${snapshots_subvol#/}"
+        echo "${root_uuid} /.snapshots btrfs subvol=${snapshots_subvol},compress=zstd:1 0 0" | sudo tee -a /etc/fstab > /dev/null
+        sudo mkdir -p /.snapshots
         sudo systemctl daemon-reload
         sudo mount /.snapshots
         log_ok "Added /.snapshots to fstab"
