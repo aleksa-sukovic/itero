@@ -82,23 +82,6 @@ migrations/  One-time system change scripts
 Local files (`~/.zshrc.local`, `~/.functions.local`) are created from example templates on first
 run and live directly in `$HOME` as real files. Edit them in place for machine-specific settings.
 
-## Development
-
-To test changes, run `itero` in the project directory. For faster iteration, you can also run specific scripts directly (e.g., `bin/itero-theme catppuccin` to test theme changes). More permanent changes are typically tested in a virtual machine - [VMWare Workstation](https://www.vmware.com/products/desktop-hypervisor/workstation-and-fusion) works nicely. Make sure you install guest and mount tools:
-
-```bash
-sudo dnf install fuse fuse-libs open-vm-tools
-sudo systemctl enable --now vmtoolsd
-```
-
-Then, add a shared folder pointing to a local instance of the project, and edit the `/etc/fstab` by appending the following line:
-
-```txt
-.host:/itero /home/{USERNAME}/.local/share/itero fuse.vmhgfs-fuse defaults,allow_other 0 0
-```
-
-and reload `sudo systemctl daemon-reload && sudo mount -a`. This repository is now available inside the VM at `~/.local/share/itero`.
-
 ## References
 
 Inspired by my previous Ansible-based setup for [Arch](https://github.com/aleksa-sukovic/restituto-arch-ansible) and [Ubuntu](https://github.com/aleksa-sukovic/restituto-ubuntu-ansible). Wallpapers and theme inspiration from the amazing [Catppuccin](https://github.com/catppuccin) and [Omarchy](https://github.com/basecamp/omarchy) projects.
