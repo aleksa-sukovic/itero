@@ -2,7 +2,7 @@
 node = "24"
 pre-commit = "latest"
 uv = "latest"
-rust = "latest"
+rust = { version = "latest", components = "rustc,cargo,rustfmt,rust-std,rust-docs,rust-analyzer,clippy,rust-src" }
 python = ["3.13", "3.14"]
 
 [settings]
