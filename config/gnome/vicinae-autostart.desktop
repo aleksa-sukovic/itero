@@ -1,7 +1,0 @@
-[Desktop Entry]
-Name=Vicinae
-Comment=Start Vicinae on login
-Exec=vicinae
-Type=Application
-X-GNOME-Autostart-enabled=true
-Terminal=false

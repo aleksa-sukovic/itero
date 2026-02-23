@@ -51,9 +51,9 @@ for ext in "${GNOME_EXTENSIONS[@]}"; do
     fi
 done
 
-# Setup vicinae autostart
+# Setup autostart
 mkdir -p "$HOME/.config/autostart"
-link_file "$ITERO_CONFIG/gnome/vicinae-autostart.desktop" "$HOME/.config/autostart/vicinae.desktop"
+link_file "/usr/share/applications/vicinae.desktop" "$HOME/.config/autostart/vicinae.desktop"
 
 # Load dconf settings
 local dconf_file="$ITERO_CONFIG/gnome/dconf.ini"
