@@ -4,9 +4,16 @@ set -e
 ITERO_PATH="${ITERO_PATH:-$(cd "$(dirname "$0")/.." && pwd)}"
 source "$ITERO_PATH/lib/helpers.sh"
 
-# Replace ffmpeg-free (default Fedora repo) with the full ffmpeg from RPM Fusion.
-# ffmpeg-free conflicts with the RPM Fusion ffmpeg package and must be removed first.
+# N.B. ffmpeg-free conflicts with the RPM Fusion ffmpeg package and must be removed first.
 if package_exists ffmpeg-free; then
-    sudo dnf remove -y -q ffmpeg-free
+    sudo dnf remove -y -q ffmpeg-free \
+        libswscale-free \
+        libswresample-free \
+        libavcodec-free \
+        libavformat-free \
+        libavutil-free \
+        libpostproc-free \
+        libavdevice-free \
+        libavfilter-free
     log_ok "Removed ffmpeg-free"
 fi
