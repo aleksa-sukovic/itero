@@ -71,7 +71,7 @@ compile_theme_templates "$ITERO_PATH/themes/$current" "$accent_name" "$ITERO_CON
 if [ "$FRESH_INSTALL" = true ]; then
     "$ITERO_PATH/bin/itero-migrate" --mark-all
 else
-    "$ITERO_PATH/bin/itero-migrate"
+    "$ITERO_PATH/bin/itero-migrate" --run
 fi
 
 # Run install scripts

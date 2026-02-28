@@ -2,29 +2,110 @@
 set -e
 
 ITERO_PATH="${ITERO_PATH:-$(cd "$(dirname "$0")/.." && pwd)}"
+source "$ITERO_PATH/lib/helpers.sh"
+
+MIGRATIONS_DIR="$ITERO_PATH/migrations"
 STATE_DIR="$HOME/.local/state/itero/migrations"
 mkdir -p "$STATE_DIR"
 
-# Mark all migrations as done (used on fresh install)
-if [ "$1" = "--mark-all" ]; then
-    for file in "$ITERO_PATH"/migrations/*.sh; do
+print_usage() {
+    echo "Usage: itero-migrate [OPTION]"
+    echo ""
+    echo "Options:"
+    echo "  --create <name>   Create a new migration with the given name"
+    echo "  --pending         List pending migrations without running them"
+    echo "  --mark-all        Mark all migrations as done (used on fresh install)"
+    echo "  --run             Run all pending migrations"
+}
+
+create_migration() {
+    local name="$1"
+
+    if [ -z "$name" ]; then
+        echo -e "${RED}!${NC} Migration name is required"
+        echo "Usage: itero-migrate --create <name>"
+        exit 1
+    fi
+
+    local timestamp
+    timestamp="$(date +%Y%m%d%H%M%S)"
+    local filename="${timestamp}_${name}.sh"
+    local filepath="$MIGRATIONS_DIR/$filename"
+    local template="$ITERO_PATH/config/migrations/migration.tpl.sh"
+
+    cp "$template" "$filepath"
+    chmod +x "$filepath"
+    log_ok "Created migration: $filename"
+}
+
+list_pending() {
+    local has_pending=false
+
+    for file in "$MIGRATIONS_DIR"/*.sh; do
+        [ -f "$file" ] || continue
+        local filename
+        filename="$(basename "$file")"
+        if [ ! -f "$STATE_DIR/$filename" ]; then
+            log_info "Pending: ${filename%.sh}"
+            has_pending=true
+        fi
+    done
+
+    if [ "$has_pending" = false ]; then
+        log_ok "No pending migrations"
+    fi
+}
+
+mark_all() {
+    for file in "$MIGRATIONS_DIR"/*.sh; do
         [ -f "$file" ] && touch "$STATE_DIR/$(basename "$file")"
     done
-    exit 0
-fi
+    log_ok "All migrations marked as done"
+}
 
-# Run pending migrations
-for file in "$ITERO_PATH"/migrations/*.sh; do
-    [ -f "$file" ] || continue
-    filename="$(basename "$file")"
+run_pending() {
+    local has_pending=false
 
-    if [ ! -f "$STATE_DIR/$filename" ]; then
-        log_info "Running migration: ${filename%.sh}"
-        if bash "$file"; then
-            touch "$STATE_DIR/$filename"
-        else
-            echo -e "\033[0;31m!\033[0m Migration failed: ${filename%.sh}"
-            exit 1
+    for file in "$MIGRATIONS_DIR"/*.sh; do
+        [ -f "$file" ] || continue
+        local filename
+        filename="$(basename "$file")"
+        if [ ! -f "$STATE_DIR/$filename" ]; then
+            has_pending=true
+            log_info "Running migration: ${filename%.sh}"
+            if bash "$file"; then
+                touch "$STATE_DIR/$filename"
+            else
+                echo -e "${RED}!${NC} Migration failed: ${filename%.sh}"
+                exit 1
+            fi
         fi
+    done
+
+    if [ "$has_pending" = false ]; then
+        log_ok "No pending migrations"
     fi
-done
+}
+
+case "${1:-}" in
+    --create)
+        create_migration "$2"
+        ;;
+    --pending)
+        list_pending
+        ;;
+    --mark-all)
+        mark_all
+        ;;
+    --run)
+        run_pending
+        ;;
+    "")
+        print_usage
+        ;;
+    *)
+        echo -e "${RED}!${NC} Unknown option: $1"
+        print_usage
+        exit 1
+        ;;
+esac
