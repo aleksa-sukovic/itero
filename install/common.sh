@@ -23,7 +23,8 @@ if is_linux; then
 
     dnf_install \
         wl-clipboard \
-        ffmpeg-free \
+        ffmpeg \
+        ffmpeg-devel \
         p7zip \
         poppler-utils \
         ImageMagick \
