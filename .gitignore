@@ -21,3 +21,4 @@ config/btop/btop.conf
 config/yazi/yazi.desktop
 config/wezterm/wezterm.lua
 config/snapshots/snapshots.desktop
+config/migrations/migration.sh
