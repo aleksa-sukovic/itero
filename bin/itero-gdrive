@@ -18,14 +18,18 @@ cmd_sync() {
 
 cmd_status() {
     systemctl --user status "$TIMER" --no-pager 2>/dev/null || log_warn "Timer not installed"
-    echo ""
-    if [ -f "$LOG_FILE" ]; then
-        if [[ "${1:-}" == "--full" || "${1:-}" == "-f" ]]; then
-            less +G "$LOG_FILE"
-        else
-            log_info "Recent activity (use --full for scrollable log):"
-            tail -n 15 "$LOG_FILE"
-        fi
+}
+
+cmd_log() {
+    if [ ! -f "$LOG_FILE" ]; then
+        log_warn "No log file found at $LOG_FILE"
+        return
+    fi
+    if [[ "${1:-}" == "--follow" || "${1:-}" == "-f" ]]; then
+        tail -f "$LOG_FILE"
+    else
+        log_info "Recent activity (use --follow to stream live):"
+        tail -n 15 "$LOG_FILE"
     fi
 }
 
@@ -49,13 +53,16 @@ cmd_reinit() {
 
 case "${1:-}" in
     sync)    cmd_sync ;;
-    status)  cmd_status "$2" ;;
+    status)  cmd_status ;;
+    log)     cmd_log "$2" ;;
     reinit)  cmd_reinit ;;
     *)
-        echo "Usage: itero-gdrive <sync|status|reinit>"
+        echo "Usage: itero-gdrive <sync|status|log|reinit>"
         echo ""
-        echo "  sync     Trigger a sync now"
-        echo "  status   Show timer status and recent log"
-        echo "  reinit   Re-establish bisync baseline"
+        echo "  sync             Trigger a sync now"
+        echo "  status           Show systemd timer/service status"
+        echo "  log              Show recent rclone log entries"
+        echo "  log --follow/-f  Stream rclone log live"
+        echo "  reinit           Re-establish bisync baseline"
         ;;
 esac
