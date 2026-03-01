@@ -64,6 +64,10 @@ vim.o.confirm = true
 -- Auto-reload files when changed externally (e.g., git commit).
 vim.o.autoread = true
 
+-- Load per-project .nvim.lua files.
+vim.o.exrc = true
+vim.o.secure = true
+
 -- Collapse the bottom bar when not in use.
 vim.opt.cmdheight = 0
 
