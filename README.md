@@ -16,7 +16,7 @@ ITERO_COMPONENTS=common,nvidia,wezterm,starship,fonts,shell itero
 ITERO_COMPONENTS=mise,nvim,tmux,yazi,lazygit,docker,lazydocker itero
 ITERO_COMPONENTS=apps,gitkraken,vscode,fastfetch,btop,vicinae itero
 ITERO_COMPONENTS=snapshots,syncthing,rclone itero
-ITERO_COMPONENTS=theme,gnome itero
+ITERO_COMPONENTS=theme,gnome,gdm itero
 ```
 
 ## Partition Setup
