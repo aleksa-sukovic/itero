@@ -104,6 +104,7 @@ run_install "$ITERO_INSTALL/vicinae.sh"
 
 run_install "$ITERO_INSTALL/theme.sh"
 run_install "$ITERO_INSTALL/gnome.sh"
+run_install "$ITERO_INSTALL/gdm.sh"
 
 # Clean up legacy layout
 if [ -d "$ITERO_PATH/apps" ] || [ -d "$ITERO_PATH/scripts" ]; then
