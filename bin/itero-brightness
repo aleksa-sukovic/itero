@@ -29,6 +29,11 @@ else
     echo "$BUS" > "$CACHE_BUS"
 fi
 
+if [ -z "$BUS" ]; then
+    echo "Error: no external display detected via DDC/CI"
+    exit 1
+fi
+
 if [ -f "$CACHE_VAL" ] && [ -s "$CACHE_VAL" ]; then
     CURRENT=$(cat "$CACHE_VAL")
 else

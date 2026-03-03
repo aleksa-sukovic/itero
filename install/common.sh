@@ -22,6 +22,7 @@ if is_linux; then
         yq \
 
     dnf_install \
+        ddcutil \
         wl-clipboard \
         ffmpeg \
         ffmpeg-devel \
