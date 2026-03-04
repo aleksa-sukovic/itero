@@ -41,4 +41,5 @@ if is_linux; then
     flatpak_install com.calibre_ebook.calibre
     flatpak_install ca.desrt.dconf-editor
     flatpak_install dev.qwery.AddWater
+    flatpak_install io.gitlab.news_flash.NewsFlash
 fi
