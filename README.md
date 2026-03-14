@@ -19,6 +19,8 @@ ITERO_COMPONENTS=snapshots,syncthing,rclone itero
 ITERO_COMPONENTS=theme,gnome,gdm itero
 ```
 
+If you want Itero to manage a `/work` bind mount, set `ITERO_WORKDIR` in `.env` to the directory that should appear at `/work`.
+
 ## Partition Setup
 
 Before installing, set up your disk partitions following these:

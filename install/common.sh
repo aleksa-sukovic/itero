@@ -68,4 +68,7 @@ if is_linux; then
 
     # Create common directories
     mkdir -p ~/Desktop ~/Downloads ~/Pictures ~/Pictures/Screenshots ~/Documents ~/Development
+
+    # Mount the configured work directory under /work
+    ensure_bind_mount "${ITERO_WORKDIR:-}" "/work"
 fi

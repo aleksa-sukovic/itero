@@ -394,3 +394,73 @@ allow_user_write() {
         | sudo tee "/etc/sudoers.d/$rule_name" >/dev/null
     sudo chmod 440 "/etc/sudoers.d/$rule_name"
 }
+
+# Ensure a bind mount exists in /etc/fstab and is mounted at the target.
+ensure_bind_mount() {
+    local source_dir="$1"
+    local target_dir="$2"
+    local source_dir_raw="$source_dir"
+
+    local desired_entry
+    local mounted_root
+
+    if ! is_linux; then
+        return 0
+    fi
+
+    if [ -z "$source_dir" ]; then
+        log_info "ITERO_WORKDIR not set, skipping $target_dir bind mount"
+        return 0
+    fi
+
+    if ! source_dir="$(readlink -f "$source_dir" 2>/dev/null)"; then
+        log_warn "Bind mount source does not exist: $source_dir_raw"
+        return 1
+    fi
+
+    if [ ! -d "$source_dir" ]; then
+        log_warn "Bind mount source is not a directory: $source_dir"
+        return 1
+    fi
+
+    sudo mkdir -p "$target_dir"
+
+    desired_entry="$source_dir $target_dir none bind 0 0"
+    if ! grep -Fqx "$desired_entry" /etc/fstab; then
+        local tmp_fstab
+        tmp_fstab="$(mktemp)"
+
+        awk -v target="$target_dir" '
+            $1 ~ /^#/ || $2 != target { print }
+        ' /etc/fstab > "$tmp_fstab"
+        printf "%s\n" "$desired_entry" >> "$tmp_fstab"
+
+        sudo install -Dm644 "$tmp_fstab" /etc/fstab
+        rm -f "$tmp_fstab"
+
+        sudo systemctl daemon-reload
+        log_ok "Updated $target_dir bind mount in /etc/fstab"
+    fi
+
+    mounted_root="$(findmnt --first-only --target "$target_dir" --output FSROOT --noheadings 2>/dev/null)"
+
+    if [ "$mounted_root" = "$source_dir" ]; then
+        log_ok "$target_dir already points to $source_dir"
+        return 0
+    fi
+
+    if mountpoint -q "$target_dir"; then
+        if ! sudo umount "$target_dir"; then
+            log_warn "Could not unmount $target_dir to apply bind mount changes"
+            return 1
+        fi
+    fi
+
+    if sudo mount "$target_dir"; then
+        log_ok "Mounted $target_dir from $source_dir"
+        return 0
+    fi
+
+    log_warn "Failed to mount $target_dir from $source_dir"
+    return 1
+}
