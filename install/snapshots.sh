@@ -44,14 +44,12 @@ if is_linux; then
     # Disable timeline snapshots (dnf triggers are sufficient for desktops)
     sudo snapper -c root set-config "TIMELINE_CREATE=no"
 
-    # Link dnf5 actions file for automatic pre/post snapshots on dnf transactions
+    # Install dnf5 actions hook for automatic pre/post snapshots
     actions_dir="/etc/dnf/libdnf5-plugins/actions.d"
     sudo mkdir -p "$actions_dir"
-
-    if [ ! -f "$actions_dir/snapper.actions" ]; then
-        sudo cp "$ITERO_CONFIG/snapshots/snapper.actions" "$actions_dir/snapper.actions"
-        log_ok "Installed dnf5 snapper actions file"
-    fi
+    sudo install -Dm755 "$ITERO_PATH/bin/itero-backup" "/usr/local/bin/itero-backup"
+    sudo install -Dm644 "$ITERO_CONFIG/snapshots/snapper.actions" "$actions_dir/snapper.actions"
+    log_ok "Installed dnf5 snapper actions hook"
 
     # Enable systemd services
     sudo systemctl enable --now snapper-cleanup.timer

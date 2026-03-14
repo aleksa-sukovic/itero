@@ -49,6 +49,7 @@ log_info "Installing itero from $ITERO_PATH"
 
 # Request sudo access upfront for any scripts that need it
 sudo -v
+sudo install -Dm644 "$ITERO_PATH/lib/helpers.sh" "/usr/local/lib/itero/helpers.sh"
 
 # Set the current theme, if not set already
 if [ -L "$ITERO_PATH/themes/current" ]; then

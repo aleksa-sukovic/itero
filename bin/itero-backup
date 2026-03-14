@@ -1,8 +1,32 @@
 #!/bin/bash
 
-ITERO_PATH="${ITERO_PATH:-$HOME/.local/share/itero}"
+ITERO_PATH="${ITERO_PATH:-$(cd "$(dirname "$0")/.." && pwd)}"
+helpers_file=""
 
-source "$ITERO_PATH/lib/helpers.sh"
+for candidate in \
+    "$ITERO_PATH/lib/helpers.sh" \
+    "/usr/local/lib/itero/helpers.sh"
+do
+    if [[ -f "$candidate" ]]; then
+        helpers_file="$candidate"
+        break
+    fi
+done
+
+if [[ -z "$helpers_file" ]]; then
+    echo "Could not find itero helpers.sh" >&2
+    exit 1
+fi
+
+source "$helpers_file"
+
+run_snapper() {
+    if [[ "$EUID" -eq 0 ]]; then
+        snapper "$@"
+    else
+        sudo snapper "$@"
+    fi
+}
 
 usage() {
     echo "Usage: itero-backup <command>"
@@ -11,15 +35,58 @@ usage() {
     exit 1
 }
 
+get_transaction_description() {
+    local pid="$1"
+    local description
+
+    description="$(ps -o command= -p "$pid" 2>/dev/null)"
+    echo "${description:-dnf transaction}"
+}
+
+create_pre_snapshot() {
+    local pid="$1"
+    local description
+    local number
+
+    description="$(get_transaction_description "$pid")"
+
+    if ! number="$(run_snapper -c root create -c number -t pre -p -d "$description")"; then
+        echo "error=Failed to create snapper pre snapshot"
+        return 1
+    fi
+
+    printf "tmp.snapper_pre_number=%s\n" "$number"
+}
+
+create_post_snapshot() {
+    local pre_number="$1"
+    local pid="$2"
+    local description
+
+    printf "tmp.snapper_pre_number\n"
+
+    if [[ -z "$pre_number" ]]; then
+        return 0
+    fi
+
+    description="$(get_transaction_description "$pid")"
+
+    if ! run_snapper -c root create -c number -t post --pre-number "$pre_number" -d "$description" >/dev/null; then
+        echo "error=Failed to create snapper post snapshot"
+        return 1
+    fi
+}
+
 create_snapshot() {
     local description="${1:-manual snapshot}"
     local number
-    number=$(sudo snapper -c root create -t single -c number -p -d "$description")
+
+    number="$(run_snapper -c root create -t single -c number -p -d "$description")"
     log_ok "Created snapshot #${number}: $description"
 }
 
 open_gui() {
-    if ! command_exists btrfs-assistant; then
+    if ! command_exists btrfs-assistant-launcher; then
         echo "btrfs-assistant is not installed. Run 'itero' to install it." >&2
         exit 1
     fi
@@ -29,7 +96,20 @@ open_gui() {
 }
 
 case "$1" in
-    --create|-c) shift; create_snapshot "$*" ;;
-    --gui|-g) open_gui ;;
-    *) usage ;;
+    --create|-c)
+        shift
+        create_snapshot "$*"
+        ;;
+    --gui|-g)
+        open_gui
+        ;;
+    --pre-transaction)
+        create_pre_snapshot "$2"
+        ;;
+    --post-transaction)
+        create_post_snapshot "${2:-}" "${3:-}"
+        ;;
+    *)
+        usage
+        ;;
 esac
