@@ -84,8 +84,7 @@ The current Zotero setup using custom plugins: [ZotMoov](https://github.com/wile
 
 ### Machine-Specific Configuration
 
-Local files (`~/.zshrc.local`, `~/.functions.local`) are created from example templates on first
-run and live directly in `$HOME` as real files. Edit them in place for machine-specific settings.
+Local files (`~/.zshrc.local`, `~/.functions.local`) are initialized from shell templates on first run and live directly in `$HOME`. Their `config/shell/*.local` counterparts inside Itero are symlinks back to the `$HOME` files.
 
 ## Structure
 

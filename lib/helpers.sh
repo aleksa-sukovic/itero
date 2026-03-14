@@ -249,6 +249,18 @@ compile_templates() {
     # Process each .tpl.* file by stripping .tpl from filename for output
     while IFS= read -r -d '' tpl; do
         local output="${tpl/.tpl/}"
+
+        case "$tpl" in
+            *.tpl.local)
+                # Machine-local files are only seeded once; afterwards they are user-owned
+                if [ -L "$output" ] && [ ! -e "$output" ]; then
+                    output="$(readlink "$output")"
+                elif [ -e "$output" ]; then
+                    continue
+                fi
+                ;;
+        esac
+
         sed "$sed_expr" "$tpl" > "$output"
 
         # Expand {{ $VAR }} placeholders with shell variable values

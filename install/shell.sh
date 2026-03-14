@@ -1,6 +1,9 @@
 init_local "$ITERO_CONFIG/shell/zshrc.local" "$HOME/.zshrc.local"
 init_local "$ITERO_CONFIG/shell/functions.local" "$HOME/.functions.local"
 
+link_file "$HOME/.zshrc.local" "$ITERO_CONFIG/shell/zshrc.local"
+link_file "$HOME/.functions.local" "$ITERO_CONFIG/shell/functions.local"
+
 link_file "$ITERO_CONFIG/shell/zshrc" "$HOME/.zshrc"
 link_file "$ITERO_CONFIG/shell/functions" "$HOME/.functions"
 

@@ -4,6 +4,11 @@ if is_linux; then
         dnf_enable_copr_repo "dejan/lazygit"
         dnf_install lazygit
     fi
+
+    if ! command_exists delta; then
+        log_info "Installing delta..."
+        dnf_install git-delta
+    fi
 fi
 
 link_file "$ITERO_CONFIG/lazygit/config.yml" "$HOME/.config/lazygit/config.yml"
