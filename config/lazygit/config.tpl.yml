@@ -3,7 +3,7 @@ os:
 git:
     pagers:
         - colorArg: "always"
-          pager: "delta --dark --paging=never"
+          pager: "delta --{{ delta_mode }} --paging=never"
 gui:
     theme:
         activeBorderColor:

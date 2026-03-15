@@ -9,16 +9,16 @@
          "size": 10
       }
    },
-   "theme": {
-      "light": {
-         "name": "catppuccin-latte",
-         "icon_theme": "Adwaita"
-      },
-      "dark": {
-         "name": "catppuccin-latte",
-         "icon_theme": "Adwaita"
-      }
-   },
+    "theme": {
+       "light": {
+          "name": "{{ vicinae_theme }}",
+          "icon_theme": "Adwaita"
+       },
+       "dark": {
+          "name": "{{ vicinae_theme }}",
+          "icon_theme": "Adwaita"
+       }
+    },
    "launcher_window": {
       "opacity": 1
    },

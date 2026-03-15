@@ -28,3 +28,4 @@ Itero is a collection of scripts and configuration files for bootstrapping a new
 - All debugging commands (e.g., reading logs) should be run by you.
 - Always follow the existing code-style and structure of the project. If you notice any inconsistencies, please fix them as part of your contribution.
 - Do NOT auto-commit changes without my approval.
+- Use migrations to _prepare_ existing systems for new changes (e.g., package installs, configuration file changes, etc.). Don't use migrations to _apply_ new changes - that happens via install scripts and templates.

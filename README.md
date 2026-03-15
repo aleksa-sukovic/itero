@@ -60,6 +60,7 @@ itero-theme --current          # show current
     - Include app-facing keys used by templates (`background`, `foreground`, `color0..color15`, etc.)
     - `accent` is resolved dynamically from the system accent color
 2. Add static files (e.g., `neovim.lua`, `wezterm.lua`, `yazi.toml`, etc.)
+3. Add `vicinae.conf` if the theme should map to one of Vicinae's built-in themes
 
 ## Migrations
 
