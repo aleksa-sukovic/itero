@@ -1,8 +1,38 @@
--- Autoformat configuration.
--- Fallbacks to the formatter provided by LSP, unless a dedicated one is found.
--- Disabled for the following languages: C, C++ (see `:help filetypes` for a list of names).
--- N.B. Formatters can be run sequentially (e.g., `{ "isort", "black" }`). Additionally, set
--- the `stop_after_first = true` configuration to only run the first one.
+-- Formatting configuration.
+-- Uses dedicated formatters when available, otherwise falls back to LSP formatting.
+
+-- Recursively checks for the presence of Ruff configuration files in the given path and its parent directories.
+local function has_ruff_config(path)
+    if vim.fs.find({ "ruff.toml", ".ruff.toml" }, { upward = true, path = path })[1] then
+        return true
+    end
+
+    local dir = path
+
+    while dir do
+        local pyproject = dir .. "/pyproject.toml"
+        local file = io.open(pyproject, "r")
+
+        if file then
+            local content = file:read("*a")
+            file:close()
+
+            if content:find("%[tool%.ruff%]") then
+                return true
+            end
+        end
+
+        local parent = vim.fs.dirname(dir)
+        if not parent or parent == dir then
+            break
+        end
+
+        dir = parent
+    end
+
+    return false
+end
+
 return {
     "stevearc/conform.nvim",
     event = { "BufWritePre" },
@@ -37,35 +67,13 @@ return {
             javascript = { "prettier" },
             typescript = { "prettier" },
             python = function(bufnr)
-                -- Check if a Ruff configuration file exists in the project
                 local cwd = vim.fs.dirname(vim.api.nvim_buf_get_name(bufnr))
-                local ruff_config = vim.fs.find({ "ruff.toml", ".ruff.toml" }, { upward = true, path = cwd })[1]
-                local pyproject = vim.fs.find({ "pyproject.toml" }, { upward = true, path = cwd })[1]
 
-                local has_ruff_config = false
-
-                if ruff_config then
-                    -- If we found an explicit Ruff configuration file
-                    has_ruff_config = true
-                elseif pyproject then
-                    -- Check if pyproject.toml actually contains a [tool.ruff] section
-                    local file = io.open(pyproject, "r")
-                    if file then
-                        local content = file:read("*a")
-                        file:close()
-                        if content:find("%[tool%.ruff%]") then
-                            has_ruff_config = true
-                        end
-                    end
-                end
-
-                if has_ruff_config and require("conform").get_formatter_info("ruff_format", bufnr).available then
-                    -- If config exists and Ruff is installed, we us it
+                if has_ruff_config(cwd) and require("conform").get_formatter_info("ruff_format", bufnr).available then
                     return { "ruff_fix", "ruff_format", "ruff_organize_imports" }
-                else
-                    -- Otherwise, we default to isort & black
-                    return { "isort", "black" }
                 end
+
+                return { "isort", "black" }
             end,
             ["*"] = { "editorconfig" },
         },
