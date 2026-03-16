@@ -5,7 +5,7 @@ return {
     dependencies = { "nvim-tree/nvim-web-devicons" },
     config = function()
         local accent = require("itero").accent()
-        local theme = require("lualine.themes.catppuccin")
+        local theme = require("lualine.themes.catppuccin-nvim")
 
         theme.normal.a.bg = accent
         theme.normal.b.fg = accent

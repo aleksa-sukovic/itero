@@ -31,9 +31,9 @@ local function refresh_lualine()
         return
     end
 
-    package.loaded["lualine.themes.catppuccin"] = nil
+    package.loaded["lualine.themes.catppuccin-nvim"] = nil
     local accent = require("itero").accent()
-    local theme = require("lualine.themes.catppuccin")
+    local theme = require("lualine.themes.catppuccin-nvim")
     theme.normal.a.bg = accent
     theme.normal.b.fg = accent
     lualine.setup({ options = { theme = theme } })
