@@ -17,6 +17,11 @@ vim.o.relativenumber = true
 -- Enable mouse mode (e.g., useful when resizing splits).
 vim.o.mouse = "a"
 
+-- Use OSC52 clipboard over SSH so remote yanks reach the local terminal clipboard.
+if vim.env.SSH_CONNECTION then
+    vim.g.clipboard = "osc52"
+end
+
 -- Don't show the mode, since it's already in the status line.
 vim.o.showmode = false
 
