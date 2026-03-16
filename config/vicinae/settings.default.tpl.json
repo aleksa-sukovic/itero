@@ -1,3 +1,6 @@
 {
-    "imports": ["/home/{{ $USER }}/.config/vicinae/settings.user.jsonc"]
+    "imports": ["/home/{{ $USER }}/.config/vicinae/settings.user.jsonc"],
+    "theme": {
+        "enabled": false
+    }
 }
