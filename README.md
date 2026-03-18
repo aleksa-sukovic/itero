@@ -19,6 +19,17 @@ ITERO_COMPONENTS=snapshots,syncthing,rclone itero
 ITERO_COMPONENTS=theme,gnome,gdm itero
 ```
 
+### MacOS setup
+
+On macOS, Itero currently supports a terminal-focused setup rather than full machine provisioning. The following component batches are supported:
+
+```bash
+ITERO_COMPONENTS=common,wezterm,starship,fonts,shell itero
+ITERO_COMPONENTS=mise,nvim,tmux,yazi,lazygit,docker,lazydocker itero
+ITERO_COMPONENTS=fastfetch,btop itero
+ITERO_COMPONENTS=theme itero
+```
+
 If you want Itero to manage a `/work` bind mount, set `ITERO_WORKDIR` in `.env` to the directory that should appear at `/work`.
 
 ## Partition Setup
