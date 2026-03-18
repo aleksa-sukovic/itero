@@ -1,8 +1,15 @@
-export EDITOR=/usr/bin/nvim
+export EDITOR=nvim
 export ITERO_PATH="$HOME/.local/share/itero"
 export GDRIVE_HOME="$HOME/Drive"
 
 export EMOJI_FONT="JetBrainsMono Nerd Font" # or Twemoji; for Vicinae launcher
+
+# Homebrew
+if [ -x "/opt/homebrew/bin/brew" ]; then
+    eval "$(/opt/homebrew/bin/brew shellenv)"
+elif [ -x "/usr/local/bin/brew" ]; then
+    eval "$(/usr/local/bin/brew shellenv)"
+fi
 
 # Path modifications
 export PATH="$HOME/.local/share/itero/bin:$PATH"
@@ -73,4 +80,3 @@ stty -ixon
 eval "$(starship init zsh)"
 eval "$(zoxide init zsh --cmd cd)"
 eval "$(mise activate zsh)"
-

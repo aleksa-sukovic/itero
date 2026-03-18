@@ -9,6 +9,8 @@ if is_linux; then
         log_info "Installing delta..."
         dnf_install git-delta
     fi
+elif is_macos; then
+    brew_install lazygit git-delta
 fi
 
 link_file "$ITERO_CONFIG/lazygit/config.yml" "$HOME/.config/lazygit/config.yml"

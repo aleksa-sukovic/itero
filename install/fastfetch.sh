@@ -1,5 +1,7 @@
 if is_linux; then
     dnf_install fastfetch
+elif is_macos; then
+    brew_install fastfetch
 fi
 
 link_file "$ITERO_CONFIG/fastfetch/config.jsonc" "$HOME/.config/fastfetch/config.jsonc"

@@ -6,10 +6,15 @@ if is_linux; then
     fi
 
     install_desktop "$ITERO_CONFIG/yazi/yazi.desktop"
+elif is_macos; then
+    brew_install yazi
 fi
 
 link_mirror "$ITERO_CONFIG/yazi" "$HOME/.config/yazi"
 
 if file_has_changed "$ITERO_CONFIG/yazi/package.toml" true; then
-    ya pkg install 2>/dev/null || true
+    if ! ya pkg install; then
+        log_warn "Failed to install yazi packages"
+        return 1
+    fi
 fi

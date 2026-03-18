@@ -10,7 +10,7 @@ CATPPUCCIN_CURSORS_URL="https://github.com/catppuccin/cursors/releases/download/
 get_fonts_dir() {
     if is_linux; then
         echo "$HOME/.local/share/fonts"
-    elif is_mac; then
+    elif is_macos; then
         echo "$HOME/Library/Fonts"
     fi
 }
@@ -115,7 +115,7 @@ if is_linux; then
     fi
 
     log_ok "Font installation complete"
-elif is_mac; then
+elif is_macos; then
     log_info "Installing Nerd Fonts..."
 
     for font in "${NERD_FONTS[@]}"; do

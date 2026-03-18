@@ -4,6 +4,8 @@ if is_linux; then
         dnf_enable_copr_repo "wezfurlong/wezterm-nightly"
         dnf_install wezterm
     fi
+elif is_macos; then
+    brew_install --cask wezterm
 fi
 
 link_mirror "$ITERO_CONFIG/wezterm" "$HOME/.config/wezterm"

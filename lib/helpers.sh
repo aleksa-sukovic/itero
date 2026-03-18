@@ -11,24 +11,85 @@ log_warn() { echo -e "${YELLOW}!${NC} $1"; }
 log_info() { echo -e "${BLUE}→${NC} $1"; }
 
 is_linux() { [[ "$(uname -s)" == "Linux" ]] }
-is_mac() { [[ "$(uname -s)" == "Darwin" ]] }
+is_macos() { [[ "$(uname -s)" == "Darwin" ]] }
+is_mac() { is_macos; }
 command_exists() { command -v "$1" &>/dev/null; }
-package_exists() { rpm -q "$1" &>/dev/null; }
+package_exists() { is_linux && rpm -q "$1" &>/dev/null; }
 should_update() { [[ "${ITERO_UPDATE:-false}" == true ]]; }
 get_flavor() { echo "$1" | sed 's/^catppuccin-//'; }
 
-# Read the system accent color from GNOME, defaulting to blue.
+# Install or update Homebrew packages.
+brew_install() {
+    if ! is_macos; then
+        return 0
+    fi
+
+    source "$ITERO_INSTALL/brew.sh" || return 1
+
+    if ! command_exists brew; then
+        log_warn "brew not available, skipping install"
+        return 1
+    fi
+
+    local brew_args=()
+    local brew_command="install"
+
+    if [ "$1" = "--cask" ]; then
+        brew_args+=("--cask")
+        shift
+    fi
+
+    if should_update; then
+        brew_command="upgrade"
+    fi
+
+    if HOMEBREW_NO_AUTO_UPDATE=1 brew "$brew_command" "${brew_args[@]}" "$@"; then
+        return 0
+    fi
+
+    if [ "$brew_command" = "upgrade" ]; then
+        HOMEBREW_NO_AUTO_UPDATE=1 brew install "${brew_args[@]}" "$@"
+    fi
+}
+
+# Read the system accent color from GNOME or macOS, defaulting to blue.
+get_macos_accent_color() {
+    if ! command_exists defaults; then
+        echo "blue"
+        return 0
+    fi
+
+    local accent_code
+
+    accent_code="$(defaults read -g AppleAccentColor 2>/dev/null || true)"
+
+    case "$accent_code" in
+        -2|"") echo "blue" ;;
+        -1)    echo "slate" ;;
+        0)     echo "red" ;;
+        1)     echo "orange" ;;
+        2)     echo "yellow" ;;
+        3)     echo "green" ;;
+        4)     echo "blue" ;;
+        5)     echo "purple" ;;
+        6)     echo "pink" ;;
+        *)     echo "blue" ;;
+    esac
+}
+
 get_accent_color() {
-    if command_exists gsettings; then
+    if is_linux && command_exists gsettings; then
         local accent
         accent="$(gsettings get org.gnome.desktop.interface accent-color 2>/dev/null | tr -d "'")"
         echo "${accent:-blue}"
+    elif is_macos; then
+        get_macos_accent_color
     else
         echo "blue"
     fi
 }
 
-# Map a GNOME accent color to the corresponding palette color name.
+# Map a system accent color to the corresponding palette color name.
 map_accent_to_palette() {
     case "$1" in
         orange) echo "peach" ;;
@@ -48,6 +109,7 @@ should_install() {
     [[ "$filter" == "all" ]] && return 0
 
     IFS=',' read -ra components <<< "$filter"
+
     for component in "${components[@]}"; do
         [[ "$component" == "$name" ]] && return 0
     done
@@ -168,7 +230,11 @@ resolve_palette_color() {
     local palette_file="$1"
     local color_name="$2"
 
-    grep -oP "^${color_name}[[:space:]]*=[[:space:]]*\"#\\K[a-fA-F0-9]{6}" "$palette_file"
+    if is_macos; then
+        sed -nE "s/^[[:space:]]*${color_name}[[:space:]]*=[[:space:]]*\"#([[:xdigit:]]{6})\"/\1/p" "$palette_file"
+    else
+        grep -oP "^${color_name}[[:space:]]*=[[:space:]]*\"#\\K[a-fA-F0-9]{6}" "$palette_file"
+    fi
 }
 
 # Resolve accent hex color from a theme palette file.
@@ -295,7 +361,13 @@ compile_templates() {
             [[ -n "$val" ]] && shell_sed+="s|{{ \$$var }}|${val}|g;"
         done < <(grep -o "$shell_var_pattern" "$output" 2>/dev/null \
                  | sed "$strip_pattern" | sort -u)
-        [[ -n "$shell_sed" ]] && sed -i "$shell_sed" "$output" || true
+        if [[ -n "$shell_sed" ]]; then
+            if is_macos; then
+                sed -i '' "$shell_sed" "$output" || return 1
+            else
+                sed -i "$shell_sed" "$output" || return 1
+            fi
+        fi
     done < <(find "$search_dir" -name '*.tpl.*' -print0)
 }
 
@@ -387,7 +459,7 @@ file_has_changed() {
 
     local file_name="$(basename "$file_path")"
     local hash_file="$ITERO_STATE/${file_name}.hash"
-    local current_hash="$(sha256sum "$file_path" | cut -d' ' -f1)"
+    local current_hash="$(shasum -a 256 "$file_path" | awk '{print $1}')"
     local stored_hash=""
 
     [ -f "$hash_file" ] && stored_hash="$(cat "$hash_file")"
@@ -406,7 +478,11 @@ set_config_value() {
     local key="$2"
     local value="$3"
 
-    sudo sed -i "s|^${key}=.*|${key}=${value}|" "$file"
+    if is_macos; then
+        sudo sed -i '' "s|^${key}=.*|${key}=${value}|" "$file"
+    else
+        sudo sed -i "s|^${key}=.*|${key}=${value}|" "$file"
+    fi
 }
 
 # Allow the current user to write to a root-owned file via passwordless sudo tee.
@@ -419,7 +495,7 @@ allow_user_write() {
     sudo chmod 440 "/etc/sudoers.d/$rule_name"
 }
 
-# Ensure a bind mount exists in /etc/fstab and is mounted at the target.
+# Ensure a bind mount exists on Linux, or a synthetic root link on macOS.
 ensure_bind_mount() {
     local source_dir="$1"
     local target_dir="$2"
@@ -428,7 +504,7 @@ ensure_bind_mount() {
     local desired_entry
     local mounted_root
 
-    if ! is_linux; then
+    if ! is_linux && ! is_macos; then
         return 0
     fi
 
@@ -437,14 +513,47 @@ ensure_bind_mount() {
         return 0
     fi
 
-    if ! source_dir="$(readlink -f "$source_dir" 2>/dev/null)"; then
+    if [ ! -d "$source_dir" ]; then
+        log_warn "Bind mount source is not a directory: $source_dir"
+        return 1
+    fi
+
+    if ! source_dir="$(cd "$source_dir" 2>/dev/null && pwd -P)"; then
         log_warn "Bind mount source does not exist: $source_dir_raw"
         return 1
     fi
 
-    if [ ! -d "$source_dir" ]; then
-        log_warn "Bind mount source is not a directory: $source_dir"
-        return 1
+    if is_macos; then
+        local target_name="${target_dir#/}"
+        local synthetic_file="/etc/synthetic.conf"
+        local desired_line
+
+        desired_line="$(printf "%s\t%s" "$target_name" "${source_dir#/}")"
+
+        if [[ "$target_name" == "$target_dir" || "$target_name" == *"/"* ]]; then
+            log_warn "MacOS only supports root-level synthetic links"
+            return 1
+        fi
+
+        if [ -e "$target_dir" ] && [ "$(cd "$target_dir" 2>/dev/null && pwd -P)" = "$source_dir" ]; then
+            log_ok "$target_dir already points to $source_dir"
+            return 0
+        fi
+
+        if [ -f "$synthetic_file" ] && grep -Fqx "$desired_line" "$synthetic_file"; then
+            log_ok "$target_dir is configured in /etc/synthetic.conf"
+            log_info "Reboot macOS to apply the synthetic link"
+            return 0
+        fi
+
+        sudo touch "$synthetic_file"
+        sudo sed -i '' "/^${target_name}[[:space:]]/d" "$synthetic_file"
+        printf "%s\n" "$desired_line" | sudo tee -a "$synthetic_file" >/dev/null
+
+        log_ok "Updated /etc/synthetic.conf for $target_dir"
+        log_info "Reboot macOS to apply the new synthetic link"
+
+        return 0
     fi
 
     sudo mkdir -p "$target_dir"

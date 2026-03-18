@@ -62,6 +62,23 @@ if is_linux; then
         log_ok "Hostname set to $HOST"
     fi
 
+elif is_macos; then
+    log_info "Installing common dependencies..."
+
+    brew_install \
+        zoxide \
+        ripgrep \
+        fd \
+        fzf \
+        jq \
+        yq \
+        ffmpeg \
+        p7zip \
+        poppler \
+        imagemagick
+fi
+
+if is_linux || is_macos; then
     # Configure git
     git config --global user.name "$GIT_USERNAME"
     git config --global user.email "$GIT_EMAIL"
@@ -69,6 +86,6 @@ if is_linux; then
     # Create common directories
     mkdir -p ~/Desktop ~/Downloads ~/Pictures ~/Pictures/Screenshots ~/Documents ~/Development
 
-    # Mount the configured work directory under /work
+    # Mount or map the configured work directory under /work
     ensure_bind_mount "${ITERO_WORKDIR:-}" "/work"
 fi

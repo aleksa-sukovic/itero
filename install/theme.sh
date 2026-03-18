@@ -1,11 +1,11 @@
 #!/bin/bash
 
-if is_linux; then
-    chmod +x "$ITERO_PATH/bin/itero-theme"
-    chmod +x "$ITERO_PATH/bin/itero-theme-watch"
+chmod +x "$ITERO_PATH/bin/itero-theme"
+chmod +x "$ITERO_PATH/bin/itero-theme-watch"
 
+if is_linux; then
     # Install and enable the theme watcher service
-    local service_dir="$HOME/.config/systemd/user"
+    service_dir="$HOME/.config/systemd/user"
 
     mkdir -p "$service_dir"
     ln -nsf "$ITERO_CONFIG/systemd/itero-theme-watch.service" "$service_dir/itero-theme-watch.service"

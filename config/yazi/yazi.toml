@@ -1,5 +1,6 @@
 [opener]
 open = [
+    { run = 'open "$@"', orphan = true, desc = "Open", for = "macos" },
     { run = 'xdg-open "$@"', orphan = true, desc = "Open", for = "linux" },
 ]
 

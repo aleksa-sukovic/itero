@@ -14,7 +14,8 @@ if [[ -f "$ITERO_PATH/.env" ]]; then
 fi
 
 list_themes() {
-    find -L "$THEMES_DIR" -mindepth 1 -maxdepth 1 -type d ! -name current 2>/dev/null | sort | xargs -r -n1 basename
+    find -L "$THEMES_DIR" -mindepth 1 -maxdepth 1 -type d ! -name current \
+        -exec basename {} \; 2>/dev/null | sort
 }
 
 current_theme() {

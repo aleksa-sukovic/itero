@@ -3,6 +3,8 @@ if is_linux; then
         dnf_enable_copr_repo "atim/starship"
         dnf_install starship
     fi
+elif is_macos; then
+    brew_install starship
 fi
 
 link_file "$ITERO_CONFIG/starship/starship.toml" "$HOME/.config/starship.toml"
