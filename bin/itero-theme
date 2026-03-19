@@ -48,14 +48,14 @@ set_theme() {
     compile_theme_templates "$THEMES_DIR/$theme" "$accent_name" "$ITERO_PATH/config"
 
     # Set cursor theme (reset first to force GNOME to reload)
-    if command_exists gsettings; then
+    if is_linux && command_exists gsettings; then
         gsettings set org.gnome.desktop.interface cursor-theme "default"
         gsettings set org.gnome.desktop.interface cursor-theme "$cursor_theme"
         gsettings set org.gnome.desktop.interface cursor-size 24
     fi
 
     # Update itero-wm active hint color
-    if command_exists dconf; then
+    if is_linux && command_exists dconf; then
         local accent_hex="$(resolve_accent_hex "$THEMES_DIR/$theme/palette.toml" "$accent_name")"
         local accent_rgb="$(hex_to_rgb "$accent_hex")"
         dconf write /org/gnome/shell/extensions/pop-shell/hint-color-rgba "'rgba(${accent_rgb}, 1)'"
