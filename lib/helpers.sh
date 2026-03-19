@@ -10,8 +10,8 @@ log_ok()   { echo -e "${GREEN}✓${NC} $1"; }
 log_warn() { echo -e "${YELLOW}!${NC} $1"; }
 log_info() { echo -e "${BLUE}→${NC} $1"; }
 
-is_linux() { [[ "$(uname -s)" == "Linux" ]] }
-is_macos() { [[ "$(uname -s)" == "Darwin" ]] }
+is_linux() { [[ "$(uname -s)" == "Linux" ]]; }
+is_macos() { [[ "$(uname -s)" == "Darwin" ]]; }
 is_mac() { is_macos; }
 command_exists() { command -v "$1" &>/dev/null; }
 package_exists() { is_linux && rpm -q "$1" &>/dev/null; }
@@ -319,7 +319,7 @@ compile_templates() {
     fi
 
     # Build sed expression from key = "value" pairs
-    local sed_expr=""
+    local sed_args=()
     while IFS='=' read -r key value; do
         key=$(echo "$key" | xargs)
         [[ -z "$key" || "$key" == \#* ]] && continue
@@ -329,8 +329,8 @@ compile_templates() {
 
         local value_nohash="${value#\#}"
 
-        sed_expr+="s|{{ ${key} }}|${value}|g;"
-        sed_expr+="s|{{ ${key}:nohash }}|${value_nohash}|g;"
+        sed_args+=(-e "s|{{ ${key} }}|${value}|g")
+        sed_args+=(-e "s|{{ ${key}:nohash }}|${value_nohash}|g")
     done < "$variables_file"
 
     local shell_var_pattern='{{ \$[A-Za-z_][A-Za-z_0-9]* }}'
@@ -351,21 +351,21 @@ compile_templates() {
                 ;;
         esac
 
-        sed "$sed_expr" "$tpl" > "$output"
+        sed "${sed_args[@]}" "$tpl" > "$output"
 
         # Expand {{ $VAR }} placeholders with shell variable values
-        local shell_sed=""
+        local shell_sed_args=()
         while IFS= read -r var; do
             [[ -z "$var" ]] && continue
             local val="${!var}"
-            [[ -n "$val" ]] && shell_sed+="s|{{ \$$var }}|${val}|g;"
+            [[ -n "$val" ]] && shell_sed_args+=(-e "s|{{ \$$var }}|${val}|g")
         done < <(grep -o "$shell_var_pattern" "$output" 2>/dev/null \
                  | sed "$strip_pattern" | sort -u)
-        if [[ -n "$shell_sed" ]]; then
+        if [[ ${#shell_sed_args[@]} -gt 0 ]]; then
             if is_macos; then
-                sed -i '' "$shell_sed" "$output" || return 1
+                sed -i '' "${shell_sed_args[@]}" "$output" || return 1
             else
-                sed -i "$shell_sed" "$output" || return 1
+                sed -i "${shell_sed_args[@]}" "$output" || return 1
             fi
         fi
     done < <(find "$search_dir" -name '*.tpl.*' -print0)

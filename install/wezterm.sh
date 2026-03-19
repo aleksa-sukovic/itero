@@ -5,7 +5,7 @@ if is_linux; then
         dnf_install wezterm
     fi
 elif is_macos; then
-    brew_install --cask wezterm
+    brew_install --cask wezterm@nightly
 fi
 
 link_mirror "$ITERO_CONFIG/wezterm" "$HOME/.config/wezterm"

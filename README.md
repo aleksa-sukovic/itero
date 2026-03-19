@@ -30,7 +30,11 @@ ITERO_COMPONENTS=fastfetch,btop itero
 ITERO_COMPONENTS=theme itero
 ```
 
-If you want Itero to manage a `/work` bind mount, set `ITERO_WORKDIR` in `.env` to the directory that should appear at `/work`. On macOS, Itero configures `/work` via `/etc/synthetic.conf`, which takes effect after a reboot.
+If you want Itero to manage a `/work` bind mount, set `ITERO_WORKDIR` in `.env` to the directory that should appear at `/work`. On macOS, Itero configures `/work` via `/etc/synthetic.conf`, which takes effect after a reboot. To update all components at once, run:
+
+```bash
+ITERO_COMPONENTS=common,wezterm,starship,fonts,shell,mise,nvim,tmux,yazi,lazygit,lazydocker,fastfetch,btop,theme itero
+```
 
 ## Partition Setup
 
