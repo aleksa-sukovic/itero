@@ -1,5 +1,5 @@
 #!/bin/bash
-SYNCTHING_VERSION="2.0.13"
+SYNCTHING_VERSION="2.0.15"
 
 if is_linux; then
     if ! command_exists syncthing || should_update; then
