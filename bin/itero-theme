@@ -43,7 +43,7 @@ set_theme() {
         accent_name="$(map_accent_to_palette "$(get_accent_color)")"
     fi
 
-    # Sync system accent when explicitly set (skip when reading from system to avoid loops)
+    # Sync system accent when explicitly set
     if [[ -n "$2" ]]; then
         set_system_accent_color "$accent_name"
     fi
