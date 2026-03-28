@@ -64,9 +64,13 @@ cd ~/.local/share/itero && git pull && itero
 ```bash
 itero-theme                    # interactive picker
 itero-theme catppuccin-mocha   # set directly
+itero-theme --accent blue      # change accent color
 itero-theme --list             # list available
 itero-theme --current          # show current
+itero-theme --current-accent   # show current accent
 ```
+
+Accent colors are Catppuccin palette names (e.g., `blue`, `mauve`, `lavender`) and are synced bidirectionally with the system accent setting (GNOME/macOS). Note that Catppuccin's palette colors are pastel and won't visually match the system's built-in accent colors.
 
 ### Adding a new theme
 

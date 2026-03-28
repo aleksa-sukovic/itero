@@ -99,6 +99,42 @@ map_accent_to_palette() {
     esac
 }
 
+# Map a palette color name back to the system accent color name.
+map_palette_to_accent() {
+    case "$1" in
+        peach)    echo "orange" ;;
+        mauve)    echo "purple" ;;
+        lavender) echo "slate" ;;
+        *)        echo "$1" ;;
+    esac
+}
+
+# Set the system accent color from a palette color name.
+set_system_accent_color() {
+    local palette_name="$1"
+    local accent_name
+    accent_name="$(map_palette_to_accent "$palette_name")"
+
+    if is_linux && command_exists gsettings; then
+        gsettings set org.gnome.desktop.interface accent-color "$accent_name"
+    elif is_macos && command_exists defaults; then
+        local code
+        case "$accent_name" in
+            red)    code=0 ;;
+            orange) code=1 ;;
+            yellow) code=2 ;;
+            green)  code=3 ;;
+            blue)   code=4 ;;
+            purple) code=5 ;;
+            pink)   code=6 ;;
+            slate)  code=-1 ;;
+            teal)   code=4 ;;  # macOS has no teal; use blue
+            *)      code=4 ;;
+        esac
+        defaults write -g AppleAccentColor -int "$code"
+    fi
+}
+
 ITERO_FAILED_INSTALLS=()
 
 # Check if a component should be installed based on ITERO_COMPONENTS env var.

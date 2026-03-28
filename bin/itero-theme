@@ -26,16 +26,28 @@ current_theme() {
     fi
 }
 
+current_accent() {
+    map_accent_to_palette "$(get_accent_color)"
+}
+
 set_theme() {
     local theme="$1"
+    local accent_name="$2"
 
     if [[ ! -d "$THEMES_DIR/$theme" ]]; then
         echo "Theme '$theme' not found" >&2
         exit 1
     fi
 
-    local accent_name
-    accent_name="$(map_accent_to_palette "$(get_accent_color)")"
+    if [[ -z "$accent_name" ]]; then
+        accent_name="$(map_accent_to_palette "$(get_accent_color)")"
+    fi
+
+    # Sync system accent when explicitly set (skip when reading from system to avoid loops)
+    if [[ -n "$2" ]]; then
+        set_system_accent_color "$accent_name"
+    fi
+
     local flavor="$(get_flavor "$theme")"
     local cursor_theme="catppuccin-${flavor}-${accent_name}"
 
@@ -45,7 +57,7 @@ set_theme() {
     export accent_name cursor_theme
 
     # Compile theme and config templates from the canonical palette
-    compile_theme_templates "$THEMES_DIR/$theme" "$accent_name" "$ITERO_PATH/config"
+    compile_theme_templates "$THEMES_DIR/$theme" "$accent_name" "$ITERO_PATH/config" || exit 1
 
     # Set cursor theme (reset first to force GNOME to reload)
     if is_linux && command_exists gsettings; then
@@ -88,8 +100,40 @@ set_theme() {
     echo "Theme: $theme (accent: $accent_name)"
 }
 
-case "$1" in
-    --list|-l) list_themes ;;
-    --current|-c) current_theme ;;
-    *) set_theme "${1:-$(current_theme)}" ;;
+# Parse arguments
+theme=""
+accent=""
+action=""
+
+while [[ $# -gt 0 ]]; do
+    case "$1" in
+        --list|-l)          action="list-themes" ;;
+        --current|-c)       action="current-theme" ;;
+        --current-accent)   action="current-accent" ;;
+        --accent)
+            shift
+            accent="$1"
+            if [[ -z "$accent" ]]; then
+                echo "Missing accent color name" >&2
+                exit 1
+            fi
+            ;;
+        -*)
+            echo "Unknown option: $1" >&2
+            exit 1
+            ;;
+        *)
+            theme="$1"
+            ;;
+    esac
+    shift
+done
+
+case "$action" in
+    list-themes)    list_themes ;;
+    current-theme)  current_theme ;;
+    current-accent) current_accent ;;
+    *)
+        set_theme "${theme:-$(current_theme)}" "$accent"
+        ;;
 esac
