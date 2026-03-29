@@ -34,6 +34,7 @@ if is_linux; then
 
     # Link config and systemd units
     link_file "$ITERO_CONFIG/rclone/filters.txt" "$HOME/.config/rclone/filters.txt"
+    link_file "$ITERO_CONFIG/rclone/gdrive-sync.sh" "$HOME/.config/rclone/gdrive-sync.sh"
     link_file "$ITERO_CONFIG/rclone/itero-gdrive.service" "$HOME/.config/systemd/user/itero-gdrive.service"
     link_file "$ITERO_CONFIG/rclone/itero-gdrive.timer" "$HOME/.config/systemd/user/itero-gdrive.timer"
 

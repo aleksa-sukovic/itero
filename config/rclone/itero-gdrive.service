@@ -5,18 +5,7 @@ Wants=network-online.target
 
 [Service]
 Type=oneshot
-ExecStart=/usr/bin/rclone bisync gdrive: %h/Drive \
-    --filter-from %h/.config/rclone/filters.txt \
-    --create-empty-src-dirs \
-    --conflict-resolve newer \
-    --conflict-loser num \
-    --conflict-suffix .conflict \
-    --resilient \
-    --recover \
-    --max-lock 2m \
-    --drive-skip-gdocs \
-    --verbose \
-    --log-file %h/.local/state/itero/gdrive-sync.log
+ExecStart=/bin/bash %h/.config/rclone/gdrive-sync.sh
 
 [Install]
 WantedBy=default.target
