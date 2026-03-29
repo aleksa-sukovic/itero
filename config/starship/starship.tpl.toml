@@ -14,6 +14,7 @@ success_symbol = "[❯](fg:green bold)"
 error_symbol = "[✗](fg:red bold)"
 
 [directory]
+style = "fg:accent bold"
 truncation_length = 3
 truncate_to_repo = false
 truncation_symbol = "…/"
@@ -44,6 +45,7 @@ style = "fg:yellow bold"
 style = "fg:yellow bold"
 
 [palettes.theme]
+accent = "{{ accent }}"
 green = "{{ color2 }}"
 red = "{{ color1 }}"
 yellow = "{{ color3 }}"
