@@ -80,6 +80,7 @@ fi
 # Run install scripts
 run_install "$ITERO_INSTALL/common.sh"
 run_install "$ITERO_INSTALL/nvidia.sh"
+run_install "$ITERO_INSTALL/bluetooth.sh"
 run_install "$ITERO_INSTALL/wezterm.sh"
 run_install "$ITERO_INSTALL/starship.sh"
 run_install "$ITERO_INSTALL/fonts.sh"
