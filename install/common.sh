@@ -29,6 +29,7 @@ if is_linux; then
         p7zip \
         poppler-utils \
         ImageMagick \
+        nautilus-python \
 
     # Enable RMP Fusion. See also: https://docs.fedoraproject.org/en-US/quick-docs/rpmfusion-setup/.
     fedora_release="$(rpm -E %fedora)"
