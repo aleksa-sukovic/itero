@@ -15,7 +15,7 @@ GNOME_EXTENSIONS=(
 # Install Extension Manager for managing extensions via GUI
 flatpak_install "com.mattjakeman.ExtensionManager"
 
-# Setup tiling window management
+# Setup tiling window management via Itero WM
 local pop_shell_repo="https://aleksa-sukovic:$GITHUB_TOKEN@github.com/aleksa-sukovic/itero-wm.git"
 local pop_shell_dir="$HOME/.local/share/itero-sources/itero-wm"
 local pop_shell_dest="$HOME/.local/share/gnome-shell/extensions/pop-shell@system76.com"
@@ -24,14 +24,12 @@ if [[ ! -d "$pop_shell_dir" ]]; then
     git clone -b master "$pop_shell_repo" "$pop_shell_dir"
 fi
 
-if [[ ! -d "$pop_shell_dest" ]] || should_update; then
-    cd "$pop_shell_dir"
-    git pull --ff-only
-    make
-    make install
-    cd "$ITERO_PATH"
-    log_ok "Installed Pop Shell from fork"
-fi
+cd "$pop_shell_dir"
+git pull --ff-only
+make
+make install
+cd "$ITERO_PATH"
+log_ok "Installed Pop Shell from fork"
 
 # Install system-wide schemas for dconf settings to work
 sudo cp "$pop_shell_dir/schemas/org.gnome.shell.extensions.pop-shell.gschema.xml" \
