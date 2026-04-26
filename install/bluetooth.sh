@@ -1,8 +1,7 @@
 # Bluetooth audio configuration for WirePlumber.
 #
-# Codec ordering: LDAC > SBC-XQ > SBC > AAC. AAC is demoted because its
-# transport acquisition fails on certain devices (e.g., Sony WF-1000XM6),
-# causing AVDTP stream errors.
+# Codec ordering: aptX Adaptive > aptX HD > LDAC > aptX > SBC-XQ > AAC > SBC. AAC is demoted because
+# its transport acquisition fails on certain devices, causing AVDTP stream errors.
 
 if is_linux; then
     link_file "$ITERO_CONFIG/bluetooth/51-bluetooth-codecs.conf" \
