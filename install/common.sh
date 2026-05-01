@@ -26,8 +26,8 @@ if is_linux; then
         wl-clipboard \
         ffmpeg \
         ffmpeg-devel \
-        p7zip \
-        poppler-utils \
+        7zip \
+
         ImageMagick \
         nautilus-python \
 
