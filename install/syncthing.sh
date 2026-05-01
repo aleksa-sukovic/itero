@@ -18,6 +18,10 @@ if is_linux; then
         curl -fsSL "$url" | tar -xz -C "$tmp"
 
         mkdir -p "$HOME/.local/bin"
+
+        # Stop the service before replacing the binary
+        systemctl --user stop syncthing.service 2>/dev/null || true
+
         cp "$tmp/${tarball}/syncthing" "$HOME/.local/bin/syncthing"
         chmod +x "$HOME/.local/bin/syncthing"
 
