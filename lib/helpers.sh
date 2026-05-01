@@ -538,7 +538,6 @@ ensure_bind_mount() {
     local source_dir_raw="$source_dir"
 
     local desired_entry
-    local mounted_root
 
     if ! is_linux && ! is_macos; then
         return 0
@@ -611,9 +610,7 @@ ensure_bind_mount() {
         log_ok "Updated $target_dir bind mount in /etc/fstab"
     fi
 
-    mounted_root="$(findmnt --first-only --target "$target_dir" --output FSROOT --noheadings 2>/dev/null)"
-
-    if [ "$mounted_root" = "$source_dir" ]; then
+    if [ "$(stat -c '%d:%i' "$source_dir" 2>/dev/null)" = "$(stat -c '%d:%i' "$target_dir" 2>/dev/null)" ]; then
         log_ok "$target_dir already points to $source_dir"
         return 0
     fi
