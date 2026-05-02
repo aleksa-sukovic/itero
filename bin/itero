@@ -13,6 +13,14 @@ done
 
 source "$ITERO_PATH/lib/helpers.sh"
 
+if [ -z "${ITERO_GIT_PULLED:-}" ]; then
+    if git -C "$ITERO_PATH" pull --ff-only --quiet; then
+        exec env ITERO_GIT_PULLED=true "$ITERO_PATH/bin/itero" "$@"
+    else
+        log_warn "Failed to update Itero from git, continuing with the current checkout"
+    fi
+fi
+
 # Check for .env file and setup environment variables
 if [ ! -f "$ITERO_PATH/.env" ]; then
     if [ ! -f "$ITERO_PATH/.env.example" ]; then
