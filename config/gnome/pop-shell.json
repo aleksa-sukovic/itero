@@ -4,7 +4,8 @@
         { "class": "org.gnome.Settings" },
         { "class": "org.gnome.Weather" },
         { "class": "com.mattjakeman.ExtensionManager" },
-        { "class": "org.gnome.NautilusPreviewer" }
+        { "class": "org.gnome.NautilusPreviewer" },
+        { "class": "org.mozilla.firefox", "title": "^Extension: " }
     ],
     "log_on_focus": false,
     "disable_active_border_on_float": true
