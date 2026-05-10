@@ -32,8 +32,8 @@ config.use_fancy_tab_bar = false
 config.hide_tab_bar_if_only_one_tab = true
 
 -- [[ Font configuration ]]
-config.font_size = 10.0
-config.line_height = 1.7
+config.font_size = 11.0
+config.line_height = 1.0
 config.font = wezterm.font_with_fallback({ "JetBrainsMono Nerd Font", "JetBrains Mono" })
 
 -- [[ Color scheme ]]
