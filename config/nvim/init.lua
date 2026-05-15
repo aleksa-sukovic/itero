@@ -17,8 +17,10 @@ vim.o.relativenumber = true
 -- Enable mouse mode (e.g., useful when resizing splits).
 vim.o.mouse = "a"
 
--- Use OSC52 clipboard over SSH so remote yanks reach the local terminal clipboard.
-if vim.env.SSH_CONNECTION then
+-- Use OSC52 clipboard inside WezTerm or over SSH. This avoids spawning wl-copy/wl-paste
+-- subprocesses which create transient Wayland surfaces that interfere with tiling WMs.
+-- Tmux passes OSC52 sequences through to WezTerm via set-clipboard on.
+if vim.env.WEZTERM_EXECUTABLE ~= nil or vim.env.SSH_CONNECTION then
     vim.g.clipboard = "osc52"
 end
 
