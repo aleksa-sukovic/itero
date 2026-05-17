@@ -5,6 +5,15 @@ src() {
     cd /work/source/
 }
 
+# Platform helpers.
+is_linux() {
+    [ "$(uname -s)" = "Linux" ]
+}
+
+is_macos() {
+    [ "$(uname -s)" = "Darwin" ]
+}
+
 # Prints local IP address.
 ip-local() {
     myIP="$(ip route get 1.1.1.1 | awk '{print $7; exit}')"

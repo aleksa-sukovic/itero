@@ -14,6 +14,8 @@ if is_linux; then
     # Install packages
     dnf_install \
         zsh \
+        zsh-syntax-highlighting \
+        tldr \
         zoxide \
         ripgrep \
         fd-find \
@@ -66,6 +68,9 @@ elif is_macos; then
     log_info "Installing common dependencies..."
 
     brew_install \
+        zsh-completions \
+        zsh-syntax-highlighting \
+        tlrc \
         zoxide \
         ripgrep \
         fd \

@@ -51,6 +51,8 @@ alias lzd="lazydocker"
 
 alias v="nvim"
 
+alias tlrc="tldr"
+
 # Tmux
 alias t="tmux attach -t main || tmux new -s main"
 alias ts="tmux new -A -s"
@@ -71,7 +73,22 @@ setopt SHARE_HISTORY
 # Vi keybindings
 bindkey -v
 
-# Use fzf for reverse history search.
+# Shell completion, history search, and syntax highlighting.
+if is_macos; then
+    zsh_site_functions="$HOMEBREW_PREFIX/share/zsh/site-functions"
+    zsh_syntax_highlighting="$HOMEBREW_PREFIX/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
+elif is_linux; then
+    zsh_site_functions="/usr/share/zsh/site-functions"
+    zsh_syntax_highlighting="/usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
+fi
+
+if [ -n "${zsh_site_functions:-}" ] && [ -d "$zsh_site_functions" ]; then
+    fpath=("$zsh_site_functions" $fpath)
+fi
+
+autoload -Uz compinit
+compinit
+
 zle -N itero-history-fzf-widget
 bindkey '^R' itero-history-fzf-widget
 
@@ -79,3 +96,7 @@ bindkey '^R' itero-history-fzf-widget
 eval "$(starship init zsh)"
 eval "$(zoxide init zsh --cmd cd)"
 eval "$(mise activate zsh)"
+
+if [ -n "${zsh_syntax_highlighting:-}" ] && [ -f "$zsh_syntax_highlighting" ]; then
+    source "$zsh_syntax_highlighting"
+fi
