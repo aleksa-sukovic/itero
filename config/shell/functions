@@ -1,11 +1,11 @@
 #!/bin/bash
 
-# Navigates to the source coude directory
+# Navigates to the source code directory.
 src() {
     cd /work/source/
 }
 
-# Prints local IP address
+# Prints local IP address.
 ip-local() {
     myIP="$(ip route get 1.1.1.1 | awk '{print $7; exit}')"
     echo "Local IP: $myIP"
@@ -17,16 +17,13 @@ ip-public() {
     echo "Public IP: $myIP"
 }
 
-# Lazygit with optional path argument
-# Usage: lzg [path]
-#   lzg              - open lazygit in current directory
-#   lzg ~/project    - open lazygit in specified path
+# Lazygit with optional path argument.
 lzg() {
     lazygit -p "${1:-.}"
 }
 
-# Yazi file manager wrapper
-# Allows changing the cwd when exiting
+# Yazi file manager wrapper.
+# Allows changing the cwd when exiting.
 function y() {
     local tmp="$(mktemp -t "yazi-cwd.XXXXXX")" cwd
     command yazi "$@" --cwd-file="$tmp"
@@ -35,3 +32,16 @@ function y() {
     rm -f -- "$tmp"
 }
 
+# Pick a command from shell history with fzf.
+itero-history-fzf() {
+    fc -lnr 1 | fzf --scheme=history --query="$LBUFFER"
+}
+
+# ZLE widget for replacing the current buffer from fzf history search.
+itero-history-fzf-widget() {
+    local selected
+    selected=$(itero-history-fzf) || return
+    LBUFFER="$selected"
+    CURSOR=${#LBUFFER}
+    zle redisplay
+}

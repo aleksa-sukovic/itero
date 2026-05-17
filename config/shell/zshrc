@@ -71,10 +71,9 @@ setopt SHARE_HISTORY
 # Vi keybindings
 bindkey -v
 
-# Enable reverse/forward history search via Ctrl+R/S and free up Ctrl+S from flow control
-bindkey '^R' history-incremental-search-backward
-bindkey '^S' history-incremental-search-forward
-stty -ixon
+# Use fzf for reverse history search.
+zle -N itero-history-fzf-widget
+bindkey '^R' itero-history-fzf-widget
 
 # Shell setup
 eval "$(starship init zsh)"
