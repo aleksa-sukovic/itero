@@ -1,0 +1,106 @@
+{
+	"preferences": {
+		"request": {
+			"sslVerification": false,
+			"customCaCertificate": {
+				"enabled": false,
+				"filePath": null
+			},
+			"keepDefaultCaCertificates": {
+				"enabled": true
+			},
+			"storeCookies": true,
+			"sendCookies": true,
+			"timeout": 0,
+			"oauth2": {
+				"useSystemBrowser": false
+			}
+		},
+		"font": {
+			"codeFont": "default",
+			"codeFontSize": 13
+		},
+		"proxy": {
+			"source": "inherit",
+			"pac": {
+				"source": ""
+			},
+			"config": {
+				"protocol": "http",
+				"hostname": "",
+				"port": null,
+				"auth": {
+					"username": "",
+					"password": ""
+				},
+				"bypassProxy": ""
+			}
+		},
+		"features": {
+			"terminal": true,
+			"apiSpec": false,
+			"fileExplorer": false,
+			"git": false,
+			"brunoJson": false
+		},
+		"secretsProviders": [],
+		"awsConfig": {
+			"enabled": false,
+			"accessKeyId": "",
+			"secretAccessKey": "",
+			"region": "",
+			"sessionToken": ""
+		},
+		"azureConfig": {
+			"enabled": false,
+			"tenantId": "",
+			"clientId": "",
+			"clientSecret": ""
+		},
+		"autoupdate": {
+			"downloadUpdates": true
+		},
+		"layout": {
+			"responsePaneOrientation": "horizontal"
+		},
+		"beta": {
+			"openapi-sync": false
+		},
+		"onboarding": {
+			"hasLaunchedBefore": true,
+			"hasSeenWelcomeModal": true
+		},
+		"autoSave": {
+			"enabled": false,
+			"interval": 1000
+		},
+		"display": {
+			"zoomPercentage": 120
+		},
+		"cache": {
+			"sslSession": {
+				"enabled": false
+			}
+		},
+		"telemetry": {
+			"enabled": true
+		},
+		"license": {
+			"proxy": {
+				"auth": {}
+			}
+		},
+		"_migrations": {
+			"codeFontSize14to13": true
+		}
+	},
+	"themeMode": "dark",
+	"themeBg": "#1e1e2e",
+	"window-bounds": {
+		"x": 0,
+		"y": 0,
+		"width": 1888,
+		"height": 1136
+	},
+	"maximized": false
+}
