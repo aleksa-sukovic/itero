@@ -17,6 +17,12 @@
         "when": "editorFocus || editorIsOpen"
     },
     {
+        "key": "alt+k f",
+        "mac": "cmd+k f",
+        "command": "-workbench.action.closeFolder",
+        "when": "emptyWorkspaceSupport && !isSessionsWindow && workbenchState != 'empty'"
+    },
+    {
         "key": "ctrl+f",
         "mac": "cmd+f",
         "command": "-actions.find",
@@ -199,7 +205,7 @@
     // === VS Code Editor ===
     // Toggle left sidebar (primary bar)
     {
-        "key": "alt+k ,",
+        "key": "ctrl+k ,",
         "mac": "cmd+k ,",
         "command": "workbench.action.toggleSidebarVisibility"
     },
@@ -210,7 +216,7 @@
     },
     // Toggle right sidebar (auxiliary bar)
     {
-        "key": "alt+k .",
+        "key": "ctrl+k .",
         "mac": "cmd+k .",
         "command": "workbench.action.toggleAuxiliaryBar"
     },
@@ -226,13 +232,13 @@
     },
     // Toggle status bar
     {
-        "key": "alt+k m",
+        "key": "ctrl+k m",
         "mac": "cmd+k m",
         "command": "workbench.action.toggleStatusbarVisibility"
     },
     // Context menu
     {
-        "key": "alt+k c",
+        "key": "ctrl+k c",
         "mac": "cmd+k c",
         "command": "editor.action.showContextMenu",
         "when": "textInputFocus"
@@ -244,7 +250,7 @@
     },
     // Toggle activity bar
     {
-        "key": "alt+k /",
+        "key": "ctrl+k /",
         "mac": "cmd+k /",
         "command": "workbench.action.toggleActivityBarVisibility"
     },
@@ -387,12 +393,6 @@
         "key": "shift+alt+p",
         "command": "projectManager.listProjectsNewWindow"
     },
-    {
-        "key": "alt+k f",
-        "mac": "cmd+k f",
-        "command": "-workbench.action.closeFolder",
-        "when": "emptyWorkspaceSupport && !isSessionsWindow && workbenchState != 'empty'"
-    },
     // === Jupyter Notebooks ===
     // Execute cell (in notebook and interactive editor)
     {
@@ -428,7 +428,7 @@
         "when": "notebookEditorFocused"
     },
     {
-        "key": "alt+k c",
+        "key": "ctrl+k c",
         "mac": "cmd+k c",
         "command": "-workbench.files.action.compareWithClipboard"
     }
