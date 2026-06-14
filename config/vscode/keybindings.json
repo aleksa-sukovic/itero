@@ -11,16 +11,10 @@
     },
     // Find in editor
     {
-        "key": "alt+k f",
-        "mac": "cmd+k f",
+        "key": "alt+s f",
+        "mac": "cmd+s f",
         "command": "actions.find",
         "when": "editorFocus || editorIsOpen"
-    },
-    {
-        "key": "alt+k f",
-        "mac": "cmd+k f",
-        "command": "-workbench.action.closeFolder",
-        "when": "emptyWorkspaceSupport && !isSessionsWindow && workbenchState != 'empty'"
     },
     {
         "key": "ctrl+f",
