@@ -1,0 +1,435 @@
+[
+    // Bind "Fix All" command instead of "Organize Imports"
+    {
+        "key": "shift+alt+o",
+        "command": "editor.action.fixAll"
+    },
+    {
+        "key": "shift+alt+o",
+        "command": "-editor.action.organizeImports",
+        "when": "textInputFocus && !editorReadonly && supportedCodeAction =~ /(\\s|^)source\\.organizeImports\\b/"
+    },
+    // Find in editor
+    {
+        "key": "alt+k f",
+        "mac": "cmd+k f",
+        "command": "actions.find",
+        "when": "editorFocus || editorIsOpen"
+    },
+    {
+        "key": "ctrl+f",
+        "mac": "cmd+f",
+        "command": "-actions.find",
+        "when": "editorFocus || editorIsOpen"
+    },
+    // Multi-cursor find next/previous selection
+    {
+        "key": "ctrl+alt+n",
+        "mac": "cmd+alt+n",
+        "command": "editor.action.addSelectionToNextFindMatch",
+        "when": "editorFocus"
+    },
+    {
+        "key": "ctrl+d",
+        "command": "-editor.action.addSelectionToNextFindMatch",
+        "when": "editorFocus"
+    },
+    {
+        "key": "ctrl+alt+shift+n",
+        "mac": "cmd+alt+shift+n",
+        "command": "editor.action.moveSelectionToNextFindMatch",
+        "when": "editorFocus"
+    },
+    {
+        "key": "ctrl+k ctrl+d",
+        "mac": "cmd+k cmd+d",
+        "command": "-editor.action.moveSelectionToNextFindMatch",
+        "when": "editorFocus"
+    },
+    // Reserve grouped prefixes for language, testing, and debugging
+    {
+        "key": "alt+l",
+        "mac": "cmd+l",
+        "command": "-expandLineSelection",
+        "when": "editorTextFocus"
+    },
+    {
+        "key": "alt+t",
+        "mac": "cmd+t",
+        "command": "-workbench.action.showAllSymbols"
+    },
+    {
+        "key": "alt+d",
+        "mac": "cmd+d",
+        "command": "-editor.action.addSelectionToNextFindMatch",
+        "when": "editorFocus"
+    },
+    // === Language ===
+    {
+        "key": "alt+l d",
+        "mac": "cmd+l d",
+        "command": "editor.action.revealDefinition",
+        "when": "editorTextFocus && editorHasDefinitionProvider"
+    },
+    {
+        "key": "alt+l r",
+        "mac": "cmd+l r",
+        "command": "editor.action.goToReferences",
+        "when": "editorTextFocus && editorHasReferenceProvider"
+    },
+    {
+        "key": "alt+l i",
+        "mac": "cmd+l i",
+        "command": "editor.action.goToImplementation",
+        "when": "editorTextFocus && editorHasImplementationProvider"
+    },
+    {
+        "key": "alt+l t",
+        "mac": "cmd+l t",
+        "command": "editor.action.goToTypeDefinition",
+        "when": "editorTextFocus && editorHasTypeDefinitionProvider"
+    },
+    {
+        "key": "alt+l n",
+        "mac": "cmd+l n",
+        "command": "editor.action.rename",
+        "when": "editorTextFocus && editorHasRenameProvider && !editorReadonly"
+    },
+    {
+        "key": "alt+l a",
+        "mac": "cmd+l a",
+        "command": "editor.action.codeAction",
+        "when": "editorTextFocus && !editorReadonly"
+    },
+    {
+        "key": "alt+l h",
+        "mac": "cmd+l h",
+        "command": "editor.action.showHover",
+        "when": "editorTextFocus && !inDebugMode"
+    },
+    {
+        "key": "alt+l h",
+        "mac": "cmd+l h",
+        "command": "editor.debug.action.showDebugHover",
+        "when": "editorTextFocus && inDebugMode"
+    },
+    // === Testing ===
+    {
+        "key": "alt+t r",
+        "mac": "cmd+t r",
+        "command": "testing.runAtCursor",
+        "when": "editorTextFocus"
+    },
+    {
+        "key": "alt+t f",
+        "mac": "cmd+t f",
+        "command": "testing.runCurrentFile",
+        "when": "editorTextFocus"
+    },
+    {
+        "key": "alt+t a",
+        "mac": "cmd+t a",
+        "command": "testing.runAll"
+    },
+    {
+        "key": "alt+t d",
+        "mac": "cmd+t d",
+        "command": "testing.debugAtCursor",
+        "when": "editorTextFocus"
+    },
+    {
+        "key": "alt+t s",
+        "mac": "cmd+t s",
+        "command": "testing.focusTestExplorer"
+    },
+    // === Debugging ===
+    {
+        "key": "alt+d b",
+        "mac": "cmd+d b",
+        "command": "editor.debug.action.toggleBreakpoint",
+        "when": "debuggersAvailable && disassemblyViewFocus || debuggersAvailable && editorTextFocus"
+    },
+    {
+        "key": "alt+d shift+b",
+        "mac": "cmd+d shift+b",
+        "command": "editor.debug.action.conditionalBreakpoint",
+        "when": "debuggersAvailable && editorTextFocus"
+    },
+    {
+        "key": "alt+d c",
+        "mac": "cmd+d c",
+        "command": "workbench.action.debug.continue",
+        "when": "inDebugMode"
+    },
+    {
+        "key": "alt+d c",
+        "mac": "cmd+d c",
+        "command": "workbench.action.debug.start",
+        "when": "!inDebugMode"
+    },
+    {
+        "key": "alt+d i",
+        "mac": "cmd+d i",
+        "command": "workbench.action.debug.stepInto",
+        "when": "inDebugMode"
+    },
+    {
+        "key": "alt+d o",
+        "mac": "cmd+d o",
+        "command": "workbench.action.debug.stepOver",
+        "when": "inDebugMode"
+    },
+    {
+        "key": "alt+d shift+o",
+        "mac": "cmd+d shift+o",
+        "command": "workbench.action.debug.stepOut",
+        "when": "inDebugMode"
+    },
+    {
+        "key": "alt+d t",
+        "mac": "cmd+d t",
+        "command": "workbench.action.debug.stop",
+        "when": "inDebugMode"
+    },
+    {
+        "key": "alt+d r",
+        "mac": "cmd+d r",
+        "command": "workbench.debug.action.toggleRepl"
+    },
+    // === VS Code Editor ===
+    // Toggle left sidebar (primary bar)
+    {
+        "key": "alt+k ,",
+        "mac": "cmd+k ,",
+        "command": "workbench.action.toggleSidebarVisibility"
+    },
+    {
+        "key": "ctrl+b",
+        "mac": "cmd+b",
+        "command": "-workbench.action.toggleSidebarVisibility"
+    },
+    // Toggle right sidebar (auxiliary bar)
+    {
+        "key": "alt+k .",
+        "mac": "cmd+k .",
+        "command": "workbench.action.toggleAuxiliaryBar"
+    },
+    {
+        "key": "ctrl+alt+b",
+        "mac": "cmd+alt+b",
+        "command": "-workbench.action.toggleAuxiliaryBar"
+    },
+    // Toggle bottom panel
+    {
+        "key": "ctrl+j",
+        "command": "workbench.action.togglePanel"
+    },
+    // Toggle status bar
+    {
+        "key": "alt+k m",
+        "mac": "cmd+k m",
+        "command": "workbench.action.toggleStatusbarVisibility"
+    },
+    // Context menu
+    {
+        "key": "alt+k c",
+        "mac": "cmd+k c",
+        "command": "editor.action.showContextMenu",
+        "when": "textInputFocus"
+    },
+    {
+        "key": "shift+f10",
+        "command": "-editor.action.showContextMenu",
+        "when": "textInputFocus"
+    },
+    // Toggle activity bar
+    {
+        "key": "alt+k /",
+        "mac": "cmd+k /",
+        "command": "workbench.action.toggleActivityBarVisibility"
+    },
+    // Close pane
+    {
+        "key": "ctrl+w q",
+        "command": "workbench.action.closeActiveEditor"
+    },
+    {
+        "key": "ctrl+w",
+        "command": "-workbench.action.closeActiveEditor"
+    },
+    // Move pane up, down, left, right
+    {
+        "key": "ctrl+w k",
+        "command": "workbench.action.focusAboveGroup"
+    },
+    {
+        "key": "ctrl+k ctrl+up",
+        "mac": "cmd+k cmd+up",
+        "command": "-workbench.action.focusAboveGroup"
+    },
+    {
+        "key": "ctrl+w j",
+        "command": "workbench.action.focusBelowGroup"
+    },
+    {
+        "key": "ctrl+k ctrl+down",
+        "mac": "cmd+k cmd+down",
+        "command": "-workbench.action.focusBelowGroup"
+    },
+    {
+        "key": "ctrl+w h",
+        "command": "workbench.action.focusLeftGroup"
+    },
+    {
+        "key": "ctrl+k ctrl+left",
+        "mac": "cmd+k cmd+left",
+        "command": "-workbench.action.focusLeftGroup"
+    },
+    {
+        "key": "ctrl+w l",
+        "command": "workbench.action.focusRightGroup"
+    },
+    {
+        "key": "ctrl+k ctrl+right",
+        "mac": "cmd+k cmd+right",
+        "command": "-workbench.action.focusRightGroup"
+    },
+    // Feature panes
+    {
+        "key": "alt+0",
+        "command": "workbench.view.extensions",
+        "when": "viewContainer.workbench.view.extensions.enabled"
+    },
+    {
+        "key": "alt+1",
+        "command": "workbench.view.explorer",
+        "when": "viewContainer.workbench.view.explorer.enabled"
+    },
+    {
+        "key": "ctrl+shift+e",
+        "command": "-workbench.view.explorer",
+        "when": "viewContainer.workbench.view.explorer.enabled"
+    },
+    {
+        "key": "alt+2",
+        "command": "workbench.action.terminal.toggleTerminal",
+        "when": "terminal.active"
+    },
+    {
+        "key": "ctrl+`",
+        "command": "-workbench.action.terminal.toggleTerminal",
+        "when": "terminal.active"
+    },
+    {
+        "key": "alt+3",
+        "command": "workbench.view.scm",
+        "when": "workbench.scm.active"
+    },
+    {
+        "key": "ctrl+shift+g",
+        "command": "-workbench.view.scm",
+        "when": "workbench.scm.active"
+    },
+    {
+        "key": "alt+4",
+        "command": "workbench.view.debug",
+        "when": "viewContainer.workbench.view.debug.enabled"
+    },
+    {
+        "key": "ctrl+shift+d",
+        "command": "-workbench.view.debug",
+        "when": "viewContainer.workbench.view.debug.enabled"
+    },
+    {
+        "key": "alt+5",
+        "command": "workbench.debug.action.toggleRepl",
+        "when": "workbench.panel.repl.view.active"
+    },
+    {
+        "key": "ctrl+shift+y",
+        "command": "-workbench.debug.action.toggleRepl",
+        "when": "workbench.panel.repl.view.active"
+    },
+    {
+        "key": "alt+6",
+        "command": "workbench.view.extension.test"
+    },
+    {
+        "key": "alt+7",
+        "command": "workbench.action.output.toggleOutput",
+        "when": "workbench.panel.output.active"
+    },
+    {
+        "key": "alt+8",
+        "command": "workbench.actions.view.problems",
+        "when": "workbench.panel.markers.view.active"
+    },
+    {
+        "key": "ctrl+shift+m",
+        "command": "-workbench.actions.view.problems",
+        "when": "workbench.panel.markers.view.active"
+    },
+    {
+        "key": "alt+9",
+        "command": "workbench.view.extension.gitlensPanel"
+    },
+    // === VS Code Extensions ===
+    // Project Manager
+    {
+        "key": "alt+p",
+        "command": "projectManager.listProjects"
+    },
+    {
+        "key": "shift+alt+p",
+        "command": "-projectManager.listProjects"
+    },
+    {
+        "key": "shift+alt+p",
+        "command": "projectManager.listProjectsNewWindow"
+    },
+    {
+        "key": "alt+k f",
+        "mac": "cmd+k f",
+        "command": "-workbench.action.closeFolder",
+        "when": "emptyWorkspaceSupport && !isSessionsWindow && workbenchState != 'empty'"
+    },
+    // === Jupyter Notebooks ===
+    // Execute cell (in notebook and interactive editor)
+    {
+        "key": "ctrl+enter",
+        "command": "notebook.cell.execute",
+        "when": "notebookEditorFocused"
+    },
+    {
+        "key": "ctrl+enter",
+        "command": "jupyter.runcurrentcell",
+        "when": "editorTextFocus && jupyter.hascodecells"
+    },
+    // Add code block (below/above)
+    {
+        "key": "alt+enter",
+        "command": "notebook.cell.insertCodeCellBelow",
+        "when": "notebookEditorFocused"
+    },
+    {
+        "key": "shift+alt+enter",
+        "command": "notebook.cell.insertCodeCellAbove",
+        "when": "notebookEditorFocused"
+    },
+    // Add markdown block (below/above)
+    {
+        "key": "ctrl+shift+enter",
+        "command": "notebook.cell.insertMarkdownCellBelow",
+        "when": "notebookEditorFocused"
+    },
+    {
+        "key": "ctrl+shift+alt+enter",
+        "command": "notebook.cell.insertMarkdownCellAbove",
+        "when": "notebookEditorFocused"
+    },
+    {
+        "key": "alt+k c",
+        "mac": "cmd+k c",
+        "command": "-workbench.files.action.compareWithClipboard"
+    }
+]
