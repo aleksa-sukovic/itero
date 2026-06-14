@@ -1,0 +1,9 @@
+{
+    // VSCodeVim remaps live in global settings.json; native VS Code shortcuts in keybindings.json
+    "vim.normalModeKeyBindingsNonRecursive": [
+        {
+            "before": ["K"],
+            "commands": ["editor.action.showHover"]
+        }
+    ]
+}
