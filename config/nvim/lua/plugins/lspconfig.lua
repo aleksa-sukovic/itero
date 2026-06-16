@@ -111,6 +111,7 @@ return {
         -- Request & enable language servers and additional formatters/tools
         -- See `:help lspconfig-all` for a list of all the pre-configured LSPs
         local servers = {
+            bashls = {},
             lua_ls = {
                 settings = {
                     Lua = {
@@ -130,6 +131,8 @@ return {
 
         -- Ensure the servers and tools above are installed
         local mason_packages = {
+            -- Bash
+            "bash-language-server",
             -- Lua
             "lua-language-server",
             "stylua",
