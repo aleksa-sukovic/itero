@@ -425,5 +425,22 @@
         "key": "ctrl+k c",
         "mac": "cmd+k c",
         "command": "-workbench.files.action.compareWithClipboard"
+    },
+    // === Copilot ===
+    {
+        "key": "alt+c p",
+        "command": "workbench.panel.chat"
+    },
+    {
+        "key": "ctrl+alt+i",
+        "command": "-workbench.panel.chat"
+    },
+    {
+        "key": "alt+c i",
+        "command": "inlineChat.start"
+    },
+    {
+        "key": "ctrl+i",
+        "command": "-inlineChat.start"
     }
 ]
