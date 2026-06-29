@@ -113,6 +113,16 @@
         "command": "editor.debug.action.showDebugHover",
         "when": "editorTextFocus && inDebugMode"
     },
+    {
+        "key": "alt+l f",
+        "command": "editor.action.formatDocument",
+        "when": "editorHasDocumentFormattingProvider && editorTextFocus && !editorReadonly && !inCompositeEditor"
+    },
+    {
+        "key": "ctrl+shift+i",
+        "command": "-editor.action.formatDocument",
+        "when": "editorHasDocumentFormattingProvider && editorTextFocus && !editorReadonly && !inCompositeEditor"
+    },
     // === Testing ===
     {
         "key": "alt+t r",
