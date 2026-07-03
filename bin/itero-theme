@@ -30,6 +30,22 @@ current_accent() {
     map_accent_to_palette "$(get_accent_color)"
 }
 
+update_vscode_theme() {
+    local theme="$1"
+    local theme_file="$THEMES_DIR/$theme/vscode.txt"
+    local config_roots=("$HOME/.config" "$HOME/Library/Application Support")
+
+    [[ -f "$theme_file" ]] || return 0
+
+    local vscode_theme="$(sed -n '1p' "$theme_file")"
+    local vscode_icon_theme="$(sed -n '2p' "$theme_file")"
+
+    while IFS= read -r -d '' settings_file; do
+        sed -i -E "s/(\"workbench\.colorTheme\"[[:space:]]*:[[:space:]]*\")[^\"]*(\")/\1${vscode_theme}\2/" "$settings_file"
+        sed -i -E "s/(\"workbench\.iconTheme\"[[:space:]]*:[[:space:]]*\")[^\"]*(\")/\1${vscode_icon_theme}\2/" "$settings_file"
+    done < <(find "${config_roots[@]}" \( -path "*/User/settings.json" -o -path "*/User/profiles/*/settings.json" \) -print0 2>/dev/null)
+}
+
 set_theme() {
     local theme="$1"
     local accent_name="$2"
@@ -58,6 +74,9 @@ set_theme() {
 
     # Compile theme and config templates from the canonical palette
     compile_theme_templates "$THEMES_DIR/$theme" "$accent_name" "$ITERO_PATH/config" || exit 1
+
+    # Set VSCode theme
+    update_vscode_theme "$theme"
 
     # Set cursor theme (reset first to force GNOME to reload)
     if is_linux && command_exists gsettings; then

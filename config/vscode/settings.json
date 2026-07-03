@@ -1,5 +1,6 @@
 {
-    // VSCodeVim remaps live in global settings.json; native VS Code shortcuts in keybindings.json
+    "window.autoDetectColorScheme": false,
+    // N.B. VSCodeVim remaps live in global settings.json; native VS Code shortcuts in keybindings.json
     "vim.normalModeKeyBindingsNonRecursive": [
         {
             "before": ["K"],
