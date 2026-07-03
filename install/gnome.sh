@@ -9,6 +9,7 @@ GNOME_EXTENSIONS=(
     "gsconnect@andyholmes.github.io"
     "lockkeys@vaina.lt"
     "night-light-slider-updated@vilsbeg.codeberg.org"
+    "rounded-window-corners@fxgn"
     "vicinae@dagimg-dot"
 )
 
