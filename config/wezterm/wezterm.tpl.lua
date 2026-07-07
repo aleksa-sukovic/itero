@@ -12,6 +12,7 @@ end
 config.initial_rows = 25
 config.initial_cols = 140
 config.window_close_confirmation = "NeverPrompt"
+config.enable_kitty_keyboard = true
 
 -- [[ Window configuration ]]
 config.window_decorations = wezterm.target_triple:find("darwin") and "RESIZE" or "NONE"
