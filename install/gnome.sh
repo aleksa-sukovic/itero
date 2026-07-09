@@ -56,7 +56,7 @@ done
 mkdir -p "$HOME/.config/autostart"
 link_file "/usr/share/applications/vicinae.desktop" "$HOME/.config/autostart/vicinae.desktop"
 
-# Apply GTK styles for native GNOME window corners
+# Apply GTK styles
 link_file "$ITERO_CONFIG/gnome/gtk.css" "$HOME/.config/gtk-3.0/gtk.css"
 link_file "$ITERO_CONFIG/gnome/gtk.css" "$HOME/.config/gtk-4.0/gtk.css"
 
