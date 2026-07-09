@@ -1,0 +1,18 @@
+:root {
+    --window-radius: 8px;
+}
+
+window.csd {
+    border-radius: 8px;
+}
+
+window.csd.maximized,
+window.csd.fullscreen,
+window.csd.tiled,
+window.csd.tiled-top,
+window.csd.tiled-right,
+window.csd.tiled-bottom,
+window.csd.tiled-left {
+    --window-radius: 0px;
+    border-radius: 0px;
+}

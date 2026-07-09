@@ -56,6 +56,10 @@ done
 mkdir -p "$HOME/.config/autostart"
 link_file "/usr/share/applications/vicinae.desktop" "$HOME/.config/autostart/vicinae.desktop"
 
+# Apply GTK styles for native GNOME window corners
+link_file "$ITERO_CONFIG/gnome/gtk.css" "$HOME/.config/gtk-3.0/gtk.css"
+link_file "$ITERO_CONFIG/gnome/gtk.css" "$HOME/.config/gtk-4.0/gtk.css"
+
 # Load dconf settings
 local dconf_file="$ITERO_CONFIG/gnome/dconf.ini"
 if [[ -f "$dconf_file" ]]; then
