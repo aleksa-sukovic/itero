@@ -89,7 +89,7 @@ set_theme() {
     if is_linux && command_exists dconf; then
         local accent_hex="$(resolve_accent_hex "$THEMES_DIR/$theme/palette.toml" "$accent_name")"
         local accent_rgb="$(hex_to_rgb "$accent_hex")"
-        dconf write /org/gnome/shell/extensions/pop-shell/hint-color-rgba "'rgba(${accent_rgb}, 1)'"
+        dconf write /org/gnome/shell/extensions/itero-wm/hint-color-rgba "'rgba(${accent_rgb}, 1)'"
     fi
 
     # Copy yazi theme

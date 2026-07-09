@@ -16,12 +16,11 @@ GNOME_EXTENSIONS=(
 # Install Extension Manager for managing extensions via GUI
 flatpak_install "com.mattjakeman.ExtensionManager"
 
-# Set up tiling window management via IteroWM
+# Set up tiling window management via Itero WM
 local itero_wm_repo="https://aleksa-sukovic:$GITHUB_TOKEN@github.com/aleksa-sukovic/itero-wm.git"
 local itero_wm_dir="$HOME/.local/share/itero-sources/itero-wm"
-# IteroWM still uses the upstream extension ID for GNOME integration
-local itero_wm_config_dir="$HOME/.config/pop-shell"
-local itero_wm_schema="org.gnome.shell.extensions.pop-shell.gschema.xml"
+local itero_wm_config_dir="$HOME/.config/itero-wm"
+local itero_wm_schema="org.gnome.shell.extensions.itero-wm.gschema.xml"
 
 if [[ ! -d "$itero_wm_dir" ]]; then
     git clone -b master "$itero_wm_repo" "$itero_wm_dir"
@@ -32,7 +31,7 @@ git pull --ff-only
 make
 make install
 cd "$ITERO_PATH"
-log_ok "Installed IteroWM from fork"
+log_ok "Installed Itero WM from fork"
 
 # Install system-wide schemas for dconf settings to work
 sudo cp "$itero_wm_dir/schemas/$itero_wm_schema" \
@@ -40,7 +39,7 @@ sudo cp "$itero_wm_dir/schemas/$itero_wm_schema" \
 sudo glib-compile-schemas /usr/share/glib-2.0/schemas/
 
 rm -f "$itero_wm_config_dir/config.json"
-link_file "$ITERO_CONFIG/gnome/pop-shell.json" "$itero_wm_config_dir/config.json"
+link_file "$ITERO_CONFIG/gnome/itero-wm.json" "$itero_wm_config_dir/config.json"
 
 # Install extensions that are not yet installed
 for ext in "${GNOME_EXTENSIONS[@]}"; do
