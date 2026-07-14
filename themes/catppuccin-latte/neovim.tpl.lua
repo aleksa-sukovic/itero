@@ -67,7 +67,7 @@ return {
         },
     },
     config = function(_, opts)
-        vim.g.itero_accent = "{{ accent_name }}"
+        vim.g.itero_accent = "{{ accent }}"
         require("catppuccin").setup(opts)
         vim.cmd.colorscheme("catppuccin")
     end,

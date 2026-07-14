@@ -1,0 +1,2 @@
+Gruvbox Dark Medium
+catppuccin-mocha

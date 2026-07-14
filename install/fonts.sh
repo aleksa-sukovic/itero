@@ -7,6 +7,9 @@ NERD_FONTS=("JetBrainsMono")
 CATPPUCCIN_CURSORS_VERSION="v2.0.0"
 CATPPUCCIN_CURSORS_URL="https://github.com/catppuccin/cursors/releases/download/${CATPPUCCIN_CURSORS_VERSION}"
 
+PHINGER_CURSORS_VERSION="3328966123"
+PHINGER_CURSORS_URL="https://github.com/rehanzo/phinger-cursors-gruvbox-material/releases/download/${PHINGER_CURSORS_VERSION}/phinger-cursors-variants.tar.bz2"
+
 get_fonts_dir() {
     if is_linux; then
         echo "$HOME/.local/share/fonts"
@@ -60,6 +63,50 @@ install_nerd_font() {
     log_ok "Installed ${font_name}"
 }
 
+install_phinger_gruvbox_material_cursors() {
+    local icons_dir="$HOME/.local/share/icons"
+    local cursor_names=(
+        "phinger-cursors-gruvbox-material"
+        "phinger-cursors-gruvbox-material-light"
+    )
+    local archive
+    local tmp_dir
+
+    if [[ -d "${icons_dir}/${cursor_names[0]}" && -d "${icons_dir}/${cursor_names[1]}" ]] && ! should_update; then
+        return 0
+    fi
+
+    tmp_dir="$(mktemp -d)"
+    archive="$tmp_dir/phinger-cursors-variants.tar.bz2"
+
+    if ! curl -fsSL "$PHINGER_CURSORS_URL" -o "$archive"; then
+        log_warn "Failed to download Phinger Gruvbox Material cursors"
+        rm -rf "$tmp_dir"
+        return 1
+    fi
+
+    if ! tar -xjf "$archive" -C "$tmp_dir"; then
+        log_warn "Failed to extract Phinger Gruvbox Material cursors"
+        rm -rf "$tmp_dir"
+        return 1
+    fi
+
+    mkdir -p "$icons_dir"
+    for cursor_name in "${cursor_names[@]}"; do
+        if [[ ! -d "$tmp_dir/$cursor_name" ]]; then
+            log_warn "Missing ${cursor_name} in Phinger cursor archive"
+            rm -rf "$tmp_dir"
+            return 1
+        fi
+
+        rm -rf "$icons_dir/$cursor_name"
+        mv "$tmp_dir/$cursor_name" "$icons_dir/$cursor_name"
+    done
+
+    rm -rf "$tmp_dir"
+    log_ok "Phinger Gruvbox Material cursors installed"
+}
+
 install_catppuccin_cursors() {
     local icons_dir="$HOME/.local/share/icons"
     local flavors=("mocha" "macchiato" "frappe" "latte")
@@ -107,6 +154,7 @@ if is_linux; then
     done
 
     install_catppuccin_cursors
+    install_phinger_gruvbox_material_cursors
 
     if command_exists fc-cache; then
         log_info "Refreshing font cache..."

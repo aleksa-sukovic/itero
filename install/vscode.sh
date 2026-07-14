@@ -13,3 +13,11 @@ if is_linux; then
         log_ok "VS Code installed"
     fi
 fi
+
+if command_exists code; then
+    log_info "Installing VS Code extensions..."
+    code --install-extension jdinhlife.gruvbox --force
+    code --install-extension JonathanHarty.gruvbox-material-icon-theme --force
+    code --install-extension Catppuccin.catppuccin-vsc --force
+    code --install-extension Catppuccin.catppuccin-vsc-icons --force
+fi

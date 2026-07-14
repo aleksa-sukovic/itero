@@ -4,15 +4,9 @@ return {
     "nvim-lualine/lualine.nvim",
     dependencies = { "nvim-tree/nvim-web-devicons" },
     config = function()
-        local accent = require("itero").accent()
-        local theme = require("lualine.themes.catppuccin-nvim")
-
-        theme.normal.a.bg = accent
-        theme.normal.b.fg = accent
-
         require("lualine").setup({
             options = {
-                theme = theme,
+                theme = require("itero").lualine_theme(),
                 component_separators = { left = "", right = "" },
                 section_separators = { left = "", right = "" },
                 globalstatus = true,

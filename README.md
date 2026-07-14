@@ -12,11 +12,11 @@ git clone https://github.com/aleksa-sukovic/itero ~/.local/share/itero
 On first run, itero will create a `.env` file from `.env.example` and prompt you to fill in machine-specific values. After editing `.env`, it is recommended to proceed with incremental setup, restarting the system after each step:
 
 ```
-ITERO_COMPONENTS=common,nvidia,wezterm,starship,fonts,shell itero
-ITERO_COMPONENTS=mise,nvim,tmux,yazi,lazygit,docker,lazydocker itero
-ITERO_COMPONENTS=apps,bruno,gitkraken,vscode,fastfetch,btop,vicinae itero
-ITERO_COMPONENTS=snapshots,syncthing,rclone itero
-ITERO_COMPONENTS=theme,gnome,gdm itero
+ITC=common,nvidia,wezterm,starship,fonts,shell itero
+ITC=mise,nvim,tmux,yazi,lazygit,docker,lazydocker itero
+ITC=apps,bruno,gitkraken,vscode,fastfetch,btop,vicinae itero
+ITC=snapshots,syncthing,rclone itero
+ITC=theme,gnome,gdm itero
 ```
 
 ### MacOS setup
@@ -24,16 +24,16 @@ ITERO_COMPONENTS=theme,gnome,gdm itero
 On macOS, Itero currently supports a terminal-focused setup rather than full machine provisioning. The following component batches are supported:
 
 ```bash
-ITERO_COMPONENTS=common,wezterm,starship,fonts,shell itero
-ITERO_COMPONENTS=mise,nvim,tmux,yazi,lazygit,lazydocker itero
-ITERO_COMPONENTS=fastfetch,btop,bruno itero
-ITERO_COMPONENTS=theme itero
+ITC=common,wezterm,starship,fonts,shell itero
+ITC=mise,nvim,tmux,yazi,lazygit,lazydocker itero
+ITC=fastfetch,btop,bruno itero
+ITC=theme itero
 ```
 
 If you want Itero to manage a `/work` bind mount, set `ITERO_WORKDIR` in `.env` to the directory that should appear at `/work`. On macOS, Itero configures `/work` via `/etc/synthetic.conf`, which takes effect after a reboot. To update all components at once, run:
 
 ```bash
-ITERO_COMPONENTS=common,wezterm,starship,fonts,shell,mise,nvim,tmux,yazi,lazygit,lazydocker,fastfetch,btop,bruno,theme itero
+ITC=common,wezterm,starship,fonts,shell,mise,nvim,tmux,yazi,lazygit,lazydocker,fastfetch,btop,bruno,theme itero
 ```
 
 ## Partition Setup
@@ -50,7 +50,7 @@ Before installing, set up your disk partitions following these:
 You can install only a selection of itero's features:
 
 ```bash
-ITERO_COMPONENTS=common,gnome,fonts itero
+ITC=common,gnome,fonts itero
 ```
 
 ## Update
@@ -70,15 +70,15 @@ itero-theme --current          # show current
 itero-theme --current-accent   # show current accent
 ```
 
-Accent colors are Catppuccin palette names (e.g., `blue`, `mauve`, `lavender`) and are synced bidirectionally with the system accent setting (GNOME/macOS). Note that Catppuccin's palette colors are pastel and won't visually match the system's built-in accent colors.
+Accent colors use Itero palette names (e.g., `blue`, `mauve`, `lavender`) and are synced bidirectionally with the system accent setting (GNOME/macOS). Each theme maps those names to its own palette, so the resulting color may not visually match the system's built-in accent color.
 
 ### Adding a new theme
 
 1. Create `themes/<name>/palette.toml` as the single color source:
-    - Include base palette keys (`rosewater`, `blue`, `base`, `text`, etc.)
+    - Include the accent aliases used by the system picker (`blue`, `teal`, `green`, `yellow`, `peach`, `red`, `pink`, `mauve`, and `lavender`)
     - Include app-facing keys used by templates (`background`, `foreground`, `color0..color15`, etc.)
     - `accent` is resolved dynamically from the system accent color
-2. Add static files (e.g., `neovim.lua`, `wezterm.lua`, `yazi.toml`, etc.)
+2. Add app assets as needed (use a `.tpl` filename for files that require template substitution)
 3. Add `vicinae.conf` if the theme should map to one of Vicinae's built-in themes
 
 ## Migrations
@@ -98,7 +98,7 @@ Most dependencies are automatically installed when running `itero`. Few require 
 
 ### GNOME
 
-GNOME settings are stored in `config/gnome/dconf.tpl.ini` and applied automatically during `itero` runs. To apply manually, either run `itero-gnome load` or alternatively `ITERO_COMPONENTS=gnome itero` to run only the GNOME component. To capture a new setting, run `dconf watch /` while changing settings in GNOME, then add the relevant keys to the template. To add a new extension, add its identifier to the `GNOME_EXTENSIONS` array in `install/gnome.sh` and to the `enabled-extensions` list in the dconf template.
+GNOME settings are stored in `config/gnome/dconf.tpl.ini` and applied automatically during `itero` runs. To apply manually, either run `itero-gnome load` or alternatively `ITC=gnome itero` to run only the GNOME component. To capture a new setting, run `dconf watch /` while changing settings in GNOME, then add the relevant keys to the template. To add a new extension, add its identifier to the `GNOME_EXTENSIONS` array in `install/gnome.sh` and to the `enabled-extensions` list in the dconf template.
 
 ### Zotero
 

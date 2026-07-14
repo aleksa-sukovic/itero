@@ -45,6 +45,18 @@ const themes: Theme[] = [
         icon: "🌙",
         keywords: ["catppuccin", "mocha", "dark"],
     },
+    {
+        id: "gruvbox-light",
+        title: "Gruvbox Light",
+        icon: "☀️",
+        keywords: ["gruvbox", "light", "warm"],
+    },
+    {
+        id: "gruvbox-dark",
+        title: "Gruvbox Dark",
+        icon: "🌒",
+        keywords: ["gruvbox", "dark", "warm"],
+    },
 ];
 
 const accents: Accent[] = [

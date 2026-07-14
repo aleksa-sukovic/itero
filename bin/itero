@@ -71,12 +71,12 @@ fi
 
 # Resolve accent color from theme palette
 accent_name="$(map_accent_to_palette "$(get_accent_color)")"
-flavor="$(get_flavor "$current")"
-cursor_theme="catppuccin-${flavor}-${accent_name}"
-export accent_name cursor_theme
 
 # Compile theme and config templates from the canonical palette
 compile_theme_templates "$ITERO_PATH/themes/$current" "$accent_name" "$ITERO_CONFIG"
+
+cursor_theme="$(get_cursor_theme "$ITERO_PATH/themes/$current")"
+export accent_name cursor_theme
 
 # Handle migrations
 if [ "$FRESH_INSTALL" = true ]; then

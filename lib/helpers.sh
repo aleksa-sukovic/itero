@@ -16,7 +16,6 @@ is_mac() { is_macos; }
 command_exists() { command -v "$1" &>/dev/null; }
 package_exists() { is_linux && rpm -q "$1" &>/dev/null; }
 should_update() { [[ "${ITERO_UPDATE:-false}" == true ]]; }
-get_flavor() { echo "$1" | sed 's/^catppuccin-//'; }
 
 # Install or update Homebrew packages.
 brew_install() {
@@ -77,6 +76,7 @@ get_macos_accent_color() {
     esac
 }
 
+# Read the system accent color from GNOME or macOS, defaulting to blue.
 get_accent_color() {
     if is_linux && command_exists gsettings; then
         local accent
@@ -87,6 +87,15 @@ get_accent_color() {
     else
         echo "blue"
     fi
+}
+
+# Read the cursor theme configured by a theme.
+get_cursor_theme() {
+    local cursor_file="$1/cursor.txt"
+
+    [[ -f "$cursor_file" ]] || return 0
+
+    sed -n '1p' "$cursor_file"
 }
 
 # Map a system accent color to the corresponding palette color name.
@@ -135,12 +144,10 @@ set_system_accent_color() {
     fi
 }
 
-ITERO_FAILED_INSTALLS=()
-
-# Check if a component should be installed based on ITERO_COMPONENTS env var.
+# Check if a component should be installed based on ITC env var.
 should_install() {
     local name="$1"
-    local filter="${ITERO_COMPONENTS:-all}"
+    local filter="${ITC:-all}"
 
     [[ "$filter" == "all" ]] && return 0
 
@@ -152,6 +159,8 @@ should_install() {
 
     return 1
 }
+
+ITERO_FAILED_INSTALLS=()
 
 # Run an install script with error handling. Failures are logged but don't stop the process.
 run_install() {
@@ -184,7 +193,7 @@ print_install_summary() {
         echo "  - $name"
     done
     echo ""
-    log_info "Re-run itero to retry, or install individually with: ITERO_COMPONENTS=<name> itero"
+    log_info "Re-run itero to retry, or install individually with: ITC=<name> itero"
 }
 
 # Install a .desktop file to the user's applications directory.

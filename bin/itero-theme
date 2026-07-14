@@ -13,11 +13,13 @@ if [[ -f "$ITERO_PATH/.env" ]]; then
     set +a
 fi
 
+# List available themes.
 list_themes() {
     find -L "$THEMES_DIR" -mindepth 1 -maxdepth 1 -type d ! -name current \
         -exec basename {} \; 2>/dev/null | sort
 }
 
+# Print the current theme name.
 current_theme() {
     if [ -L "$CURRENT_LINK" ]; then
         basename "$(readlink "$CURRENT_LINK")"
@@ -26,10 +28,24 @@ current_theme() {
     fi
 }
 
+# Print the current palette accent name.
 current_accent() {
     map_accent_to_palette "$(get_accent_color)"
 }
 
+# Replace a value in a user-owned configuration file.
+replace_in_file() {
+    local expression="$1"
+    local file="$2"
+
+    if is_macos; then
+        sed -i '' -E "$expression" "$file"
+    else
+        sed -i -E "$expression" "$file"
+    fi
+}
+
+# Update Pi's theme when its settings file exists.
 update_pi() {
     local theme="$1"
     local theme_file="$THEMES_DIR/$theme/pi.txt"
@@ -39,9 +55,30 @@ update_pi() {
 
     local pi_theme="$(sed -n '1p' "$theme_file")"
 
-    sed -i -E "s/(\"theme\"[[:space:]]*:[[:space:]]*\")[^\"]*(\")/\1${pi_theme}\2/" "$settings_file"
+    replace_in_file "s/(\"theme\"[[:space:]]*:[[:space:]]*\")[^\"]*(\")/\1${pi_theme}\2/" "$settings_file"
 }
 
+# Update Bruno's theme mode when its preferences file exists.
+update_bruno() {
+    local theme="$1"
+    local theme_file="$THEMES_DIR/$theme/bruno.txt"
+    local preferences_files=(
+        "$HOME/.var/app/com.usebruno.Bruno/config/bruno/preferences.json"
+        "$HOME/Library/Application Support/Bruno/preferences.json"
+    )
+
+    [[ -f "$theme_file" ]] || return 0
+
+    local bruno_theme
+    bruno_theme="$(sed -n '1p' "$theme_file")"
+
+    for preferences_file in "${preferences_files[@]}"; do
+        [[ -f "$preferences_file" ]] || continue
+        replace_in_file "s/(\"themeMode\"[[:space:]]*:[[:space:]]*\")[^\"]*(\")/\1${bruno_theme}\2/" "$preferences_file"
+    done
+}
+
+# Update VS Code theme settings in every detected profile.
 update_vscode() {
     local theme="$1"
     local theme_file="$THEMES_DIR/$theme/vscode.txt"
@@ -53,11 +90,12 @@ update_vscode() {
     local vscode_icon_theme="$(sed -n '2p' "$theme_file")"
 
     while IFS= read -r -d '' settings_file; do
-        sed -i -E "s/(\"workbench\.colorTheme\"[[:space:]]*:[[:space:]]*\")[^\"]*(\")/\1${vscode_theme}\2/" "$settings_file"
-        sed -i -E "s/(\"workbench\.iconTheme\"[[:space:]]*:[[:space:]]*\")[^\"]*(\")/\1${vscode_icon_theme}\2/" "$settings_file"
+        replace_in_file "s/(\"workbench\.colorTheme\"[[:space:]]*:[[:space:]]*\")[^\"]*(\")/\1${vscode_theme}\2/" "$settings_file"
+        replace_in_file "s/(\"workbench\.iconTheme\"[[:space:]]*:[[:space:]]*\")[^\"]*(\")/\1${vscode_icon_theme}\2/" "$settings_file"
     done < <(find "${config_roots[@]}" \( -path "*/User/settings.json" -o -path "*/User/profiles/*/settings.json" \) -print0 2>/dev/null)
 }
 
+# Copy the active Yazi theme.
 update_yazi() {
     local theme="$1"
     local theme_file="$THEMES_DIR/$theme/yazi.toml"
@@ -68,10 +106,12 @@ update_yazi() {
     cp "$theme_file" "$HOME/.config/yazi/theme.toml"
 }
 
+# Trigger WezTerm configuration reload.
 update_wezterm() {
     touch "$HOME/.config/wezterm/wezterm.lua" 2>/dev/null || true
 }
 
+# Reload the configuration in running tmux sessions.
 update_tmux() {
     if command_exists tmux && tmux list-sessions &>/dev/null; then
         for session in $(tmux list-sessions -F '#{session_name}' 2>/dev/null); do
@@ -80,6 +120,7 @@ update_tmux() {
     fi
 }
 
+# Link the active btop theme.
 update_btop() {
     local theme="$1"
     local theme_file="$THEMES_DIR/$theme/btop.theme"
@@ -90,6 +131,7 @@ update_btop() {
     ln -nsf "$theme_file" "$HOME/.config/btop/themes/current.theme"
 }
 
+# Apply GNOME cursor and accent settings.
 update_gnome() {
     local theme="$1"
     local accent_name="$2"
@@ -97,7 +139,8 @@ update_gnome() {
 
     if is_linux && command_exists gsettings; then
         gsettings set org.gnome.desktop.interface cursor-theme "default"
-        gsettings set org.gnome.desktop.interface cursor-theme "$cursor_theme"
+        [[ -n "$cursor_theme" ]] && \
+            gsettings set org.gnome.desktop.interface cursor-theme "$cursor_theme"
         gsettings set org.gnome.desktop.interface cursor-size 24
     fi
 
@@ -108,6 +151,7 @@ update_gnome() {
     fi
 }
 
+# Compile and apply a theme across supported applications.
 set_theme() {
     local theme="$1"
     local accent_name="$2"
@@ -126,20 +170,20 @@ set_theme() {
         set_system_accent_color "$accent_name"
     fi
 
-    local flavor="$(get_flavor "$theme")"
-    local cursor_theme="catppuccin-${flavor}-${accent_name}"
-
     # Link the chosen theme as 'current'
     ln -nsf "$theme" "$CURRENT_LINK"
-
-    export accent_name cursor_theme
 
     # Compile theme and config templates from the canonical palette
     compile_theme_templates "$THEMES_DIR/$theme" "$accent_name" "$ITERO_PATH/config" || exit 1
 
+    local cursor_theme
+    cursor_theme="$(get_cursor_theme "$THEMES_DIR/$theme")"
+    export accent_name cursor_theme
+
     # Update system & applications
     update_vscode "$theme"
     update_pi "$theme"
+    update_bruno "$theme"
     update_yazi "$theme"
     update_wezterm
     update_tmux
