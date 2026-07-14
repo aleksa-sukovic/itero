@@ -30,7 +30,19 @@ current_accent() {
     map_accent_to_palette "$(get_accent_color)"
 }
 
-update_vscode_theme() {
+update_pi() {
+    local theme="$1"
+    local theme_file="$THEMES_DIR/$theme/pi.txt"
+    local settings_file="$HOME/.pi/agent/settings.json"
+
+    [[ -f "$theme_file" && -f "$settings_file" ]] || return 0
+
+    local pi_theme="$(sed -n '1p' "$theme_file")"
+
+    sed -i -E "s/(\"theme\"[[:space:]]*:[[:space:]]*\")[^\"]*(\")/\1${pi_theme}\2/" "$settings_file"
+}
+
+update_vscode() {
     local theme="$1"
     local theme_file="$THEMES_DIR/$theme/vscode.txt"
     local config_roots=("$HOME/.config" "$HOME/Library/Application Support")
@@ -44,6 +56,56 @@ update_vscode_theme() {
         sed -i -E "s/(\"workbench\.colorTheme\"[[:space:]]*:[[:space:]]*\")[^\"]*(\")/\1${vscode_theme}\2/" "$settings_file"
         sed -i -E "s/(\"workbench\.iconTheme\"[[:space:]]*:[[:space:]]*\")[^\"]*(\")/\1${vscode_icon_theme}\2/" "$settings_file"
     done < <(find "${config_roots[@]}" \( -path "*/User/settings.json" -o -path "*/User/profiles/*/settings.json" \) -print0 2>/dev/null)
+}
+
+update_yazi() {
+    local theme="$1"
+    local theme_file="$THEMES_DIR/$theme/yazi.toml"
+
+    [[ -f "$theme_file" ]] || return 0
+
+    mkdir -p "$HOME/.config/yazi"
+    cp "$theme_file" "$HOME/.config/yazi/theme.toml"
+}
+
+update_wezterm() {
+    touch "$HOME/.config/wezterm/wezterm.lua" 2>/dev/null || true
+}
+
+update_tmux() {
+    if command_exists tmux && tmux list-sessions &>/dev/null; then
+        for session in $(tmux list-sessions -F '#{session_name}' 2>/dev/null); do
+            tmux source-file "$HOME/.tmux.conf" -t "$session" 2>/dev/null || true
+        done
+    fi
+}
+
+update_btop() {
+    local theme="$1"
+    local theme_file="$THEMES_DIR/$theme/btop.theme"
+
+    [[ -f "$theme_file" ]] || return 0
+
+    mkdir -p "$HOME/.config/btop/themes"
+    ln -nsf "$theme_file" "$HOME/.config/btop/themes/current.theme"
+}
+
+update_gnome() {
+    local theme="$1"
+    local accent_name="$2"
+    local cursor_theme="$3"
+
+    if is_linux && command_exists gsettings; then
+        gsettings set org.gnome.desktop.interface cursor-theme "default"
+        gsettings set org.gnome.desktop.interface cursor-theme "$cursor_theme"
+        gsettings set org.gnome.desktop.interface cursor-size 24
+    fi
+
+    if is_linux && command_exists dconf; then
+        local accent_hex="$(resolve_accent_hex "$THEMES_DIR/$theme/palette.toml" "$accent_name")"
+        local accent_rgb="$(hex_to_rgb "$accent_hex")"
+        dconf write /org/gnome/shell/extensions/itero-wm/hint-color-rgba "'rgba(${accent_rgb}, 1)'"
+    fi
 }
 
 set_theme() {
@@ -75,46 +137,14 @@ set_theme() {
     # Compile theme and config templates from the canonical palette
     compile_theme_templates "$THEMES_DIR/$theme" "$accent_name" "$ITERO_PATH/config" || exit 1
 
-    # Set VSCode theme
-    update_vscode_theme "$theme"
-
-    # Set cursor theme (reset first to force GNOME to reload)
-    if is_linux && command_exists gsettings; then
-        gsettings set org.gnome.desktop.interface cursor-theme "default"
-        gsettings set org.gnome.desktop.interface cursor-theme "$cursor_theme"
-        gsettings set org.gnome.desktop.interface cursor-size 24
-    fi
-
-    # Update itero-wm active hint color
-    if is_linux && command_exists dconf; then
-        local accent_hex="$(resolve_accent_hex "$THEMES_DIR/$theme/palette.toml" "$accent_name")"
-        local accent_rgb="$(hex_to_rgb "$accent_hex")"
-        dconf write /org/gnome/shell/extensions/itero-wm/hint-color-rgba "'rgba(${accent_rgb}, 1)'"
-    fi
-
-    # Copy yazi theme
-    local yazi_theme="$THEMES_DIR/$theme/yazi.toml"
-    if [[ -f "$yazi_theme" ]]; then
-        mkdir -p "$HOME/.config/yazi"
-        cp "$yazi_theme" "$HOME/.config/yazi/theme.toml"
-    fi
-
-    # Trigger wezterm config reload
-    touch ~/.config/wezterm/wezterm.lua 2>/dev/null || true
-
-    # Reload tmux for all sessions
-    if command_exists tmux && tmux list-sessions &>/dev/null; then
-        for session in $(tmux list-sessions -F '#{session_name}' 2>/dev/null); do
-            tmux source-file ~/.tmux.conf -t "$session" 2>/dev/null || true
-        done
-    fi
-
-    # Link btop theme
-    local btop_theme="$THEMES_DIR/$theme/btop.theme"
-    if [[ -f "$btop_theme" ]]; then
-        mkdir -p "$HOME/.config/btop/themes"
-        ln -nsf "$btop_theme" "$HOME/.config/btop/themes/current.theme"
-    fi
+    # Update system & applications
+    update_vscode "$theme"
+    update_pi "$theme"
+    update_yazi "$theme"
+    update_wezterm
+    update_tmux
+    update_btop "$theme"
+    update_gnome "$theme" "$accent_name" "$cursor_theme"
 
     echo "Theme: $theme (accent: $accent_name)"
 }
