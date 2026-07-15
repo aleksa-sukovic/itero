@@ -106,9 +106,10 @@ update_yazi() {
     cp "$theme_file" "$HOME/.config/yazi/theme.toml"
 }
 
-# Trigger WezTerm configuration reload.
-update_wezterm() {
+# Trigger terminal configuration reloads.
+update_terminals() {
     touch "$HOME/.config/wezterm/wezterm.lua" 2>/dev/null || true
+    touch "$HOME/.config/kitty/kitty.conf" 2>/dev/null || true
 }
 
 # Reload the configuration in running tmux sessions.
@@ -185,7 +186,7 @@ set_theme() {
     update_pi "$theme"
     update_bruno "$theme"
     update_yazi "$theme"
-    update_wezterm
+    update_terminals
     update_tmux
     update_btop "$theme"
     update_gnome "$theme" "$accent_name" "$cursor_theme"

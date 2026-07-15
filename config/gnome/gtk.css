@@ -1,9 +1,9 @@
 :root {
-    --window-radius: 8px;
+    --window-radius: 4px;
 }
 
 window.csd {
-    border-radius: 8px;
+    border-radius: 4px;
 }
 
 window.csd.maximized,
