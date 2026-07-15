@@ -20,4 +20,5 @@ if command_exists code; then
     code --install-extension JonathanHarty.gruvbox-material-icon-theme --force
     code --install-extension Catppuccin.catppuccin-vsc --force
     code --install-extension Catppuccin.catppuccin-vsc-icons --force
+    code --install-extension mvllow.rose-pine --force
 fi

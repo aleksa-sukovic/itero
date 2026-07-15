@@ -28,6 +28,18 @@ const themes: Theme[] = [
         keywords: ["catppuccin", "latte", "light"],
     },
     {
+        id: "rose-pine",
+        title: "Rosé Pine",
+        icon: "🌲",
+        keywords: ["rose pine", "dark", "soft", "muted"],
+    },
+    {
+        id: "rose-pine-dawn",
+        title: "Rosé Pine Dawn",
+        icon: "🌷",
+        keywords: ["rose pine", "dawn", "light", "soft", "pale"],
+    },
+    {
         id: "catppuccin-frappe",
         title: "Catppuccin Frappe",
         icon: "🌆",

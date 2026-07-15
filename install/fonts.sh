@@ -10,6 +10,9 @@ CATPPUCCIN_CURSORS_URL="https://github.com/catppuccin/cursors/releases/download/
 PHINGER_CURSORS_VERSION="3328966123"
 PHINGER_CURSORS_URL="https://github.com/rehanzo/phinger-cursors-gruvbox-material/releases/download/${PHINGER_CURSORS_VERSION}/phinger-cursors-variants.tar.bz2"
 
+ROSE_PINE_CURSOR_URL="https://github.com/rose-pine/cursors/releases/latest/download/BreezeX-RosePine-Linux.tar.xz"
+ROSE_PINE_DAWN_CURSOR_URL="https://github.com/rose-pine/cursors/releases/latest/download/BreezeX-RosePineDawn-Linux.tar.xz"
+
 get_fonts_dir() {
     if is_linux; then
         echo "$HOME/.local/share/fonts"
@@ -107,6 +110,46 @@ install_phinger_gruvbox_material_cursors() {
     log_ok "Phinger Gruvbox Material cursors installed"
 }
 
+install_rose_pine_cursors() {
+    local cursor_names=("BreezeX-RosePine-Linux" "BreezeX-RosePineDawn-Linux")
+    local cursor_urls=("$ROSE_PINE_CURSOR_URL" "$ROSE_PINE_DAWN_CURSOR_URL")
+    local icons_dir="$HOME/.local/share/icons"
+    local index
+
+    for index in "${!cursor_names[@]}"; do
+        local cursor_name="${cursor_names[$index]}"
+        local target_dir="${icons_dir}/${cursor_name}"
+        local tmp_dir
+        local archive
+
+        if [[ -d "$target_dir" ]] && ! should_update; then
+            continue
+        fi
+
+        tmp_dir="$(mktemp -d)"
+        archive="$tmp_dir/cursor.tar.xz"
+
+        if ! curl -fsSL "${cursor_urls[$index]}" -o "$archive"; then
+            log_warn "Failed to download ${cursor_name} cursors"
+            rm -rf "$tmp_dir"
+            continue
+        fi
+
+        if ! tar -xJf "$archive" -C "$tmp_dir" || [[ ! -d "$tmp_dir/$cursor_name" ]]; then
+            log_warn "Invalid ${cursor_name} cursor archive"
+            rm -rf "$tmp_dir"
+            continue
+        fi
+
+        mkdir -p "$icons_dir"
+        rm -rf "$target_dir"
+        mv "$tmp_dir/$cursor_name" "$target_dir"
+        rm -rf "$tmp_dir"
+    done
+
+    log_ok "Rosé Pine cursors installed"
+}
+
 install_catppuccin_cursors() {
     local icons_dir="$HOME/.local/share/icons"
     local flavors=("mocha" "macchiato" "frappe" "latte")
@@ -155,6 +198,7 @@ if is_linux; then
 
     install_catppuccin_cursors
     install_phinger_gruvbox_material_cursors
+    install_rose_pine_cursors
 
     if command_exists fc-cache; then
         log_info "Refreshing font cache..."
