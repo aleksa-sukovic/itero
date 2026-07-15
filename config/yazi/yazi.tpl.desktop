@@ -1,7 +1,7 @@
 [Desktop Entry]
 Name=Yazi
 Comment=Terminal file manager
-Exec=kitty yazi %F
+Exec=wezterm start -- yazi %F
 Icon={{ $ITERO_PATH }}/config/yazi/yazi.png
 Type=Application
 Categories=System;FileTools;FileManager;
