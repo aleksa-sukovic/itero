@@ -31,6 +31,7 @@ config.window_padding = {
 -- [[ Tab configuration ]]
 config.use_fancy_tab_bar = false
 config.hide_tab_bar_if_only_one_tab = true
+config.show_new_tab_button_in_tab_bar = true
 
 -- [[ Font configuration ]]
 config.font_size = 11.0
@@ -41,6 +42,30 @@ config.font = wezterm.font_with_fallback({ "JetBrainsMono Nerd Font", "JetBrains
 config.color_scheme = color_scheme
 config.colors = {
     cursor_bg = "{{ accent }}",
+    tab_bar = {
+        background = "{{ color0 }}",
+        active_tab = {
+            bg_color = "{{ accent }}",
+            fg_color = "{{ background }}",
+            intensity = "Bold",
+        },
+        inactive_tab = {
+            bg_color = "{{ color15 }}",
+            fg_color = "{{ background }}",
+        },
+        inactive_tab_hover = {
+            bg_color = "{{ color15 }}",
+            fg_color = "{{ background }}",
+        },
+        new_tab = {
+            bg_color = "{{ color0 }}",
+            fg_color = "{{ accent }}",
+        },
+        new_tab_hover = {
+            bg_color = "{{ color0 }}",
+            fg_color = "{{ accent }}",
+        },
+    },
 }
 
 -- [[ Key bindings ]]
