@@ -17,7 +17,7 @@ GNOME_EXTENSIONS=(
 flatpak_install "com.mattjakeman.ExtensionManager"
 
 # Set up tiling window management via Itero WM
-local itero_wm_repo="https://aleksa-sukovic:$GITHUB_TOKEN@github.com/aleksa-sukovic/itero-wm.git"
+local itero_wm_repo="git@github.com:aleksa-sukovic/itero-wm.git"
 local itero_wm_dir="$HOME/.local/share/itero-sources/itero-wm"
 local itero_wm_config_dir="$HOME/.config/itero-wm"
 local itero_wm_schema="org.gnome.shell.extensions.itero-wm.gschema.xml"
