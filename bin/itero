@@ -100,7 +100,7 @@ run_install "$ITERO_INSTALL/nvim.sh"
 run_install "$ITERO_INSTALL/tmux.sh"
 run_install "$ITERO_INSTALL/yazi.sh"
 run_install "$ITERO_INSTALL/lazygit.sh"
-run_install "$ITERO_INSTALL/docker.sh"
+run_optional_install "$ITERO_INSTALL/docker.sh"
 run_install "$ITERO_INSTALL/lazydocker.sh"
 
 run_install "$ITERO_INSTALL/snapshots.sh"

@@ -160,6 +160,22 @@ should_install() {
     return 1
 }
 
+# Check if an optional component was explicitly selected in ITC.
+should_install_optional() {
+    local name="$1"
+    local filter="${ITC:-}"
+
+    [ -z "$filter" ] && return 1
+
+    IFS=',' read -ra components <<< "$filter"
+
+    for component in "${components[@]}"; do
+        [[ "$component" == "$name" ]] && return 0
+    done
+
+    return 1
+}
+
 ITERO_FAILED_INSTALLS=()
 
 # Run an install script with error handling. Failures are logged but don't stop the process.
@@ -178,6 +194,17 @@ run_install() {
         log_warn "Failed to install: $name"
         ITERO_FAILED_INSTALLS+=("$name")
         return 0
+    fi
+}
+
+# Run an optional install script only when explicitly selected in ITC.
+run_optional_install() {
+    local script="$1"
+    local name
+    name="$(basename "$script" .sh)"
+
+    if should_install_optional "$name"; then
+        run_install "$script"
     fi
 }
 
