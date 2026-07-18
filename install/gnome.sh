@@ -4,14 +4,28 @@ fi
 
 log_info "Setting up GNOME..."
 
+GNOME_DISABLED_USER_SERVICES=(
+    "evolution-addressbook-factory.service" # Evolution address book backend
+    "evolution-alarm-notify.service" # Evolution calendar and task reminders
+    "evolution-calendar-factory.service" # Evolution calendar backend
+    "evolution-source-registry.service" # Evolution account and source registry
+    "evolution-user-prompter.service" # Evolution account authentication prompts
+    "gnome-software.service" # GNOME Software background update service
+    "gvfs-goa-volume-monitor.service" # GNOME Online Accounts virtual filesystem mounts
+)
+
 GNOME_EXTENSIONS=(
-    "custom-hot-corners-extended@G-dH.github.com"
     "gsconnect@andyholmes.github.io"
-    "lockkeys@vaina.lt"
     "night-light-slider-updated@vilsbeg.codeberg.org"
     "rounded-window-corners@fxgn"
     "vicinae@dagimg-dot"
 )
+
+# Disable unused GNOME user services
+for service in "${GNOME_DISABLED_USER_SERVICES[@]}"; do
+    systemctl --user mask --now "$service" &>/dev/null || \
+        log_warn "Failed to disable user service: $service"
+done
 
 # Install Extension Manager for managing extensions via GUI
 flatpak_install "com.mattjakeman.ExtensionManager"
