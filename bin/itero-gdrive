@@ -2,6 +2,27 @@
 set -e
 
 ITERO_PATH="${ITERO_PATH:-$HOME/.local/share/itero}"
+
+usage() {
+    echo "Usage: itero-gdrive <command>"
+    echo ""
+    echo "Manage the Google Drive bisync service."
+    echo ""
+    echo "Commands:"
+    echo "  sync             Trigger a sync now"
+    echo "  status           Show systemd timer and service status"
+    echo "  log [--follow]   Show recent rclone log entries or stream them live"
+    echo "  reinit           Re-establish the bisync baseline (remote wins)"
+    echo "  --help, -h       Show this help message"
+}
+
+case "${1:-}" in
+    --help|-h)
+        usage
+        exit 0
+        ;;
+esac
+
 source "$ITERO_PATH/lib/helpers.sh"
 
 GDRIVE_HOME="${GDRIVE_HOME:-$HOME/Drive}"
@@ -56,13 +77,5 @@ case "${1:-}" in
     status)  cmd_status ;;
     log)     cmd_log "$2" ;;
     reinit)  cmd_reinit ;;
-    *)
-        echo "Usage: itero-gdrive <sync|status|log|reinit>"
-        echo ""
-        echo "  sync             Trigger a sync now"
-        echo "  status           Show systemd timer/service status"
-        echo "  log              Show recent rclone log entries"
-        echo "  log --follow/-f  Stream rclone log live"
-        echo "  reinit           Re-establish bisync baseline"
-        ;;
+    *) usage ;;
 esac

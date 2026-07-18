@@ -3,6 +3,26 @@
 ITERO_PATH="${ITERO_PATH:-$(cd "$(dirname "$0")/.." && pwd)}"
 helpers_file=""
 
+usage() {
+    echo "Usage: itero-backup <option>"
+    echo ""
+    echo "Create and manage Btrfs snapshots."
+    echo ""
+    echo "Options:"
+    echo "  --create, -c [description]              Create a snapshot"
+    echo "  --gui, -g                               Open Btrfs Assistant"
+    echo "  --pre-transaction <pid>                 Create a package-manager pre-snapshot"
+    echo "  --post-transaction <pre-number> <pid>   Create a package-manager post-snapshot"
+    echo "  --help, -h                              Show this help message"
+}
+
+case "${1:-}" in
+    --help|-h)
+        usage
+        exit 0
+        ;;
+esac
+
 for candidate in \
     "$ITERO_PATH/lib/helpers.sh" \
     "/usr/local/lib/itero/helpers.sh"
@@ -26,13 +46,6 @@ run_snapper() {
     else
         sudo snapper "$@"
     fi
-}
-
-usage() {
-    echo "Usage: itero-backup <command>"
-    echo "  --create, -c [desc]  Create a snapshot (default: \"manual snapshot\")"
-    echo "  --gui, -g            Open Btrfs Assistant"
-    exit 1
 }
 
 get_transaction_description() {
@@ -111,5 +124,6 @@ case "$1" in
         ;;
     *)
         usage
+        exit 1
         ;;
 esac

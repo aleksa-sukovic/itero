@@ -5,8 +5,66 @@ export ITERO_CONFIG="$ITERO_PATH/config"
 export ITERO_INSTALL="$ITERO_PATH/install"
 export ITERO_STATE="$HOME/.local/state/itero"
 
+regular_packages=(
+    "common"
+    "nvidia"
+    "bluetooth"
+    "wezterm"
+    "kitty"
+    "starship"
+    "fonts"
+    "shell"
+    "mise"
+    "nvim"
+    "tmux"
+    "yazi"
+    "lazygit"
+    "lazydocker"
+    "snapshots"
+    "syncthing"
+    "rclone"
+    "apps"
+    "bruno"
+    "gitkraken"
+    "vscode"
+    "copilot"
+    "pi"
+    "fastfetch"
+    "btop"
+    "vicinae"
+    "theme"
+    "gnome"
+    "gdm"
+)
+
+optional_packages=(
+    "docker"
+)
+
+usage() {
+    echo "Usage: itero [--update]"
+    echo ""
+    echo "Install and configure Itero components."
+    echo ""
+    echo "Options:"
+    echo "  --update              Upgrade packages where supported"
+    echo "  --help, -h            Show this help message"
+    echo ""
+    echo "Environment:"
+    echo "  ITC=<components>      Install only comma-separated components"
+    echo "  Regular packages:"
+    printf "    %s\n" "${regular_packages[@]}"
+    echo "  Optional packages install only when selected explicitly"
+    echo "  Optional packages:"
+    printf "    %s\n" "${optional_packages[@]}"
+}
+
 for arg in "$@"; do
     case "$arg" in
+        --help|-h)
+            usage
+            exit 0
+            ;;
         --update) export ITERO_UPDATE=true ;;
     esac
 done
@@ -42,13 +100,6 @@ set -a
 source "$ITERO_PATH/.env"
 set +a
 
-# Detect fresh install
-FRESH_INSTALL=false
-if [ ! -d "$ITERO_STATE" ]; then
-    FRESH_INSTALL=true
-    mkdir -p "$ITERO_STATE"
-fi
-
 if should_update; then
     log_info "Running itero in update mode"
 fi
@@ -79,53 +130,22 @@ cursor_theme="$(get_cursor_theme "$ITERO_PATH/themes/$current")"
 export accent_name cursor_theme
 
 # Handle migrations
-if [ "$FRESH_INSTALL" = true ]; then
+if [ ! -d "$ITERO_STATE" ]; then
+    mkdir -p "$ITERO_STATE"
     "$ITERO_PATH/bin/itero-migrate" --mark-all
 else
     "$ITERO_PATH/bin/itero-migrate" --run
 fi
 
-# Run install scripts
-run_install "$ITERO_INSTALL/common.sh"
-run_install "$ITERO_INSTALL/nvidia.sh"
-run_install "$ITERO_INSTALL/bluetooth.sh"
-run_install "$ITERO_INSTALL/wezterm.sh"
-run_install "$ITERO_INSTALL/kitty.sh"
-run_install "$ITERO_INSTALL/starship.sh"
-run_install "$ITERO_INSTALL/fonts.sh"
-run_install "$ITERO_INSTALL/shell.sh"
+# Run regular install scripts
+for package in "${regular_packages[@]}"; do
+    run_install "$ITERO_INSTALL/$package.sh"
+done
 
-run_install "$ITERO_INSTALL/mise.sh"
-run_install "$ITERO_INSTALL/nvim.sh"
-run_install "$ITERO_INSTALL/tmux.sh"
-run_install "$ITERO_INSTALL/yazi.sh"
-run_install "$ITERO_INSTALL/lazygit.sh"
-run_optional_install "$ITERO_INSTALL/docker.sh"
-run_install "$ITERO_INSTALL/lazydocker.sh"
-
-run_install "$ITERO_INSTALL/snapshots.sh"
-run_install "$ITERO_INSTALL/syncthing.sh"
-run_install "$ITERO_INSTALL/rclone.sh"
-
-run_install "$ITERO_INSTALL/apps.sh"
-run_install "$ITERO_INSTALL/bruno.sh"
-run_install "$ITERO_INSTALL/gitkraken.sh"
-run_install "$ITERO_INSTALL/vscode.sh"
-run_install "$ITERO_INSTALL/copilot.sh"
-run_install "$ITERO_INSTALL/pi.sh"
-run_install "$ITERO_INSTALL/fastfetch.sh"
-run_install "$ITERO_INSTALL/btop.sh"
-run_install "$ITERO_INSTALL/vicinae.sh"
-
-run_install "$ITERO_INSTALL/theme.sh"
-run_install "$ITERO_INSTALL/gnome.sh"
-run_install "$ITERO_INSTALL/gdm.sh"
-
-# Clean up legacy layout
-if [ -d "$ITERO_PATH/apps" ] || [ -d "$ITERO_PATH/scripts" ]; then
-    rm -rf "$ITERO_PATH/apps" "$ITERO_PATH/scripts"
-    log_info "Cleaned up legacy directories"
-fi
+# Run optional install scripts
+for package in "${optional_packages[@]}"; do
+    run_optional_install "$ITERO_INSTALL/$package.sh"
+done
 
 log_ok "Done!"
 print_install_summary

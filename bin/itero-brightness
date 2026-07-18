@@ -8,11 +8,26 @@ EXCLUDE_BUS="11"
 CACHE_VAL="/dev/shm/brightness_val"
 CACHE_BUS="/dev/shm/brightness_bus"
 
-case "$1" in
+usage() {
+    echo "Usage: itero-brightness <option>"
+    echo ""
+    echo "Adjust an external monitor's brightness through DDC/CI."
+    echo ""
+    echo "Options:"
+    echo "  --up          Increase brightness by 10%"
+    echo "  --down        Decrease brightness by 10%"
+    echo "  --help, -h    Show this help message"
+}
+
+case "${1:-}" in
     --up)   direction="up" ;;
     --down) direction="down" ;;
+    --help|-h)
+        usage
+        exit 0
+        ;;
     *)
-        echo "Usage: itero-brightness --up|--down"
+        usage
         exit 1
         ;;
 esac

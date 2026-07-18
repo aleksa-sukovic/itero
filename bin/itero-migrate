@@ -1,22 +1,32 @@
 #!/bin/bash
 set -e
 
+print_usage() {
+    echo "Usage: itero-migrate <option>"
+    echo ""
+    echo "Manage Itero migrations."
+    echo ""
+    echo "Options:"
+    echo "  --create <name>   Create a new migration"
+    echo "  --pending         List pending migrations without running them"
+    echo "  --mark-all        Mark all migrations as done for a fresh install"
+    echo "  --run             Run all pending migrations"
+    echo "  --help, -h        Show this help message"
+}
+
+case "${1:-}" in
+    --help|-h)
+        print_usage
+        exit 0
+        ;;
+esac
+
 ITERO_PATH="${ITERO_PATH:-$(cd "$(dirname "$0")/.." && pwd)}"
 source "$ITERO_PATH/lib/helpers.sh"
 
 MIGRATIONS_DIR="$ITERO_PATH/migrations"
 STATE_DIR="$HOME/.local/state/itero/migrations"
 mkdir -p "$STATE_DIR"
-
-print_usage() {
-    echo "Usage: itero-migrate [OPTION]"
-    echo ""
-    echo "Options:"
-    echo "  --create <name>   Create a new migration with the given name"
-    echo "  --pending         List pending migrations without running them"
-    echo "  --mark-all        Mark all migrations as done (used on fresh install)"
-    echo "  --run             Run all pending migrations"
-}
 
 create_migration() {
     local name="$1"

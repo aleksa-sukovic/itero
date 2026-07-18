@@ -2,6 +2,27 @@
 
 CONFIG_FILE="$HOME/.local/state/syncthing/config.xml"
 
+usage() {
+    echo "Usage: itero-syncthing"
+    echo ""
+    echo "Open the local Syncthing web interface."
+    echo ""
+    echo "Options:"
+    echo "  --help, -h    Show this help message"
+}
+
+case "${1:-}" in
+    --help|-h)
+        usage
+        exit 0
+        ;;
+    "") ;;
+    *)
+        usage
+        exit 1
+        ;;
+esac
+
 if [ -f "$CONFIG_FILE" ]; then
     port=$(grep -oP '(?<=<address>127.0.0.1:)\d+' "$CONFIG_FILE")
     [ -n "$port" ] && xdg-open "http://127.0.0.1:$port"

@@ -4,6 +4,28 @@ ITERO_PATH="${ITERO_PATH:-$HOME/.local/share/itero}"
 THEMES_DIR="$ITERO_PATH/themes"
 CURRENT_LINK="$THEMES_DIR/current"
 
+usage() {
+    echo "Usage: itero-theme [theme] [--accent <color>]"
+    echo ""
+    echo "Apply an Itero theme and accent color. Without a theme, reapplies the current theme."
+    echo ""
+    echo "Options:"
+    echo "  --accent <color>   Apply an accent color"
+    echo "  --list, -l         List available themes"
+    echo "  --current, -c      Show the current theme"
+    echo "  --current-accent   Show the current accent color"
+    echo "  --help, -h         Show this help message"
+}
+
+for arg in "$@"; do
+    case "$arg" in
+        --help|-h)
+            usage
+            exit 0
+            ;;
+    esac
+done
+
 source "$ITERO_PATH/lib/helpers.sh"
 
 # Load environment variables

@@ -3,6 +3,27 @@
 WALLPAPERS_DIR="$HOME/.local/share/itero/wallpapers"
 CURRENT_LINK="$HOME/.local/state/itero/current_wallpaper"
 
+usage() {
+    echo "Usage: itero-cycle-wallpaper"
+    echo ""
+    echo "Set the next wallpaper from the Itero wallpapers directory."
+    echo ""
+    echo "Options:"
+    echo "  --help, -h    Show this help message"
+}
+
+case "${1:-}" in
+    --help|-h)
+        usage
+        exit 0
+        ;;
+    "") ;;
+    *)
+        usage
+        exit 1
+        ;;
+esac
+
 if command -v fd >/dev/null; then
     mapfile -t WALLPAPERS < <(fd . "$WALLPAPERS_DIR" -e png -e jpg -e jpeg | sort)
 else

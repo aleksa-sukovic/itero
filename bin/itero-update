@@ -2,7 +2,16 @@
 set -e
 
 ITERO_PATH="${ITERO_PATH:-$HOME/.local/share/itero}"
-source "$ITERO_PATH/lib/helpers.sh"
+
+usage() {
+    echo "Usage: itero-update [--firmware]"
+    echo ""
+    echo "Update system and Flatpak packages."
+    echo ""
+    echo "Options:"
+    echo "  --firmware    Also check for and install firmware updates"
+    echo "  --help, -h    Show this help message"
+}
 
 update_firmware=false
 
@@ -10,16 +19,17 @@ case "${1:-}" in
     "") ;;
     --firmware) update_firmware=true ;;
     -h|--help)
-        echo "Usage: itero-update [--firmware]"
-        echo "  --firmware    Also check for and install firmware updates"
+        usage
         exit 0
         ;;
     *)
-        log_warn "Unknown option: $1"
-        echo "Usage: itero-update [--firmware]"
+        echo "Unknown option: $1" >&2
+        usage >&2
         exit 1
         ;;
 esac
+
+source "$ITERO_PATH/lib/helpers.sh"
 
 if ! is_linux; then
     log_warn "itero-update currently supports Linux only"
