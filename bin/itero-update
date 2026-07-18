@@ -1,0 +1,47 @@
+#!/bin/bash
+set -e
+
+ITERO_PATH="${ITERO_PATH:-$HOME/.local/share/itero}"
+source "$ITERO_PATH/lib/helpers.sh"
+
+update_firmware=false
+
+case "${1:-}" in
+    "") ;;
+    --firmware) update_firmware=true ;;
+    -h|--help)
+        echo "Usage: itero-update [--firmware]"
+        echo "  --firmware    Also check for and install firmware updates"
+        exit 0
+        ;;
+    *)
+        log_warn "Unknown option: $1"
+        echo "Usage: itero-update [--firmware]"
+        exit 1
+        ;;
+esac
+
+if ! is_linux; then
+    log_warn "itero-update currently supports Linux only"
+    exit 1
+fi
+
+log_info "Updating system packages..."
+sudo dnf upgrade --refresh
+
+if command_exists flatpak; then
+    log_info "Updating Flatpak applications..."
+    flatpak update
+fi
+
+if [ "$update_firmware" = true ]; then
+    if command_exists fwupdmgr; then
+        log_info "Checking for firmware updates..."
+        fwupdmgr refresh --force
+        fwupdmgr update
+    else
+        log_warn "fwupdmgr is not installed; skipping firmware updates"
+    fi
+fi
+
+log_ok "System update complete"
