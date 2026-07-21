@@ -7,5 +7,8 @@
         { "class": "org.gnome.NautilusPreviewer" },
         { "class": "org.mozilla.firefox", "title": "^Extension: " }
     ],
+    "active_border_exclusions": [
+        { "class": "vicinae" }
+    ],
     "log_on_focus": false
 }
