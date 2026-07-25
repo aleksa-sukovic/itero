@@ -25,7 +25,6 @@ regular_packages=(
     "rclone"
     "apps"
     "bruno"
-    "gitkraken"
     "vscode"
     "copilot"
     "pi"
