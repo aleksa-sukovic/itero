@@ -5,6 +5,7 @@
         { "class": "org.gnome.Weather" },
         { "class": "com.mattjakeman.ExtensionManager" },
         { "class": "org.gnome.NautilusPreviewer" },
+        { "class": "Steam" },
         { "class": "org.mozilla.firefox", "title": "^Extension: " }
     ],
     "active_border_exclusions": [
