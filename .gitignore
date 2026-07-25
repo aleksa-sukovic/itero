@@ -17,6 +17,7 @@ config/lazygit/config.yml
 config/lazydocker/config.yml
 config/mise/config.toml
 config/syncthing/syncthing.desktop
+config/keychron/keychron-launcher.desktop
 config/btop/btop.desktop
 config/btop/btop.conf
 config/yazi/yazi.desktop

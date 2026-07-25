@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=Keychron Launcher
+Comment=Configure Keychron devices
+Exec=chromium-browser https://launcher.keychron.com
+Icon={{ $ITERO_PATH }}/config/keychron/keychron-launcher.png
+Type=Application
+Categories=Settings;HardwareSettings;
+Terminal=false
+StartupNotify=true

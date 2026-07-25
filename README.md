@@ -12,7 +12,7 @@ git clone https://github.com/aleksa-sukovic/itero ~/.local/share/itero
 On first run, Itero creates an `.env` file from `.env.example` and prompts for machine-specific values. After editing `.env`, proceed with incremental setup in the following order, restarting the system after each step:
 
 ```bash
-ITC=common,nvidia,wezterm,kitty,starship,fonts,shell itero
+ITC=common,nvidia,keychron,wezterm,kitty,starship,fonts,shell itero
 ITC=mise,nvim,tmux,yazi,lazygit,docker,lazydocker itero
 ITC=apps,bruno,vscode,fastfetch,btop,vicinae itero
 ITC=snapshots,syncthing,rclone itero
