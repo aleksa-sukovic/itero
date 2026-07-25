@@ -38,6 +38,10 @@ To manage a `/work` bind mount, set `ITERO_WORKDIR` in `.env` to the directory t
 ITC=common,wezterm,kitty,starship,fonts,shell,mise,nvim,tmux,yazi,lazygit,lazydocker,fastfetch,btop,bruno,theme itero
 ```
 
+### Selective Install
+
+Use `itero --help` to see the available components. Optional packages are skipped by both a normal full run and `ITC=all`; select them explicitly to install.
+
 ## Partition Setup
 
 Before installing, set up your disk partitions following these:
@@ -46,10 +50,6 @@ Before installing, set up your disk partitions following these:
 - **`/`** (50-100 GB minimum) - Root partition for system files (btrfs)
 - **`/home`** (remaining space) - User data partition (ext4)
 - **swap** (optional) - For systems with ≤8 GB RAM, use swap equal to RAM size; for 8-16 GB RAM, use half the RAM size; for >16 GB RAM, swap is optional unless hibernation is needed (then use RAM size)
-
-### Selective Install
-
-Use `itero --help` to see the available components. Optional packages are skipped by both a normal full run and `ITC=all`; select them explicitly to install.
 
 ## Update
 

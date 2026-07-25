@@ -10,7 +10,6 @@ regular_packages=(
     "nvidia"
     "bluetooth"
     "wezterm"
-    "kitty"
     "starship"
     "fonts"
     "shell"
@@ -38,6 +37,7 @@ regular_packages=(
 
 optional_packages=(
     "docker"
+    "kitty"
 )
 
 usage() {
@@ -53,7 +53,6 @@ usage() {
     echo "  ITC=<components>      Install only comma-separated components"
     echo "  Regular packages:"
     printf "    %s\n" "${regular_packages[@]}"
-    echo "  Optional packages install only when selected explicitly"
     echo "  Optional packages:"
     printf "    %s\n" "${optional_packages[@]}"
 }
