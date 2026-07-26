@@ -30,7 +30,8 @@ if is_linux; then
         ffmpeg-devel \
         7zip \
         ImageMagick \
-        nautilus-python
+        nautilus-python \
+        pulseaudio-utils
 
     # Enable RMP Fusion. See also: https://docs.fedoraproject.org/en-US/quick-docs/rpmfusion-setup/.
     fedora_release="$(rpm -E %fedora)"

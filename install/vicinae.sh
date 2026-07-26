@@ -34,3 +34,4 @@ install_vicinae_extension() {
 
 install_vicinae_extension "theme-switcher"
 install_vicinae_extension "monitor-control"
+install_vicinae_extension "audio-device-switcher"
