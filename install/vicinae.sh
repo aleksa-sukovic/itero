@@ -8,26 +8,29 @@ fi
 link_file "$ITERO_CONFIG/vicinae/settings.user.jsonc" "$HOME/.config/vicinae/settings.user.jsonc"
 init_local "$ITERO_CONFIG/vicinae/settings.default.json" "$HOME/.config/vicinae/settings.json"
 
-# Setup Vicinae theme switcher extension
-local vicinae_extensions_dir="$HOME/.local/share/vicinae/extensions"
-local vicinae_extension_name="theme-switcher"
+# Build and install a bundled Vicinae extension
+install_vicinae_extension() {
+    local extension_name="$1"
+    local extensions_dir="$HOME/.local/share/vicinae/extensions"
+    local source_dir="$ITERO_CONFIG/vicinae/extensions/$extension_name"
+    local destination_dir="$extensions_dir/$extension_name"
+    local build_dir
 
-local vicinae_extension_source_dir="$ITERO_CONFIG/vicinae/extensions/$vicinae_extension_name"
-local vicinae_extension_dest_dir="$vicinae_extensions_dir/$vicinae_extension_name"
+    mkdir -p "$extensions_dir"
+    build_dir="$(mktemp -d)"
 
-mkdir -p "$vicinae_extensions_dir"
+    rm -rf "$destination_dir"
 
-local vicinae_extension_build_dir
-vicinae_extension_build_dir="$(mktemp -d)"
+    (
+        cp -R "$source_dir"/. "$build_dir"
+        cd "$build_dir"
+        npm ci --quiet --no-fund --no-audit
+        npm run build --silent
+    )
 
-rm -rf "$vicinae_extension_dest_dir"
+    rm -rf "$build_dir"
+    log_ok "Installed Vicinae extension: $extension_name"
+}
 
-(
-    cp -R "$vicinae_extension_source_dir"/. "$vicinae_extension_build_dir"
-    cd "$vicinae_extension_build_dir"
-    npm ci --quiet --no-fund --no-audit
-    npm run build --silent
-)
-
-rm -rf "$vicinae_extension_build_dir"
-log_ok "Installed Vicinae extension: $vicinae_extension_name"
+install_vicinae_extension "theme-switcher"
+install_vicinae_extension "monitor-control"

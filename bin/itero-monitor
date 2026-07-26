@@ -1,0 +1,163 @@
+#!/bin/bash
+
+# Control an external monitor through DDC/CI
+
+BRIGHTNESS_STEP=10
+
+usage() {
+    echo "Usage: itero-monitor <command> [option]"
+    echo ""
+    echo "Control a single external monitor through DDC/CI."
+    echo ""
+    echo "Commands:"
+    echo "  brightness --up|--down  Adjust brightness by ${BRIGHTNESS_STEP}%"
+    echo "  input --list            List available input sources"
+    echo "  input <source>          Switch to an input source from --list"
+    echo "  detect                  Show DDC/CI display detection results"
+    echo "  --help, -h              Show this help message"
+}
+
+# Return the I2C bus for the single detected external display
+get_monitor_bus() {
+    local buses
+
+    if ! command -v ddcutil > /dev/null; then
+        echo "Error: ddcutil is not installed" >&2
+        return 1
+    fi
+
+    mapfile -t buses < <(
+        ddcutil detect --terse 2> /dev/null | awk '
+            /^Display [0-9]+$/ { in_display = 1; next }
+            /^Invalid display$/ { in_display = 0 }
+            in_display && /I2C bus:/ {
+                sub(".*/dev/i2c-", "")
+                print
+                in_display = 0
+            }
+        '
+    )
+
+    if [ "${#buses[@]}" -eq 0 ]; then
+        echo "Error: no external display detected via DDC/CI" >&2
+        return 1
+    fi
+
+    if [ "${#buses[@]}" -gt 1 ]; then
+        echo "Error: multiple external displays detected; monitor selection is not supported yet" >&2
+        return 1
+    fi
+
+    echo "${buses[0]}"
+}
+
+# List the input sources reported by the monitor capabilities string
+list_input_sources() {
+    local bus="$1"
+    local capabilities
+
+    if ! capabilities="$(ddcutil capabilities --bus "$bus" 2> /dev/null)"; then
+        echo "Error: failed to read monitor capabilities" >&2
+        return 1
+    fi
+
+    printf '%s\n' "$capabilities" | awk '
+        /Feature: 60 \(Input Source\)/ { in_input_source = 1; next }
+        in_input_source && /^   Feature:/ { exit }
+        in_input_source && /^[[:space:]]+[[:xdigit:]][[:xdigit:]]:/ {
+            code = $1
+            sub(":", "", code)
+            $1 = ""
+            sub(/^[[:space:]]+/, "")
+            label = $0
+
+            if (label == "Unrecognized value") {
+                label = "Input 0x" code
+            }
+
+            print "0x" tolower(code) "\t" label
+        }
+    '
+}
+
+adjust_brightness() {
+    local direction="$1"
+    local bus
+    local operator
+
+    bus="$(get_monitor_bus)" || return 1
+
+    case "$direction" in
+        --up) operator="+" ;;
+        --down) operator="-" ;;
+        *)
+            echo "Error: brightness expects --up or --down" >&2
+            return 1
+            ;;
+    esac
+
+    ddcutil setvcp 10 "$operator" "$BRIGHTNESS_STEP" \
+        --bus "$bus" \
+        --noverify \
+        --sleep-multiplier 0.1
+}
+
+switch_input() {
+    local requested_source="$1"
+    local bus
+    local source
+
+    bus="$(get_monitor_bus)" || return 1
+    source="${requested_source,,}"
+    source="0x${source#0x}"
+
+    if [[ ! "$source" =~ ^0x[[:xdigit:]][[:xdigit:]]$ ]]; then
+        echo "Error: invalid input source '$requested_source'" >&2
+        return 1
+    fi
+
+    if ! list_input_sources "$bus" | cut -f1 | grep -Fxq "$source"; then
+        echo "Error: input source '$source' is not reported by this monitor" >&2
+        return 1
+    fi
+
+    # N.B. Some LG monitors ignore VCP 0x60 writes; see https://github.com/rockowitz/ddcutil/issues/100
+    ddcutil setvcp 60 "$source" \
+        --bus "$bus" \
+        --noverify \
+        --sleep-multiplier 0.1
+}
+
+command="${1:-}"
+
+case "$command" in
+    brightness)
+        adjust_brightness "${2:-}"
+        ;;
+    input)
+        case "${2:-}" in
+            --list)
+                bus="$(get_monitor_bus)" || exit 1
+                list_input_sources "$bus"
+                ;;
+            "")
+                echo "Error: input expects --list or a source code" >&2
+                exit 1
+                ;;
+            *)
+                switch_input "$2"
+                ;;
+        esac
+        ;;
+    detect)
+        ddcutil detect
+        ;;
+    --help|-h|"")
+        usage
+        ;;
+    *)
+        echo "Error: unknown command '$command'" >&2
+        usage >&2
+        exit 1
+        ;;
+esac
