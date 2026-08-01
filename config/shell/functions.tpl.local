@@ -1,14 +1,2 @@
 #!/bin/bash
 
-# Reboot once into the current Windows entry from Fedora GRUB
-reboot-windows() {
-    local entry
-    entry=$(sudo awk -F "'" '/^menuentry / && /Windows Boot Manager/ { print $2; exit }' /boot/grub2/grub.cfg)
-
-    if [[ -z "$entry" ]]; then
-        print -u2 'No Windows Boot Manager entry was found in GRUB.'
-        return 1
-    fi
-
-    sudo grub2-reboot "$entry" && sudo reboot
-}
