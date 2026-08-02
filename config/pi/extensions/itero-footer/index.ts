@@ -1,7 +1,6 @@
 import { type ExtensionAPI, type ExtensionContext, type Theme } from "@earendil-works/pi-coding-agent";
 import { truncateToWidth, visibleWidth } from "@earendil-works/pi-tui";
 
-const FOOTER_HEIGHT = 1;
 const usage_event = "itero:provider-usage";
 
 type TokenTotals = {
@@ -38,27 +37,16 @@ export default function (pi: ExtensionAPI) {
         ctx.ui.setFooter((tui, theme, footer_data) => {
             const unsubscribe = footer_data.onBranchChange(() => tui.requestRender());
             request_render = () => tui.requestRender();
-            const footer_component = {
+            return {
                 dispose() {
                     unsubscribe();
                     request_render = undefined;
                 },
                 invalidate() {},
                 render(width: number): string[] {
-                    const content_height = tui.children.reduce(
-                        (height, component) => component === footer_component ? height : height + component.render(width).length,
-                        0,
-                    );
-                    const spacer_height = Math.max(0, tui.terminal.rows - content_height - FOOTER_HEIGHT);
-
-                    return [
-                        ...Array.from({ length: spacer_height }, () => ""),
-                        render_footer(ctx, footer_data.getGitBranch(), usage, theme, width),
-                    ];
+                    return [render_footer(ctx, footer_data.getGitBranch(), usage, theme, width)];
                 },
             };
-
-            return footer_component;
         });
     });
 
@@ -66,9 +54,7 @@ export default function (pi: ExtensionAPI) {
         usage = undefined;
         request_render = undefined;
         remove_usage_listener();
-        if (ctx.mode === "tui") {
-            ctx.ui.setFooter(undefined);
-        }
+        if (ctx.mode === "tui") ctx.ui.setFooter(undefined);
     });
 }
 
