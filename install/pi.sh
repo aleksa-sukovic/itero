@@ -4,8 +4,14 @@ fi
 
 link_mirror "$ITERO_CONFIG/pi" "$HOME/.pi/agent"
 
-if ! pi list 2>/dev/null | grep -Fq "@narumitw/pi-web-search"; then
-    pi install npm:@narumitw/pi-web-search
-elif should_update; then
-    pi update npm:@narumitw/pi-web-search
-fi
+pi_extensions=(
+    "pi-web-access"
+)
+
+for extension in "${pi_extensions[@]}"; do
+    if ! pi list 2>/dev/null | grep -Fq "$extension"; then
+        pi install "npm:$extension"
+    elif should_update; then
+        pi update "npm:$extension"
+    fi
+done
