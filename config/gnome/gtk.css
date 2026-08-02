@@ -1,9 +1,10 @@
+/* Itero WM applies the visible corner radius */
 :root {
-    --window-radius: 4px;
+    --window-radius: 0px;
 }
 
 window.csd {
-    border-radius: 4px;
+    border-radius: 0px;
 }
 
 window.csd.maximized,

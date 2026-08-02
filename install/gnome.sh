@@ -17,7 +17,6 @@ GNOME_DISABLED_USER_SERVICES=(
 GNOME_EXTENSIONS=(
     "gsconnect@andyholmes.github.io"
     "night-light-slider-updated@vilsbeg.codeberg.org"
-    "rounded-window-corners@fxgn"
     "vicinae@dagimg-dot"
 )
 
@@ -69,10 +68,6 @@ done
 mkdir -p "$HOME/.config/autostart"
 link_file "/usr/share/applications/vicinae.desktop" "$HOME/.config/autostart/vicinae.desktop"
 
-# Apply GTK styles
-link_file "$ITERO_CONFIG/gnome/gtk.css" "$HOME/.config/gtk-3.0/gtk.css"
-link_file "$ITERO_CONFIG/gnome/gtk.css" "$HOME/.config/gtk-4.0/gtk.css"
-
 # Load dconf settings
 local dconf_file="$ITERO_CONFIG/gnome/dconf.ini"
 if [[ -f "$dconf_file" ]]; then
@@ -81,5 +76,9 @@ if [[ -f "$dconf_file" ]]; then
         log_ok "Loaded GNOME dconf settings"
     fi
 fi
+
+# Apply GTK styles
+link_file "$ITERO_CONFIG/gnome/gtk.css" "$HOME/.config/gtk-3.0/gtk.css"
+link_file "$ITERO_CONFIG/gnome/gtk.css" "$HOME/.config/gtk-4.0/gtk.css"
 
 log_ok "GNOME setup complete"
