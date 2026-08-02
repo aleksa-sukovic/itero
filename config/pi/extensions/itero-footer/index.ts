@@ -1,6 +1,7 @@
 import { type ExtensionAPI, type ExtensionContext, type Theme } from "@earendil-works/pi-coding-agent";
-import { type Component, truncateToWidth, visibleWidth } from "@earendil-works/pi-tui";
+import { truncateToWidth, visibleWidth } from "@earendil-works/pi-tui";
 
+const FOOTER_HEIGHT = 1;
 const usage_event = "itero:provider-usage";
 
 type TokenTotals = {
@@ -37,31 +38,27 @@ export default function (pi: ExtensionAPI) {
         ctx.ui.setFooter((tui, theme, footer_data) => {
             const unsubscribe = footer_data.onBranchChange(() => tui.requestRender());
             request_render = () => tui.requestRender();
-            const spacer_component = {
-                invalidate() {},
-                render(width: number): string[] {
-                    // Keep the editor and footer together at the bottom of the terminal
-                    const content_height = tui.children.reduce(
-                        (height, component) => height + get_rendered_height_without(component, spacer_component, width),
-                        0,
-                    );
-                    const spacer_height = Math.max(0, tui.terminal.rows - content_height);
-
-                    return Array.from({ length: spacer_height }, () => "");
-                },
-            };
-
-            ctx.ui.setWidget("itero-footer-spacer", () => spacer_component);
-            return {
+            const footer_component = {
                 dispose() {
                     unsubscribe();
                     request_render = undefined;
                 },
                 invalidate() {},
                 render(width: number): string[] {
-                    return [render_footer(ctx, footer_data.getGitBranch(), usage, theme, width)];
+                    const content_height = tui.children.reduce(
+                        (height, component) => component === footer_component ? height : height + component.render(width).length,
+                        0,
+                    );
+                    const spacer_height = Math.max(0, tui.terminal.rows - content_height - FOOTER_HEIGHT);
+
+                    return [
+                        ...Array.from({ length: spacer_height }, () => ""),
+                        render_footer(ctx, footer_data.getGitBranch(), usage, theme, width),
+                    ];
                 },
             };
+
+            return footer_component;
         });
     });
 
@@ -70,34 +67,9 @@ export default function (pi: ExtensionAPI) {
         request_render = undefined;
         remove_usage_listener();
         if (ctx.mode === "tui") {
-            ctx.ui.setWidget("itero-footer-spacer", undefined);
             ctx.ui.setFooter(undefined);
         }
     });
-}
-
-function get_rendered_height_without(component: Component, omitted_component: Component, width: number): number {
-    if (component === omitted_component) return 0;
-
-    const children = get_component_children(component);
-    if (!children?.some((child) => contains_component(child, omitted_component))) {
-        return component.render(width).length;
-    }
-
-    return children.reduce(
-        (height, child) => height + get_rendered_height_without(child, omitted_component, width),
-        0,
-    );
-}
-
-function contains_component(component: Component, target: Component): boolean {
-    if (component === target) return true;
-    return get_component_children(component)?.some((child) => contains_component(child, target)) ?? false;
-}
-
-function get_component_children(component: Component): Component[] | undefined {
-    const children = (component as Component & { children?: unknown }).children;
-    return Array.isArray(children) ? children as Component[] : undefined;
 }
 
 function render_footer(
@@ -126,24 +98,33 @@ function render_footer(
         tokens.cache_write > 0 ? `cache write: ${format_tokens(tokens.cache_write)}` : undefined,
         get_cache_hit_rate(tokens),
     ].filter((part): part is string => Boolean(part));
-    const usage_text = usage?.provider === ctx.model?.provider ? usage.text : undefined;
+    const usage_text = usage?.provider === ctx.model?.provider ? usage?.text : undefined;
     const right = [get_model_label(ctx), usage_text].filter(Boolean).join(" • ");
 
-    let parts = [...required_parts, ...optional_parts];
+    const parts = [...required_parts, ...optional_parts];
     while (parts.length > required_parts.length && visibleWidth(parts.join("  ")) + visibleWidth(right) + 2 > width) {
         parts.pop();
     }
 
-    let left = parts.join("  ");
-    const available_left_width = Math.max(0, width - visibleWidth(right) - 2);
-    left = truncateToWidth(left, available_left_width, "…");
+    return render_stats_line(parts.join("  "), right, context_percent, theme, width);
+}
 
-    const padding = " ".repeat(Math.max(2, width - visibleWidth(left) - visibleWidth(right)));
+function render_stats_line(
+    left: string,
+    right: string,
+    context_percent: number | null | undefined,
+    theme: Theme,
+    width: number,
+): string {
+    const available_left_width = Math.max(0, width - visibleWidth(right) - 2);
+    const truncated_left = truncateToWidth(left, available_left_width, "…");
+    const padding = " ".repeat(Math.max(2, width - visibleWidth(truncated_left) - visibleWidth(right)));
     const left_style = context_percent !== null && context_percent !== undefined && context_percent > 90
-        ? theme.fg("error", left)
+        ? theme.fg("error", truncated_left)
         : context_percent !== null && context_percent !== undefined && context_percent > 70
-            ? theme.fg("warning", left)
-            : theme.fg("dim", left);
+            ? theme.fg("warning", truncated_left)
+            : theme.fg("dim", truncated_left);
+
     return truncateToWidth(left_style + theme.fg("dim", padding + right), width);
 }
 
