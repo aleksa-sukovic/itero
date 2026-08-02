@@ -1,5 +1,5 @@
 import { type ExtensionAPI, type ExtensionContext, type Theme } from "@earendil-works/pi-coding-agent";
-import { truncateToWidth, visibleWidth } from "@earendil-works/pi-tui";
+import { type Component, truncateToWidth, visibleWidth } from "@earendil-works/pi-tui";
 
 const usage_event = "itero:provider-usage";
 
@@ -37,7 +37,21 @@ export default function (pi: ExtensionAPI) {
         ctx.ui.setFooter((tui, theme, footer_data) => {
             const unsubscribe = footer_data.onBranchChange(() => tui.requestRender());
             request_render = () => tui.requestRender();
+            const spacer_component = {
+                invalidate() {},
+                render(width: number): string[] {
+                    // Keep the editor and footer together at the bottom of the terminal
+                    const content_height = tui.children.reduce(
+                        (height, component) => height + get_rendered_height_without(component, spacer_component, width),
+                        0,
+                    );
+                    const spacer_height = Math.max(0, tui.terminal.rows - content_height);
 
+                    return Array.from({ length: spacer_height }, () => "");
+                },
+            };
+
+            ctx.ui.setWidget("itero-footer-spacer", () => spacer_component);
             return {
                 dispose() {
                     unsubscribe();
@@ -55,8 +69,35 @@ export default function (pi: ExtensionAPI) {
         usage = undefined;
         request_render = undefined;
         remove_usage_listener();
-        if (ctx.mode === "tui") ctx.ui.setFooter(undefined);
+        if (ctx.mode === "tui") {
+            ctx.ui.setWidget("itero-footer-spacer", undefined);
+            ctx.ui.setFooter(undefined);
+        }
     });
+}
+
+function get_rendered_height_without(component: Component, omitted_component: Component, width: number): number {
+    if (component === omitted_component) return 0;
+
+    const children = get_component_children(component);
+    if (!children?.some((child) => contains_component(child, omitted_component))) {
+        return component.render(width).length;
+    }
+
+    return children.reduce(
+        (height, child) => height + get_rendered_height_without(child, omitted_component, width),
+        0,
+    );
+}
+
+function contains_component(component: Component, target: Component): boolean {
+    if (component === target) return true;
+    return get_component_children(component)?.some((child) => contains_component(child, target)) ?? false;
+}
+
+function get_component_children(component: Component): Component[] | undefined {
+    const children = (component as Component & { children?: unknown }).children;
+    return Array.isArray(children) ? children as Component[] : undefined;
 }
 
 function render_footer(
