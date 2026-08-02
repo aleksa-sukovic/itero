@@ -6,7 +6,8 @@
         { "class": "com.mattjakeman.ExtensionManager" },
         { "class": "org.gnome.NautilusPreviewer" },
         { "class": "Steam" },
-        { "class": "org.mozilla.firefox", "title": "^Extension: " }
+        { "class": "org.mozilla.firefox", "title": "^Extension: " },
+        { "class": "org.mozilla.firefox", "title": "bitwarden" }
     ],
     "active_border_exclusions": [
         { "class": "vicinae" }
