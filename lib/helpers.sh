@@ -326,6 +326,18 @@ hex_to_rgb() {
     echo "${r}, ${g}, ${b}"
 }
 
+# Return a hex color darkened by a percentage.
+darken_hex() {
+    local hex="$1"
+    local percentage="$2"
+
+    local r=$((16#${hex:0:2} * percentage / 100))
+    local g=$((16#${hex:2:2} * percentage / 100))
+    local b=$((16#${hex:4:2} * percentage / 100))
+
+    printf "%02x%02x%02x\n" "$r" "$g" "$b"
+}
+
 # Determine whether a hex color should be treated as light or dark.
 detect_theme_variant() {
     local hex="$1"
@@ -358,6 +370,8 @@ compile_theme_templates() {
     [[ -n "$background_hex" ]] || { echo "No background color in $palette_file" >&2; return 1; }
     local accent_rgb
     accent_rgb="$(hex_to_rgb "$accent_hex")"
+    local accent_dark_rgb
+    accent_dark_rgb="$(hex_to_rgb "$(darken_hex "$accent_hex" 65)")"
     local accent_name_capitalized="$(echo "${accent_name:0:1}" | tr '[:lower:]' '[:upper:]')${accent_name:1}"
     local theme_variant
     theme_variant="$(detect_theme_variant "$background_hex")"
@@ -369,6 +383,7 @@ compile_theme_templates() {
         echo "accent = \"#${accent_hex}\""
         echo "accent_name = \"$accent_name\""
         echo "accent_rgb = \"$accent_rgb\""
+        echo "accent_dark_rgb = \"$accent_dark_rgb\""
         echo "accent_name_capitalized = \"$accent_name_capitalized\""
         echo "theme_variant = \"$theme_variant\""
         echo "delta_mode = \"$theme_variant\""
