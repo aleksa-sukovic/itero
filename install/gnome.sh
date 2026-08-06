@@ -36,7 +36,7 @@ local itero_wm_config_dir="$HOME/.config/itero-wm"
 local itero_wm_schema="org.gnome.shell.extensions.itero-wm.gschema.xml"
 
 if [[ ! -d "$itero_wm_dir" ]]; then
-    git clone -b master "$itero_wm_repo" "$itero_wm_dir"
+    git clone -b main "$itero_wm_repo" "$itero_wm_dir"
 fi
 
 cd "$itero_wm_dir"
