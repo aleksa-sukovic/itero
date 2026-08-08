@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Name=Buzz
+Comment=Workspace for humans and AI agents
+Exec={{ $HOME }}/.local/share/buzz/Buzz.AppImage
+Icon={{ $ITERO_PATH }}/config/buzz/buzz.png
+Terminal=false
+Categories=Network;Chat;
+StartupNotify=true

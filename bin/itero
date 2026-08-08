@@ -24,6 +24,7 @@ regular_packages=(
     "syncthing"
     "rclone"
     "apps"
+    "buzz"
     "bruno"
     "vscode"
     "copilot"
