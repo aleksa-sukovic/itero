@@ -7,3 +7,4 @@ Icon={{ $ITERO_PATH }}/config/buzz/buzz.png
 Terminal=false
 Categories=Network;Chat;
 StartupNotify=true
+StartupWMClass=buzz-desktop
