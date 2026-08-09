@@ -14,7 +14,7 @@ On first run, Itero creates an `.env` file from `.env.example` and prompts for m
 ```bash
 ITC=common,nvidia,keychron,wezterm,kitty,starship,fonts,shell itero
 ITC=mise,nvim,tmux,yazi,lazygit,docker,lazydocker itero
-ITC=apps,bruno,vscode,fastfetch,btop,vicinae itero
+ITC=apps,bruno,vscode,fastfetch,btop,vicinae,buzz itero
 ITC=snapshots,syncthing,rclone itero
 ITC=theme,gnome,gdm itero
 ```
