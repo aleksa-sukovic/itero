@@ -6,6 +6,7 @@ rust = { version = "latest", components = "rustc,cargo,rustfmt,rust-std,rust-doc
 python = ["3.13", "3.14"]
 
 [settings]
+minimum_release_age = "7d"
 python.uv_venv_auto = "create|source"
 rust.cargo_home = "{{ $HOME }}/.local/share/rust/cargo"
 rust.rustup_home = "{{ $HOME }}/.local/share/rust/rustup"
