@@ -1,6 +1,6 @@
 #!/bin/bash
 
-NERD_FONTS_VERSION="v3.4.0"
+NERD_FONTS_VERSION="v3.5.0"
 NERD_FONTS_URL="https://github.com/ryanoasis/nerd-fonts/releases/download/${NERD_FONTS_VERSION}"
 NERD_FONTS=("JetBrainsMono")
 
