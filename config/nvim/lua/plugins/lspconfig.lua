@@ -122,8 +122,12 @@ return {
                 },
             },
             basedpyright = {
-                analysis = {
-                    diagnosticMode = "openFilesOnly",
+                settings = {
+                    basedpyright = {
+                        analysis = {
+                            diagnosticMode = "openFilesOnly",
+                        },
+                    },
                 },
             },
             ruff = {},
