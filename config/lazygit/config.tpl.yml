@@ -4,27 +4,27 @@ os:
 git:
     pagers:
         - colorArg: "always"
-          pager: "delta --{{ delta_mode }} --paging=never"
+          pager: "delta --{{ mode }} --paging=never"
 gui:
     theme:
         activeBorderColor:
             - "{{ accent }}"
             - bold
         inactiveBorderColor:
-            - "{{ color15 }}"
+            - "{{ muted }}"
         optionsTextColor:
             - "{{ accent }}"
         selectedLineBgColor:
-            - "{{ color0 }}"
+            - "{{ selection }}"
         cherryPickedCommitBgColor:
-            - "{{ color8 }}"
+            - "{{ muted }}"
         cherryPickedCommitFgColor:
             - "{{ accent }}"
         unstagedChangesColor:
-            - "{{ color1 }}"
+            - "{{ red }}"
         defaultFgColor:
             - "{{ foreground }}"
         searchingActiveBorderColor:
-            - "{{ color3 }}"
+            - "{{ yellow }}"
     authorColors:
-        "*": "{{ color5 }}"
+        "*": "{{ magenta }}"

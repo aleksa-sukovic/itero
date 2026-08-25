@@ -5,11 +5,11 @@ gui:
             - "{{ accent }}"
             - bold
         inactiveBorderColor:
-            - "{{ color15 }}"
+            - "{{ muted }}"
         optionsTextColor:
             - "{{ accent }}"
         selectedLineBgColor:
-            - "{{ color0 }}"
+            - "{{ selection }}"
 stats:
     graphs:
         - caption: CPU (%)
@@ -17,4 +17,4 @@ stats:
           color: "{{ accent }}"
         - caption: Memory (%)
           statPath: DerivedStats.MemoryPercentage
-          color: "{{ color2 }}"
+          color: "{{ green }}"

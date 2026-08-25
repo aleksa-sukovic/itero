@@ -338,19 +338,20 @@ darken_hex() {
     printf "%02x%02x%02x\n" "$r" "$g" "$b"
 }
 
-# Determine whether a hex color should be treated as light or dark.
-detect_theme_variant() {
-    local hex="$1"
-    local r=$((16#${hex:0:2}))
-    local g=$((16#${hex:2:2}))
-    local b=$((16#${hex:4:2}))
-    local brightness=$(((299 * r + 587 * g + 114 * b) / 1000))
+# Read and validate the display mode configured by a theme.
+get_theme_mode() {
+    local palette_file="$1"
+    local mode
 
-    if [ "$brightness" -ge 186 ]; then
-        echo "light"
-    else
-        echo "dark"
-    fi
+    mode="$(sed -nE 's/^[[:space:]]*mode[[:space:]]*=[[:space:]]*"([^"]+)"[[:space:]]*$/\1/p' "$palette_file" | sed -n '1p')"
+
+    case "$mode" in
+        light|dark) echo "$mode" ;;
+        *)
+            echo "No valid mode in $palette_file (expected light or dark)" >&2
+            return 1
+            ;;
+    esac
 }
 
 # Compile theme-specific templates from a canonical palette file.
@@ -362,19 +363,18 @@ compile_theme_templates() {
     local vicinae_file="$theme_dir/vicinae.conf"
 
     [[ -f "$palette_file" ]] || { echo "No palette file: $palette_file" >&2; return 1; }
-    local accent_hex
-    accent_hex="$(resolve_accent_hex "$palette_file" "$accent_name")"
-    [[ -n "$accent_hex" ]] || { echo "No accent '${accent_name}' in $palette_file" >&2; return 1; }
+    get_theme_mode "$palette_file" >/dev/null || return 1
     local background_hex
     background_hex="$(resolve_palette_color "$palette_file" "background")"
     [[ -n "$background_hex" ]] || { echo "No background color in $palette_file" >&2; return 1; }
+    local accent_hex
+    accent_hex="$(resolve_accent_hex "$palette_file" "$accent_name")"
+    [[ -n "$accent_hex" ]] || { echo "No accent '${accent_name}' in $palette_file" >&2; return 1; }
     local accent_rgb
     accent_rgb="$(hex_to_rgb "$accent_hex")"
     local accent_dark_rgb
     accent_dark_rgb="$(hex_to_rgb "$(darken_hex "$accent_hex" 65)")"
     local accent_name_capitalized="$(echo "${accent_name:0:1}" | tr '[:lower:]' '[:upper:]')${accent_name:1}"
-    local theme_variant
-    theme_variant="$(detect_theme_variant "$background_hex")"
 
     local vars_file
     vars_file="$(mktemp)"
@@ -385,8 +385,6 @@ compile_theme_templates() {
         echo "accent_rgb = \"$accent_rgb\""
         echo "accent_dark_rgb = \"$accent_dark_rgb\""
         echo "accent_name_capitalized = \"$accent_name_capitalized\""
-        echo "theme_variant = \"$theme_variant\""
-        echo "delta_mode = \"$theme_variant\""
     } >> "$vars_file"
     [[ -f "$vicinae_file" ]] && cat "$vicinae_file" >> "$vars_file"
 

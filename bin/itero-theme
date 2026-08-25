@@ -69,34 +69,25 @@ replace_in_file() {
 
 # Update Pi's theme when its settings file exists.
 update_pi() {
-    local theme="$1"
-    local theme_file="$THEMES_DIR/$theme/pi.txt"
+    local mode="$1"
     local settings_file="$HOME/.pi/agent/settings.json"
 
-    [[ -f "$theme_file" && -f "$settings_file" ]] || return 0
+    [[ -f "$settings_file" ]] || return 0
 
-    local pi_theme="$(sed -n '1p' "$theme_file")"
-
-    replace_in_file "s/(\"theme\"[[:space:]]*:[[:space:]]*\")[^\"]*(\")/\1${pi_theme}\2/" "$settings_file"
+    replace_in_file "s/(\"theme\"[[:space:]]*:[[:space:]]*\")[^\"]*(\")/\1${mode}\2/" "$settings_file"
 }
 
 # Update Bruno's theme mode when its preferences file exists.
 update_bruno() {
-    local theme="$1"
-    local theme_file="$THEMES_DIR/$theme/bruno.txt"
+    local mode="$1"
     local preferences_files=(
         "$HOME/.var/app/com.usebruno.Bruno/config/bruno/preferences.json"
         "$HOME/Library/Application Support/Bruno/preferences.json"
     )
 
-    [[ -f "$theme_file" ]] || return 0
-
-    local bruno_theme
-    bruno_theme="$(sed -n '1p' "$theme_file")"
-
     for preferences_file in "${preferences_files[@]}"; do
         [[ -f "$preferences_file" ]] || continue
-        replace_in_file "s/(\"themeMode\"[[:space:]]*:[[:space:]]*\")[^\"]*(\")/\1${bruno_theme}\2/" "$preferences_file"
+        replace_in_file "s/(\"themeMode\"[[:space:]]*:[[:space:]]*\")[^\"]*(\")/\1${mode}\2/" "$preferences_file"
     done
 }
 
@@ -142,10 +133,9 @@ update_tmux() {
     fi
 }
 
-# Link the active btop theme.
+# Link the generated btop theme.
 update_btop() {
-    local theme="$1"
-    local theme_file="$THEMES_DIR/$theme/btop.theme"
+    local theme_file="$ITERO_PATH/config/btop/btop.theme"
 
     [[ -f "$theme_file" ]] || return 0
 
@@ -186,20 +176,23 @@ set_theme() {
         exit 1
     fi
 
+    local mode
+    mode="$(get_theme_mode "$THEMES_DIR/$theme/palette.toml")" || exit 1
+
     if [[ -z "$accent_name" ]]; then
         accent_name="$(map_accent_to_palette "$(get_accent_color)")"
     fi
+
+    # Compile theme and config templates from the canonical palette
+    compile_theme_templates "$THEMES_DIR/$theme" "$accent_name" "$ITERO_PATH/config" || exit 1
+
+    # Link the chosen theme as 'current'
+    ln -nsf "$theme" "$CURRENT_LINK"
 
     # Sync system accent when explicitly set
     if [[ -n "$2" ]]; then
         set_system_accent_color "$accent_name"
     fi
-
-    # Link the chosen theme as 'current'
-    ln -nsf "$theme" "$CURRENT_LINK"
-
-    # Compile theme and config templates from the canonical palette
-    compile_theme_templates "$THEMES_DIR/$theme" "$accent_name" "$ITERO_PATH/config" || exit 1
 
     local cursor_theme
     cursor_theme="$(get_cursor_theme "$THEMES_DIR/$theme")"
@@ -207,12 +200,12 @@ set_theme() {
 
     # Update system & applications
     update_vscode "$theme"
-    update_pi "$theme"
-    update_bruno "$theme"
+    update_pi "$mode"
+    update_bruno "$mode"
     update_yazi "$theme"
     update_terminals
     update_tmux
-    update_btop "$theme"
+    update_btop
     update_gnome "$theme" "$accent_name" "$cursor_theme"
 
     echo "Theme: $theme (accent: $accent_name)"

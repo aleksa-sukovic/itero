@@ -43,26 +43,26 @@ config.color_scheme = color_scheme
 config.colors = {
     cursor_bg = "{{ accent }}",
     tab_bar = {
-        background = "{{ color0 }}",
+        background = "{{ selection }}",
         active_tab = {
             bg_color = "{{ accent }}",
             fg_color = "{{ background }}",
             intensity = "Bold",
         },
         inactive_tab = {
-            bg_color = "{{ color15 }}",
-            fg_color = "{{ background }}",
+            bg_color = "{{ background }}",
+            fg_color = "{{ muted }}",
         },
         inactive_tab_hover = {
-            bg_color = "{{ color15 }}",
-            fg_color = "{{ background }}",
+            bg_color = "{{ background }}",
+            fg_color = "{{ muted }}",
         },
         new_tab = {
-            bg_color = "{{ color0 }}",
+            bg_color = "{{ selection }}",
             fg_color = "{{ accent }}",
         },
         new_tab_hover = {
-            bg_color = "{{ color0 }}",
+            bg_color = "{{ selection }}",
             fg_color = "{{ accent }}",
         },
     },

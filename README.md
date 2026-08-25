@@ -62,8 +62,9 @@ Before installing, set up your disk partitions following these:
 ### Adding a new theme
 
 1. Create `themes/<name>/palette.toml` as the single color source:
+    - Set `mode` to `light` or `dark`
     - Include the accent aliases used by the system picker (`blue`, `teal`, `green`, `yellow`, `peach`, `red`, `pink`, `mauve`, and `lavender`)
-    - Include app-facing keys used by templates (`background`, `foreground`, `color0..color15`, etc.)
+    - Include semantic app-facing keys used by templates (`background`, `foreground`, `selection`, `muted`, `red`, `green`, `yellow`, `cyan`, `magenta`, etc.)
     - `accent` is resolved dynamically from the system accent color
 2. Add app assets as needed (use a `.tpl` filename for files that require template substitution)
 3. Add `vicinae.conf` if the theme should map to one of Vicinae's built-in themes

@@ -6,3 +6,6 @@ elif is_macos; then
 fi
 
 link_file "$ITERO_CONFIG/btop/btop.conf" "$HOME/.config/btop/btop.conf"
+
+mkdir -p "$HOME/.config/btop/themes"
+ln -nsf "$ITERO_CONFIG/btop/btop.theme" "$HOME/.config/btop/themes/current.theme"

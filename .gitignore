@@ -20,6 +20,7 @@ config/syncthing/syncthing.desktop
 config/keychron/keychron-launcher.desktop
 config/btop/btop.desktop
 config/btop/btop.conf
+config/btop/btop.theme
 config/yazi/yazi.desktop
 config/wezterm/wezterm.lua
 config/snapshots/snapshots.desktop
