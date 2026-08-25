@@ -131,7 +131,6 @@ update_yazi() {
 # Trigger terminal configuration reloads.
 update_terminals() {
     touch "$HOME/.config/wezterm/wezterm.lua" 2>/dev/null || true
-    touch "$HOME/.config/kitty/kitty.conf" 2>/dev/null || true
 }
 
 # Reload the configuration in running tmux sessions.

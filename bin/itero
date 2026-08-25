@@ -27,7 +27,6 @@ regular_packages=(
     "buzz"
     "bruno"
     "vscode"
-    "copilot"
     "pi"
     "fastfetch"
     "btop"
@@ -39,7 +38,6 @@ regular_packages=(
 
 optional_packages=(
     "docker"
-    "kitty"
 )
 
 usage() {
