@@ -15,6 +15,7 @@ GNOME_DISABLED_USER_SERVICES=(
 )
 
 GNOME_EXTENSIONS=(
+    "auto-accent-colour@Wartybix"
     "gsconnect@andyholmes.github.io"
     "night-light-slider-updated@vilsbeg.codeberg.org"
     "vicinae@dagimg-dot"
