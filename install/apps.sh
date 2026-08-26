@@ -40,7 +40,6 @@ if is_linux; then
     flatpak_install md.obsidian.Obsidian
     flatpak_install com.calibre_ebook.calibre
     flatpak_install ca.desrt.dconf-editor
-    flatpak_install dev.qwery.AddWater
     flatpak_install io.gitlab.news_flash.NewsFlash
     flatpak_install io.dbeaver.DBeaverCommunity
 fi
