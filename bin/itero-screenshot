@@ -1,0 +1,24 @@
+#!/bin/bash
+
+# Capture and annotate a screenshot with Flameshot
+
+screenshot_dir="$HOME/Pictures/Screenshots"
+
+if [[ ${1:-} == "--help" || ${1:-} == "-h" ]]; then
+    echo "Usage: itero-screenshot"
+    echo ""
+    echo "Capture and annotate a screenshot with Flameshot."
+    exit 0
+fi
+
+if ! command -v flameshot &>/dev/null; then
+    echo "Flameshot is not installed. Run itero with the Flameshot component first." >&2
+    exit 1
+fi
+
+if ! mkdir -p "$screenshot_dir"; then
+    echo "Could not create screenshot directory: $screenshot_dir" >&2
+    exit 1
+fi
+
+flameshot gui --path "$screenshot_dir" --clipboard

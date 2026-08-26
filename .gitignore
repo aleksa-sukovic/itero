@@ -7,6 +7,7 @@ themes/current
 themes/*/cursor.txt
 themes/*/neovim.lua
 config/gnome/dconf.ini
+config/flameshot/flameshot.ini
 config/vicinae/settings.user.jsonc
 config/vicinae/settings.default.json
 config/shell/zshrc.local
