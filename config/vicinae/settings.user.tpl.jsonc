@@ -9,7 +9,7 @@
    },
    "font": {
       "normal": {
-         "size": 10
+         "size": 12
       }
    },
     "theme": {
@@ -34,6 +34,21 @@
             }
          }
       },
+     "@ShyAssassin/store.vicinae.vscode-recents": {
+         "entrypoints": {
+            "open-recents": {
+               "alias": "Visual Studio Code - Recents"
+            }
+         }
+      },
+      "@dagimg-dot/store.vicinae.wifi-commander": {
+         "preferences": {
+            "network-cli-tool": "nmcli"
+         }
+      },
+      "browser-extension": {
+         "enabled": false
+      },
       "applications": {
          "preferences": {
             "defaultAction": "focus",
@@ -53,6 +68,53 @@
          }
       },
       "core": {
+         "enabled": true,
+         "entrypoints": {
+            "list-extensions": {
+               "enabled": true
+            },
+            "manage-fallback": {
+               "enabled": false
+            },
+            "open-config-file": {
+               "enabled": true
+            },
+            "reload-scripts": {
+               "enabled": false
+            },
+            "report-bug": {
+               "enabled": false
+            },
+            "search-emojis": {
+               "enabled": false
+            },
+            "sponsor": {
+               "enabled": false
+            }
+         }
+      },
+      "developer": {
+         "enabled": false
+      },
+      "files": {
+         "enabled": false
+      },
+      "manage-shortcuts": {
+         "enabled": false
+      },
+      "raycast-compat": {
+         "enabled": false
+      },
+      "snippets": {
+         "enabled": false
+      },
+      "system": {
+         "enabled": false
+      },
+      "theme": {
+         "enabled": false
+      },
+      "wm": {
          "enabled": false
       },
       "power": {
