@@ -97,6 +97,19 @@ rules = [
 ]
 
 [icon]
+prepend_dirs = [
+    { name = "Desktop", text = "", fg = "{{ accent }}" },
+    { name = "Development", text = "", fg = "{{ accent }}" },
+    { name = "Documents", text = "", fg = "{{ accent }}" },
+    { name = "Downloads", text = "", fg = "{{ accent }}" },
+    { name = "Drive", text = "󰊢", fg = "{{ accent }}" },
+    { name = "Music", text = "", fg = "{{ accent }}" },
+    { name = "Pictures", text = "", fg = "{{ accent }}" },
+    { name = "Public", text = "", fg = "{{ accent }}" },
+    { name = "Templates", text = "󰈙", fg = "{{ accent }}" },
+    { name = "Videos", text = "", fg = "{{ accent }}" },
+    { name = "Zotero", text = "󰂺", fg = "{{ accent }}" },
+]
 prepend_conds = [
     { if = "dir & hovered", text = "", fg = "{{ accent }}" },
     { if = "dir", text = "", fg = "{{ accent }}" },
