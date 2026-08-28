@@ -27,9 +27,6 @@ for service in "${GNOME_DISABLED_USER_SERVICES[@]}"; do
         log_warn "Failed to disable user service: $service"
 done
 
-# Install Extension Manager for managing extensions via GUI
-flatpak_install "com.mattjakeman.ExtensionManager"
-
 # Set up tiling window management via Itero WM
 local itero_wm_repo="git@github.com:aleksa-sukovic/itero-wm.git"
 local itero_wm_dir="$HOME/.local/share/itero-sources/itero-wm"
@@ -55,13 +52,42 @@ sudo glib-compile-schemas /usr/share/glib-2.0/schemas/
 rm -f "$itero_wm_config_dir/config.json"
 link_file "$ITERO_CONFIG/gnome/itero-wm.json" "$itero_wm_config_dir/config.json"
 
+# Install an extension without invoking GNOME Shell's confirmation dialog
+install_gnome_extension() {
+    local uuid="$1"
+    local shell_version
+    local archive
+    local status
+    local download_url
+
+    shell_version="$(gnome-shell --version 2>/dev/null | awk '{print $NF}')"
+    [[ -n "$shell_version" ]] || return 1
+
+    archive="$(mktemp --suffix=.shell-extension.zip)" || return 1
+    download_url="https://extensions.gnome.org/download-extension/${uuid}.shell-extension.zip?shell_version=${shell_version}"
+
+    curl --fail --silent --show-error --location \
+        "$download_url" \
+        -o "$archive" || {
+        rm -f "$archive"
+        return 1
+    }
+
+    gnome-extensions install --force "$archive"
+    status=$?
+
+    rm -f "$archive"
+    return "$status"
+}
+
 # Install extensions that are not yet installed
 for ext in "${GNOME_EXTENSIONS[@]}"; do
     if ! gnome-extensions info "$ext" &>/dev/null; then
-        log_info "Installing extension: $ext"
-        busctl --user call org.gnome.Shell.Extensions /org/gnome/Shell/Extensions \
-            org.gnome.Shell.Extensions InstallRemoteExtension s "$ext" 2>/dev/null || \
+        if install_gnome_extension "$ext"; then
+            log_ok "Installed extension: $ext"
+        else
             log_warn "Failed to install $ext (install manually via Extension Manager)"
+        fi
     fi
 done
 
