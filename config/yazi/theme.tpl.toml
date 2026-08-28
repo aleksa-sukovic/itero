@@ -1,0 +1,103 @@
+[mgr]
+cwd = { fg = "{{ accent }}" }
+find_keyword = { fg = "{{ yellow }}", bold = true, italic = true, underline = true }
+find_position = { fg = "{{ peach }}", bold = true, italic = true }
+symlink_target = { fg = "{{ muted }}", italic = true }
+marker_copied = { fg = "{{ green }}", bg = "{{ green }}" }
+marker_cut = { fg = "{{ red }}", bg = "{{ red }}" }
+marker_marked = { fg = "{{ accent }}", bg = "{{ accent }}" }
+marker_selected = { fg = "{{ background }}", bg = "{{ accent }}" }
+count_copied = { fg = "{{ background }}", bg = "{{ green }}" }
+count_cut = { fg = "{{ background }}", bg = "{{ red }}" }
+count_selected = { fg = "{{ background }}", bg = "{{ accent }}" }
+border_symbol = "│"
+border_style = { fg = "{{ muted }}" }
+
+[tabs]
+active = { fg = "{{ background }}", bg = "{{ accent }}", bold = true }
+inactive = { fg = "{{ muted }}", bg = "{{ selection }}" }
+sep_inner = { open = "", close = "" }
+sep_outer = { open = "", close = "" }
+
+[mode]
+normal_main = { fg = "{{ background }}", bg = "{{ accent }}", bold = true }
+normal_alt = { fg = "{{ accent }}", bg = "{{ selection }}" }
+select_main = { fg = "{{ background }}", bg = "{{ yellow }}", bold = true }
+select_alt = { fg = "{{ yellow }}", bg = "{{ selection }}" }
+unset_main = { fg = "{{ background }}", bg = "{{ muted }}", bold = true }
+unset_alt = { fg = "{{ muted }}", bg = "{{ selection }}" }
+
+[indicator]
+parent = { reversed = true }
+current = { reversed = true }
+preview = { underline = true }
+
+[status]
+sep_left = { open = "", close = "" }
+sep_right = { open = "", close = "" }
+perm_type = { fg = "{{ accent }}" }
+perm_read = { fg = "{{ yellow }}" }
+perm_write = { fg = "{{ red }}" }
+perm_exec = { fg = "{{ green }}" }
+perm_sep = { fg = "{{ muted }}" }
+progress_label = { fg = "{{ foreground }}", bold = true }
+progress_normal = { fg = "{{ accent }}", bg = "{{ selection }}" }
+progress_error = { fg = "{{ red }}", bg = "{{ selection }}" }
+
+[which]
+border = { fg = "{{ accent }}" }
+mask = { bg = "{{ background }}" }
+cand = { fg = "{{ accent }}" }
+rest = { fg = "{{ muted }}" }
+desc = { fg = "{{ foreground }}" }
+separator = "  "
+separator_style = { fg = "{{ muted }}" }
+
+[confirm]
+border = { fg = "{{ accent }}" }
+title = { fg = "{{ accent }}" }
+btn_yes = { reversed = true, fg = "{{ accent }}" }
+
+[spot]
+border = { fg = "{{ accent }}" }
+title = { fg = "{{ accent }}" }
+tbl_col = { fg = "{{ accent }}" }
+tbl_cell = { fg = "{{ yellow }}", reversed = true }
+
+[notify]
+title_info = { fg = "{{ green }}" }
+title_warn = { fg = "{{ yellow }}" }
+title_error = { fg = "{{ red }}" }
+
+[pick]
+border = { fg = "{{ accent }}" }
+active = { fg = "{{ accent }}", bold = true }
+
+[input]
+border = { fg = "{{ accent }}" }
+selected = { reversed = true }
+
+[cmp]
+border = { fg = "{{ accent }}" }
+active = { reversed = true }
+
+[tasks]
+border = { fg = "{{ accent }}" }
+hovered = { fg = "{{ accent }}", bold = true }
+
+[help]
+border = { fg = "{{ accent }}" }
+chord = { fg = "{{ accent }}" }
+hovered = { reversed = true, bold = true }
+
+[filetype]
+rules = [
+    { url = "*/", fg = "{{ accent }}" },
+    { url = "*", fg = "{{ foreground }}" },
+]
+
+[icon]
+prepend_conds = [
+    { if = "dir & hovered", text = "", fg = "{{ accent }}" },
+    { if = "dir", text = "", fg = "{{ accent }}" },
+]

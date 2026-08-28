@@ -108,15 +108,15 @@ update_vscode() {
     done < <(find "${config_roots[@]}" \( -path "*/User/settings.json" -o -path "*/User/profiles/*/settings.json" \) -print0 2>/dev/null)
 }
 
-# Copy the active Yazi theme.
+# Link the generated Yazi theme.
 update_yazi() {
-    local theme="$1"
-    local theme_file="$THEMES_DIR/$theme/yazi.toml"
+    local theme_file="$ITERO_PATH/config/yazi/theme.toml"
 
     [[ -f "$theme_file" ]] || return 0
 
     mkdir -p "$HOME/.config/yazi"
-    cp "$theme_file" "$HOME/.config/yazi/theme.toml"
+    rm -f "$HOME/.config/yazi/theme.toml"
+    ln -s "$theme_file" "$HOME/.config/yazi/theme.toml"
 }
 
 # Trigger terminal configuration reloads.
@@ -202,7 +202,7 @@ set_theme() {
     update_vscode "$theme"
     update_pi "$mode"
     update_bruno "$mode"
-    update_yazi "$theme"
+    update_yazi
     update_terminals
     update_tmux
     update_btop

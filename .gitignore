@@ -23,6 +23,7 @@ config/btop/btop.desktop
 config/btop/btop.conf
 config/btop/btop.theme
 config/yazi/yazi.desktop
+config/yazi/theme.toml
 config/wezterm/wezterm.lua
 config/snapshots/snapshots.desktop
 config/buzz/buzz.desktop
