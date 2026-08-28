@@ -1,0 +1,43 @@
+#!/bin/bash
+
+# Opens Nautilus in the focused WezTerm pane's working directory.
+open_in_terminal_cwd() {
+    local clients
+    local pane_id
+    local panes
+    local cwd
+
+    clients="$(wezterm cli list-clients --format json 2>/dev/null)" || {
+        nautilus
+        return
+    }
+    pane_id="$(jq -r '.[0].focused_pane_id // empty' <<< "$clients")"
+
+    if [ -n "$pane_id" ]; then
+        panes="$(wezterm cli list --format json 2>/dev/null)"
+        cwd="$(jq -r --argjson pane_id "$pane_id" \
+            '.[] | select(.pane_id == $pane_id) | .cwd // empty' <<< "$panes")"
+    fi
+
+    if [ -n "$cwd" ]; then
+        nautilus "$cwd"
+    else
+        nautilus
+    fi
+}
+
+case "${1:-}" in
+    --cwd)
+        open_in_terminal_cwd
+        ;;
+    --help|-h)
+        echo "Usage: itero-nautilus [--cwd]"
+        ;;
+    "")
+        nautilus
+        ;;
+    *)
+        echo "Usage: itero-nautilus [--cwd]" >&2
+        exit 1
+        ;;
+esac
