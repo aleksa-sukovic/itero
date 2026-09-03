@@ -1,16 +1,16 @@
 [[plugin.deps]]
 use = "yazi-rs/plugins:vcs-files"
-rev = "c591a36"
+rev = "4dc7f1b"
 hash = "853240b2454c93a93fd03fc9fd7e06e8"
 
 [[plugin.deps]]
 use = "yazi-rs/plugins:smart-paste"
-rev = "c591a36"
-hash = "3f8d49413bc8691b4c652eb417a20178"
+rev = "4dc7f1b"
+hash = "5be02722d97561b6f7aec22429aa00be"
 
 [[plugin.deps]]
 use = "yazi-rs/plugins:mount"
-rev = "c591a36"
+rev = "4dc7f1b"
 hash = "b95f898e6dc60b52edbc415952e14395"
 
 [flavor]
