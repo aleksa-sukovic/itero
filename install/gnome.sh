@@ -28,6 +28,10 @@ GNOME_GTK_FLATPAKS=(
     "io.gitlab.news_flash.NewsFlash"
 )
 
+GNOME_XWAYLAND_FLATPAKS=(
+    "com.calibre_ebook.calibre"
+)
+
 # Disable unused GNOME user services
 for service in "${GNOME_DISABLED_USER_SERVICES[@]}"; do
     systemctl --user mask --now "$service" &>/dev/null || \
@@ -119,8 +123,18 @@ link_file "$gtk_css" "$HOME/.config/gtk-4.0/gtk.css"
 if command_exists flatpak; then
     for app in "${GNOME_GTK_FLATPAKS[@]}"; do
         flatpak info "$app" &>/dev/null || continue
+
+        # N.B. Expose the shared stylesheet to the Flatpak sandbox
+        flatpak override --user --filesystem="$gtk_css:ro" "$app"
         link_file "$gtk_css" "$HOME/.var/app/$app/config/gtk-3.0/gtk.css"
         link_file "$gtk_css" "$HOME/.var/app/$app/config/gtk-4.0/gtk.css"
+    done
+
+    for app in "${GNOME_XWAYLAND_FLATPAKS[@]}"; do
+        flatpak info "$app" &>/dev/null || continue
+
+        # N.B. Use XWayland because Qt's Wayland decorations have a fixed corner radius
+        flatpak override --user --socket=x11 --env=QT_QPA_PLATFORM=xcb "$app"
     done
 fi
 

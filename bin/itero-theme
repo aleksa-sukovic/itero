@@ -1,6 +1,7 @@
 #!/bin/bash
 
 ITERO_PATH="${ITERO_PATH:-$HOME/.local/share/itero}"
+ITERO_CONFIG="$ITERO_PATH/config"
 THEMES_DIR="$ITERO_PATH/themes"
 CURRENT_LINK="$THEMES_DIR/current"
 
