@@ -21,6 +21,13 @@ GNOME_EXTENSIONS=(
     "vicinae@dagimg-dot"
 )
 
+GNOME_GTK_FLATPAKS=(
+    "ca.desrt.dconf-editor"
+    "com.mattjakeman.ExtensionManager"
+    "io.dbeaver.DBeaverCommunity"
+    "io.gitlab.news_flash.NewsFlash"
+)
+
 # Disable unused GNOME user services
 for service in "${GNOME_DISABLED_USER_SERVICES[@]}"; do
     systemctl --user mask --now "$service" &>/dev/null || \
@@ -105,7 +112,16 @@ if [[ -f "$dconf_file" ]]; then
 fi
 
 # Apply GTK styles
-link_file "$ITERO_CONFIG/gnome/gtk.css" "$HOME/.config/gtk-3.0/gtk.css"
-link_file "$ITERO_CONFIG/gnome/gtk.css" "$HOME/.config/gtk-4.0/gtk.css"
+local gtk_css="$ITERO_CONFIG/gnome/gtk.css"
+link_file "$gtk_css" "$HOME/.config/gtk-3.0/gtk.css"
+link_file "$gtk_css" "$HOME/.config/gtk-4.0/gtk.css"
+
+if command_exists flatpak; then
+    for app in "${GNOME_GTK_FLATPAKS[@]}"; do
+        flatpak info "$app" &>/dev/null || continue
+        link_file "$gtk_css" "$HOME/.var/app/$app/config/gtk-3.0/gtk.css"
+        link_file "$gtk_css" "$HOME/.var/app/$app/config/gtk-4.0/gtk.css"
+    done
+fi
 
 log_ok "GNOME setup complete"

@@ -1,0 +1,35 @@
+/* Keep GTK client-side decorations aligned with Itero WM */
+:root {
+    --window-radius: {{ corner_radius }}px;
+}
+
+window.csd,
+window.csd > decoration,
+window.csd > decoration:backdrop,
+decoration,
+decoration:backdrop,
+.csd.popup decoration,
+.csd.popup decoration:backdrop,
+headerbar,
+headerbar:backdrop {
+    border-radius: {{ corner_radius }}px;
+}
+
+/* Firefox keeps these theme properties on decoration rather than window.csd */
+decoration,
+decoration:backdrop,
+.csd.popup decoration,
+.csd.popup decoration:backdrop {
+    box-shadow: none;
+    margin: 0;
+}
+
+window.csd.maximized,
+window.csd.fullscreen,
+window.csd.tiled,
+window.csd.tiled-top,
+window.csd.tiled-right,
+window.csd.tiled-bottom,
+window.csd.tiled-left {
+    border-radius: 0px;
+}

@@ -98,6 +98,18 @@ get_cursor_theme() {
     sed -n '1p' "$cursor_file"
 }
 
+# Read a setting from a GNOME dconf dump.
+get_gnome_config_value() {
+    awk -v section="$1" -v key="$2" '
+        $0 == "[" section "]" { in_section = 1; next }
+        in_section && /^\[/ { exit }
+        in_section && index($0, key "=") == 1 {
+            print substr($0, length(key) + 2)
+            exit
+        }
+    ' "$ITERO_CONFIG/gnome/dconf.tpl.ini"
+}
+
 # Map a system accent color to the corresponding palette color name.
 map_accent_to_palette() {
     case "$1" in
@@ -375,6 +387,8 @@ compile_theme_templates() {
     local accent_dark_rgb
     accent_dark_rgb="$(hex_to_rgb "$(darken_hex "$accent_hex" 65)")"
     local accent_name_capitalized="$(echo "${accent_name:0:1}" | tr '[:lower:]' '[:upper:]')${accent_name:1}"
+    local corner_radius="$(get_gnome_config_value \
+        "org/gnome/shell/extensions/itero-wm" "corner-radius" | sed 's/^uint32 //')"
 
     local vars_file
     vars_file="$(mktemp)"
@@ -385,6 +399,7 @@ compile_theme_templates() {
         echo "accent_rgb = \"$accent_rgb\""
         echo "accent_dark_rgb = \"$accent_dark_rgb\""
         echo "accent_name_capitalized = \"$accent_name_capitalized\""
+        echo "corner_radius = \"$corner_radius\""
     } >> "$vars_file"
     [[ -f "$vicinae_file" ]] && cat "$vicinae_file" >> "$vars_file"
 
