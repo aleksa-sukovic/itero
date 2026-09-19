@@ -1,0 +1,47 @@
+#!/bin/bash
+
+usage() {
+    echo "Usage: itero-webapp <url> [chromium-flags...]"
+    echo ""
+    echo "Open a URL in Chromium application mode."
+    echo ""
+    echo "Options:"
+    echo "  --help, -h    Show this help message"
+}
+
+case "${1:-}" in
+    --help|-h)
+        usage
+        exit 0
+        ;;
+    http://*|https://*)
+        url="$1"
+        shift
+        ;;
+    "")
+        usage >&2
+        exit 1
+        ;;
+    *)
+        echo "Error: web app URL must use HTTP or HTTPS" >&2
+        exit 1
+        ;;
+esac
+
+profile_dir="$HOME/.config/itero-webapps/chromium"
+preferences_file="$profile_dir/Default/Preferences"
+
+# XWayland lets GNOME provide a consistent system title bar
+if [ ! -f "$preferences_file" ]; then
+    umask 077
+    mkdir -p "$profile_dir/Default"
+    printf '%s\n' '{"browser":{"custom_chrome_frame":false}}' > "$preferences_file"
+fi
+
+exec chromium-browser \
+    --user-data-dir="$profile_dir" \
+    --ozone-platform=x11 \
+    --password-store=gnome-libsecret \
+    --no-first-run \
+    "$@" \
+    --app="$url"

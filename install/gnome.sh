@@ -52,6 +52,7 @@ cd "$itero_wm_dir"
 git pull --ff-only
 make
 make install
+rm -rf "$HOME/.local/share/itero-wm"
 cd "$ITERO_PATH"
 log_ok "Installed Itero WM from fork"
 

@@ -10,6 +10,9 @@ if is_linux; then
         chromium \
         texlive-scheme-full
 
+    # Web applications
+    install_desktop "$ITERO_CONFIG/gemini/itero-gemini.desktop"
+
     # Set Firefox as default browser
     xdg-settings set default-web-browser firefox.desktop 2>/dev/null || true
     xdg-mime default firefox.desktop x-scheme-handler/http 2>/dev/null || true
