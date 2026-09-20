@@ -3,6 +3,12 @@
 # Control an external monitor through DDC/CI
 
 BRIGHTNESS_STEP=10
+BRIGHTNESS_MIN=1
+BRIGHTNESS_MAX=100
+
+cache_dir="${XDG_RUNTIME_DIR:-/tmp}/itero-monitor-$UID"
+bus_cache="$cache_dir/bus"
+brightness_lock="$cache_dir/brightness.lock"
 
 usage() {
     echo "Usage: itero-monitor <command> [option]"
@@ -11,14 +17,17 @@ usage() {
     echo ""
     echo "Commands:"
     echo "  brightness --up|--down  Adjust brightness by ${BRIGHTNESS_STEP}%"
+    echo "  brightness --max        Set brightness to ${BRIGHTNESS_MAX}%"
+    echo "  brightness --min        Set brightness to ${BRIGHTNESS_MIN}%"
     echo "  input --list            List available input sources"
     echo "  input <source>          Switch to an input source from --list"
     echo "  detect                  Show DDC/CI display detection results"
     echo "  --help, -h              Show this help message"
 }
 
-# Return the I2C bus for the single detected external display
+# Return the cached I2C bus or detect the single external display.
 get_monitor_bus() {
+    local bus
     local buses
 
     if ! command -v ddcutil > /dev/null; then
@@ -26,8 +35,19 @@ get_monitor_bus() {
         return 1
     fi
 
+    if [ -r "$bus_cache" ]; then
+        read -r bus < "$bus_cache"
+
+        if [[ "$bus" =~ ^[0-9]+$ ]]; then
+            echo "$bus"
+            return 0
+        fi
+
+        rm -f "$bus_cache"
+    fi
+
     mapfile -t buses < <(
-        ddcutil detect --terse 2> /dev/null | awk '
+        ddcutil --skip-ddc-checks detect --brief 2> /dev/null | awk '
             /^Display [0-9]+$/ { in_display = 1; next }
             /^Invalid display$/ { in_display = 0 }
             in_display && /I2C bus:/ {
@@ -48,10 +68,29 @@ get_monitor_bus() {
         return 1
     fi
 
+    mkdir -p "$cache_dir"
+    printf '%s\n' "${buses[0]}" > "$bus_cache"
     echo "${buses[0]}"
 }
 
-# List the input sources reported by the monitor capabilities string
+# Set a VCP feature and invalidate the cached bus on failure.
+set_vcp() {
+    local bus="$1"
+    shift
+
+    if ddcutil --bus "$bus" \
+        --skip-ddc-checks \
+        --noverify \
+        --sleep-multiplier 0.1 \
+        setvcp "$@"; then
+        return 0
+    fi
+
+    rm -f "$bus_cache"
+    return 1
+}
+
+# List the input sources reported by the monitor capabilities string.
 list_input_sources() {
     local bus="$1"
     local capabilities
@@ -83,23 +122,26 @@ list_input_sources() {
 adjust_brightness() {
     local direction="$1"
     local bus
-    local operator
-
-    bus="$(get_monitor_bus)" || return 1
+    local lock_fd
+    local -a value_args
 
     case "$direction" in
-        --up) operator="+" ;;
-        --down) operator="-" ;;
+        --up) value_args=("+" "$BRIGHTNESS_STEP") ;;
+        --down) value_args=("-" "$BRIGHTNESS_STEP") ;;
+        --max) value_args=("$BRIGHTNESS_MAX") ;;
+        --min) value_args=("$BRIGHTNESS_MIN") ;;
         *)
-            echo "Error: brightness expects --up or --down" >&2
+            echo "Error: brightness expects --up, --down, --max, or --min" >&2
             return 1
             ;;
     esac
 
-    ddcutil setvcp 10 "$operator" "$BRIGHTNESS_STEP" \
-        --bus "$bus" \
-        --noverify \
-        --sleep-multiplier 0.1
+    mkdir -p "$cache_dir"
+    exec {lock_fd}> "$brightness_lock"
+    flock -n "$lock_fd" || return 0
+
+    bus="$(get_monitor_bus)" || return 1
+    set_vcp "$bus" 10 "${value_args[@]}"
 }
 
 switch_input() {
@@ -107,7 +149,6 @@ switch_input() {
     local bus
     local source
 
-    bus="$(get_monitor_bus)" || return 1
     source="${requested_source,,}"
     source="0x${source#0x}"
 
@@ -116,21 +157,18 @@ switch_input() {
         return 1
     fi
 
+    bus="$(get_monitor_bus)" || return 1
+
     if ! list_input_sources "$bus" | cut -f1 | grep -Fxq "$source"; then
         echo "Error: input source '$source' is not reported by this monitor" >&2
         return 1
     fi
 
     # N.B. Some LG monitors ignore VCP 0x60 writes; see https://github.com/rockowitz/ddcutil/issues/100
-    ddcutil setvcp 60 "$source" \
-        --bus "$bus" \
-        --noverify \
-        --sleep-multiplier 0.1
+    set_vcp "$bus" 60 "$source"
 }
 
-command="${1:-}"
-
-case "$command" in
+case "${1:-}" in
     brightness)
         adjust_brightness "${2:-}"
         ;;
@@ -156,7 +194,7 @@ case "$command" in
         usage
         ;;
     *)
-        echo "Error: unknown command '$command'" >&2
+        echo "Error: unknown command '$1'" >&2
         usage >&2
         exit 1
         ;;
