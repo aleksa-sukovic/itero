@@ -18,6 +18,7 @@ regular_packages=(
     "mise"
     "nvim"
     "tmux"
+    "ttyd"
     "yazi"
     "lazygit"
     "github"
@@ -86,6 +87,7 @@ if [ ! -f "$ITERO_PATH/.env" ]; then
     fi
 
     cp "$ITERO_PATH/.env.example" "$ITERO_PATH/.env"
+    chmod 600 "$ITERO_PATH/.env"
 
     log_warn "Created .env file from .env.example"
     log_info "Please edit $ITERO_PATH/.env and fill in your machine-specific values"
@@ -95,6 +97,7 @@ if [ ! -f "$ITERO_PATH/.env" ]; then
 fi
 
 # Load environment variables from .env
+chmod 600 "$ITERO_PATH/.env"
 set -a
 source "$ITERO_PATH/.env"
 set +a

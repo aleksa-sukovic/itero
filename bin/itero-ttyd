@@ -1,0 +1,86 @@
+#!/bin/bash
+
+if [[ ${1:-} == "--help" || ${1:-} == "-h" ]]; then
+    echo "Usage: itero-ttyd"
+    echo ""
+    echo "Share a writable login shell through an authenticated ngrok tunnel."
+    exit 0
+elif [ $# -gt 0 ]; then
+    echo "Usage: itero-ttyd" >&2
+    exit 1
+fi
+
+source "$HOME/.local/share/itero/.env"
+
+for variable in NGROK_AUTHTOKEN NGROK_URL; do
+    if [ -z "${!variable:-}" ]; then
+        echo "Error: $variable is not configured in the Itero .env file" >&2
+        exit 1
+    fi
+done
+
+for command in ngrok ttyd; do
+    if ! command -v "$command" >/dev/null 2>&1; then
+        echo "Error: $command is not installed" >&2
+        exit 1
+    fi
+done
+
+password="$(od -An -N16 -tx1 /dev/urandom | tr -d ' \n')"
+ngrok_log="$(mktemp)"
+ngrok_pid=""
+ttyd_pid=""
+
+cleanup() {
+    for pid in "$ngrok_pid" "$ttyd_pid"; do
+        if [ -n "$pid" ]; then
+            kill "$pid" 2>/dev/null || true
+            wait "$pid" 2>/dev/null || true
+        fi
+    done
+    rm -f "$ngrok_log"
+}
+
+trap cleanup EXIT
+trap 'exit 130' INT
+trap 'exit 143' HUP TERM
+
+env -u NGROK_AUTHTOKEN ttyd \
+    --writable \
+    --check-origin \
+    --interface lo \
+    --port 8081 \
+    --credential "terminal:$password" \
+    --client-option rendererType=canvas \
+    --client-option disableResizeOverlay=true \
+    --client-option enableSixel=true \
+    --client-option "fontFamily=JetBrainsMono Nerd Font Mono, monospace" \
+    env -u TMUX -u TMUX_PANE "${SHELL:-/bin/bash}" -l \
+    >/dev/null 2>&1 &
+ttyd_pid=$!
+
+sleep 0.2
+if ! kill -0 "$ttyd_pid" 2>/dev/null; then
+    echo "Error: failed to start ttyd" >&2
+    wait "$ttyd_pid"
+    exit $?
+fi
+
+NGROK_AUTHTOKEN="$NGROK_AUTHTOKEN" ngrok http http://127.0.0.1:8081 \
+    --url "$NGROK_URL" \
+    --inspect=false \
+    >"$ngrok_log" 2>&1 &
+ngrok_pid=$!
+
+echo ""
+echo "URL:      $NGROK_URL"
+echo "Username: terminal"
+echo "Password: $password"
+echo ""
+echo "Press Ctrl-C when finished."
+echo ""
+
+if ! wait "$ngrok_pid"; then
+    cat "$ngrok_log" >&2
+    exit 1
+fi
