@@ -90,7 +90,7 @@ GNOME settings are stored in `config/gnome/dconf.tpl.ini` and applied automatica
 
 ### Zotero
 
-The current Zotero setup using custom plugins: [ZotMoov](https://github.com/wileyyugioh/zotmoov), [Zutilo utility for Zotero](https://github.com/wshanks/Zutilo). Download and install these manually. Next, setup WebDAV sync with Rivendell server (c.f., Preferences -> Sync -> WebDAV). Make sure you also change the filename format to `{{ firstCreator suffix=" - " }}{{ year suffix=" - " }}{{ title truncate="100" }}` (c.f., Preferences -> General -> Customize Filename Format). Lastly, configure the move/copy location of ZotMoov plugin (c.f., Preferences -> ZotMoov). This will ensure that all attachments (1) are stored via WebDAV and (2) are automatically moved to another location in their raw format (e.g., PDFs, images, etc.) instead of Zotero's default storage format.
+The current Zotero setup using custom plugins: [ZotMoov](https://github.com/wileyyugioh/zotmoov), [Zutilo utility for Zotero](https://github.com/wshanks/Zutilo). Download and install these manually. Next, setup WebDAV sync with the server (c.f., Preferences -> Sync -> WebDAV). Make sure you also change the filename format to `{{ firstCreator suffix=" - " }}{{ year suffix=" - " }}{{ title truncate="100" }}` (c.f., Preferences -> General -> Customize Filename Format). Lastly, configure the move/copy location of ZotMoov plugin (c.f., Preferences -> ZotMoov). This will ensure that all attachments (1) are stored via WebDAV and (2) are automatically moved to another location in their raw format (e.g., PDFs, images, etc.) instead of Zotero's default storage format.
 
 ### Browser Terminal
 
