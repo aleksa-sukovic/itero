@@ -34,7 +34,7 @@ config.hide_tab_bar_if_only_one_tab = true
 config.show_new_tab_button_in_tab_bar = true
 
 -- [[ Font configuration ]]
-config.font_size = 11.0
+config.font_size = 14.0
 config.line_height = 1.0
 config.font = wezterm.font_with_fallback({ "JetBrainsMono Nerd Font", "JetBrains Mono" })
 
