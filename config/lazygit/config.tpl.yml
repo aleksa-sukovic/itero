@@ -2,9 +2,9 @@ promptToReturnFromSubprocess: false
 os:
     editPreset: "nvim"
 git:
-    pagers:
+    diffRenderers:
         - colorArg: "always"
-          pager: "delta --{{ mode }} --paging=never"
+          command: "delta --{{ mode }} --paging=never"
 gui:
     theme:
         activeBorderColor:
