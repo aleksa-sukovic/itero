@@ -98,18 +98,6 @@ get_cursor_theme() {
     sed -n '1p' "$cursor_file"
 }
 
-# Read a setting from a GNOME dconf dump.
-get_gnome_config_value() {
-    awk -v section="$1" -v key="$2" '
-        $0 == "[" section "]" { in_section = 1; next }
-        in_section && /^\[/ { exit }
-        in_section && index($0, key "=") == 1 {
-            print substr($0, length(key) + 2)
-            exit
-        }
-    ' "$ITERO_CONFIG/gnome/dconf.tpl.ini"
-}
-
 # Map a system accent color to the corresponding palette color name.
 map_accent_to_palette() {
     case "$1" in
@@ -370,25 +358,36 @@ get_theme_mode() {
 compile_theme_templates() {
     local theme_dir="$1"
     local accent_name="$2"
+    local accent_name_capitalized="$(echo "${accent_name:0:1}" | tr '[:lower:]' '[:upper:]')${accent_name:1}"
     local config_dir="${3:-}"
-    local palette_file="$theme_dir/palette.toml"
     local vicinae_file="$theme_dir/vicinae.conf"
 
+    local palette_file="$theme_dir/palette.toml"
     [[ -f "$palette_file" ]] || { echo "No palette file: $palette_file" >&2; return 1; }
     get_theme_mode "$palette_file" >/dev/null || return 1
+
     local background_hex
     background_hex="$(resolve_palette_color "$palette_file" "background")"
     [[ -n "$background_hex" ]] || { echo "No background color in $palette_file" >&2; return 1; }
+
     local accent_hex
     accent_hex="$(resolve_accent_hex "$palette_file" "$accent_name")"
     [[ -n "$accent_hex" ]] || { echo "No accent '${accent_name}' in $palette_file" >&2; return 1; }
+
     local accent_rgb
     accent_rgb="$(hex_to_rgb "$accent_hex")"
+
     local accent_dark_rgb
     accent_dark_rgb="$(hex_to_rgb "$(darken_hex "$accent_hex" 65)")"
-    local accent_name_capitalized="$(echo "${accent_name:0:1}" | tr '[:lower:]' '[:upper:]')${accent_name:1}"
-    local corner_radius="$(get_gnome_config_value \
-        "org/gnome/shell/extensions/itero-wm" "corner-radius" | sed 's/^uint32 //')"
+
+    local corner_radius=0
+    if is_linux && command_exists gsettings; then
+        local gnome_corner_radius
+        if gnome_corner_radius="$(gsettings get \
+            org.gnome.shell.extensions.itero-wm corner-radius 2>/dev/null)"; then
+            corner_radius="${gnome_corner_radius#uint32 }"
+        fi
+    fi
 
     local vars_file
     vars_file="$(mktemp)"

@@ -116,6 +116,9 @@ if [[ -f "$dconf_file" ]]; then
     fi
 fi
 
+# Recompile templates now that GNOME settings are available
+compile_theme_templates "$ITERO_PATH/themes/$current" "$accent_name" "$ITERO_CONFIG"
+
 # Apply GTK styles
 local gtk_css="$ITERO_CONFIG/gnome/gtk.css"
 link_file "$gtk_css" "$HOME/.config/gtk-3.0/gtk.css"

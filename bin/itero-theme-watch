@@ -5,10 +5,20 @@ ITERO_PATH="${ITERO_PATH:-$HOME/.local/share/itero}"
 usage() {
     echo "Usage: itero-theme-watch"
     echo ""
-    echo "Watch GNOME accent-color changes and reapply the active Itero theme."
+    echo "Watch GNOME appearance changes and reapply the active Itero theme."
     echo ""
     echo "Options:"
     echo "  --help, -h    Show this help message"
+}
+
+watch_setting() {
+    gsettings monitor "$1" "$2" | while read -r _key _value; do
+        "$ITERO_PATH/bin/itero-theme"
+    done
+}
+
+cleanup() {
+    kill "${watchers[@]}" 2>/dev/null || true
 }
 
 case "${1:-}" in
@@ -23,8 +33,16 @@ case "${1:-}" in
         ;;
 esac
 
-export ITERO_THEME_WATCH=1
+watchers=()
 
-gsettings monitor org.gnome.desktop.interface accent-color | while read -r _key value; do
-    "$ITERO_PATH/bin/itero-theme"
-done
+watch_setting org.gnome.desktop.interface accent-color &
+watchers+=("$!")
+
+watch_setting org.gnome.shell.extensions.itero-wm corner-radius &
+watchers+=("$!")
+
+trap cleanup EXIT
+trap "exit 0" INT TERM
+
+wait -n "${watchers[@]}"
+exit 1
