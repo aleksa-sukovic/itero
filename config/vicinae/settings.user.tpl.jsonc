@@ -23,7 +23,8 @@
        }
     },
    "launcher_window": {
-      "opacity": 1
+      "opacity": 1,
+      "rounding": {{ corner_radius }}
    },
    "favorites": [],
    "providers": {
