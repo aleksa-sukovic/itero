@@ -35,7 +35,7 @@ ITC=theme itero
 To manage a `/work` bind mount, set `ITERO_WORKDIR` in `.env` to the directory that should appear at `/work`. Itero configures `/work` through `/etc/synthetic.conf`, which takes effect after a reboot. To update all components at once, run:
 
 ```bash
-ITC=common,wezterm,starship,fonts,shell,mise,nvim,tmux,yazi,lazygit,lazydocker,fastfetch,btop,bruno,pi,theme itero
+ITC=common,wezterm,starship,fonts,shell,mise,nvim,tmux,yazi,lazygit,lazydocker,fastfetch,btop,bruno,theme itero
 ```
 
 ### Selective Install

@@ -9,13 +9,13 @@ if not ok then
 end
 
 -- [[ General configuration ]]
-config.initial_rows = 25
+config.initial_rows = 40
 config.initial_cols = 140
 config.window_close_confirmation = "NeverPrompt"
 config.enable_kitty_keyboard = true
 
 -- [[ Window configuration ]]
-config.window_decorations = wezterm.target_triple:find("darwin") and "RESIZE" or "NONE"
+config.window_decorations = wezterm.target_triple:find("darwin") and "TITLE|RESIZE" or "NONE"
 config.window_background_opacity = 1.0
 config.window_content_alignment = {
     horizontal = "Center",
