@@ -2,8 +2,9 @@
 Type=Application
 Name=Gemini
 Comment=Chat with Gemini
-Exec=itero-webapp https://gemini.google.com/
+Exec={{ $ITERO_PATH }}/bin/itero-webapp https://gemini.google.com/
 Icon={{ $ITERO_PATH }}/config/gemini/gemini.png
 Terminal=false
 Categories=Network;Chat;
 StartupNotify=true
+StartupWMClass=gemini.google.com

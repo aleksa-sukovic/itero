@@ -2,8 +2,9 @@
 Type=Application
 Name=YouTube
 Comment=Watch videos on YouTube
-Exec=itero-webapp https://www.youtube.com/
+Exec={{ $ITERO_PATH }}/bin/itero-webapp https://www.youtube.com/
 Icon={{ $ITERO_PATH }}/config/youtube/youtube.png
 Terminal=false
 Categories=AudioVideo;
 StartupNotify=true
+StartupWMClass=www.youtube.com
