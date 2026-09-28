@@ -20,6 +20,9 @@ config/lazydocker/config.yml
 config/mise/config.toml
 config/syncthing/syncthing.desktop
 config/gemini/gemini.desktop
+config/youtube/youtube.desktop
+config/x/x.desktop
+config/reddit/reddit.desktop
 config/keychron/keychron-launcher.desktop
 config/btop/btop.desktop
 config/btop/btop.conf

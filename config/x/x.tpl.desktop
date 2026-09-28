@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Name=X
+Comment=Browse X
+Exec=itero-webapp https://x.com/
+Icon={{ $ITERO_PATH }}/config/x/x.png
+Terminal=false
+Categories=Network;
+StartupNotify=true

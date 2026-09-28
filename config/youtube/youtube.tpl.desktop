@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Name=YouTube
+Comment=Watch videos on YouTube
+Exec=itero-webapp https://www.youtube.com/
+Icon={{ $ITERO_PATH }}/config/youtube/youtube.png
+Terminal=false
+Categories=AudioVideo;
+StartupNotify=true

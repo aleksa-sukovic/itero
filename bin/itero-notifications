@@ -1,0 +1,42 @@
+#!/bin/bash
+
+usage() {
+    echo "Usage: itero-notifications dnd toggle"
+    echo ""
+    echo "Toggle GNOME Do Not Disturb mode."
+    echo ""
+    echo "Options:"
+    echo "  --help, -h    Show this help message"
+}
+
+if [ "$#" -eq 1 ] && [[ "$1" == "--help" || "$1" == "-h" ]]; then
+    usage
+    exit 0
+fi
+
+if [ "$#" -ne 2 ] || [ "$1" != "dnd" ] || [ "$2" != "toggle" ]; then
+    usage >&2
+    exit 1
+fi
+
+if ! command -v gsettings >/dev/null; then
+    echo "Error: gsettings is required" >&2
+    exit 1
+fi
+
+show_banners="$(gsettings get org.gnome.desktop.notifications show-banners)" || exit 1
+
+case "$show_banners" in
+    true)
+        gsettings set org.gnome.desktop.notifications show-banners false || exit 1
+        echo "Do Not Disturb enabled"
+        ;;
+    false)
+        gsettings set org.gnome.desktop.notifications show-banners true || exit 1
+        echo "Do Not Disturb disabled"
+        ;;
+    *)
+        echo "Error: could not read notification settings" >&2
+        exit 1
+        ;;
+esac

@@ -12,6 +12,9 @@ if is_linux; then
 
     # Web applications
     install_desktop "$ITERO_CONFIG/gemini/gemini.desktop"
+    install_desktop "$ITERO_CONFIG/youtube/youtube.desktop"
+    install_desktop "$ITERO_CONFIG/x/x.desktop"
+    install_desktop "$ITERO_CONFIG/reddit/reddit.desktop"
 
     # Set Firefox as default browser
     xdg-settings set default-web-browser firefox.desktop 2>/dev/null || true

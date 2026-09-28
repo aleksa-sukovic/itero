@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Name=Reddit
+Comment=Browse Reddit
+Exec=itero-webapp https://www.reddit.com/
+Icon={{ $ITERO_PATH }}/config/reddit/reddit.png
+Terminal=false
+Categories=Network;
+StartupNotify=true
