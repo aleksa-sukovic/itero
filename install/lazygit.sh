@@ -13,4 +13,9 @@ elif is_macos; then
     brew_install lazygit git-delta
 fi
 
-link_file "$ITERO_CONFIG/lazygit/config.yml" "$HOME/.config/lazygit/config.yml"
+if is_macos; then
+    link_file "$ITERO_CONFIG/lazygit/config.yml" "$HOME/Library/Application Support/lazygit/config.yml"
+else
+    link_file "$ITERO_CONFIG/lazygit/config.yml" "$HOME/.config/lazygit/config.yml"
+fi
+
