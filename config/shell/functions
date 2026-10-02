@@ -7,11 +7,11 @@ src() {
 
 # Platform helpers.
 is_linux() {
-    [ "$(uname -s)" = "Linux" ]
+    [ "$OSTYPE" = "linux*" ]
 }
 
 is_macos() {
-    [ "$(uname -s)" = "Darwin" ]
+    [ "$OSTYPE" = "darwin*" ]
 }
 
 # Prints local IP address.
