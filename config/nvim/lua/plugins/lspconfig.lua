@@ -131,6 +131,9 @@ return {
                 },
             },
             ruff = {},
+            ts_ls = {},
+            eslint = {},
+            lemminx = {},
         }
 
         -- Ensure the servers and tools above are installed
@@ -146,7 +149,12 @@ return {
             "black",
             "isort",
             "debugpy",
-            -- JavaScript, TypeScript, HTML, CSS, JSON, YAML, Markdown
+            -- JavaScript and TypeScript
+            "typescript-language-server",
+            "eslint-lsp",
+            -- XML and SVG
+            "lemminx",
+            -- HTML, CSS, JSON, YAML, Markdown, JavaScript, and TypeScript
             "prettier",
             -- Rust
             "codelldb",

@@ -65,7 +65,9 @@ return {
             html = { "prettier" },
             css = { "prettier" },
             javascript = { "prettier" },
+            javascriptreact = { "prettier" },
             typescript = { "prettier" },
+            typescriptreact = { "prettier" },
             python = function(bufnr)
                 local cwd = vim.fs.dirname(vim.api.nvim_buf_get_name(bufnr))
 

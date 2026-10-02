@@ -10,6 +10,8 @@ return {
             "c",
             "diff",
             "html",
+            "javascript",
+            "jsdoc",
             "lua",
             "luadoc",
             "markdown",
@@ -18,9 +20,15 @@ return {
             "query",
             "rust",
             "toml",
+            "tsx",
+            "typescript",
             "vim",
             "vimdoc",
         }
+
+        local filetypes = vim.deepcopy(languages)
+        table.insert(filetypes, "javascriptreact")
+        table.insert(filetypes, "typescriptreact")
 
         local treesitter = require("nvim-treesitter")
         treesitter.setup({ install_dir = vim.fn.stdpath("data") .. "/site" })
@@ -43,7 +51,7 @@ return {
 
         vim.api.nvim_create_autocmd("FileType", {
             group = vim.api.nvim_create_augroup("alsk-treesitter", { clear = true }),
-            pattern = languages,
+            pattern = filetypes,
             callback = function()
                 vim.treesitter.start()
                 vim.wo.foldexpr = "v:lua.vim.treesitter.foldexpr()"
