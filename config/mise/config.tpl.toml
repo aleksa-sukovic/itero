@@ -4,6 +4,7 @@ pre-commit = "latest"
 uv = "latest"
 rust = { version = "latest", components = "rustc,cargo,rustfmt,rust-std,rust-docs,rust-analyzer,clippy,rust-src" }
 python = ["3.13", "3.14"]
+tree-sitter = "latest"
 
 [settings]
 minimum_release_age = "7d"
