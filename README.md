@@ -14,7 +14,7 @@ On first run, Itero creates an `.env` file from `.env.example` and prompts for m
 ```bash
 ITC=common,nvidia,keychron,wezterm,starship,fonts,shell itero
 ITC=mise,nvim,tmux,ttyd,yazi,lazygit,github,docker,lazydocker itero
-ITC=apps,bruno,vscode,fastfetch,btop,vicinae,pi,flameshot itero
+ITC=apps,bruno,vscode,fastfetch,btop,vicinae,codex,pi,flameshot itero
 ITC=snapshots,syncthing,rclone itero
 ITC=theme,gnome,gdm itero
 ```
@@ -28,7 +28,7 @@ On macOS, Itero supports a terminal-focused setup rather than full machine provi
 ```bash
 ITC=common,wezterm,starship,fonts,shell itero
 ITC=mise,nvim,tmux,yazi,lazygit,lazydocker itero
-ITC=fastfetch,btop,bruno,pi itero
+ITC=fastfetch,btop,bruno itero
 ITC=theme itero
 ```
 
