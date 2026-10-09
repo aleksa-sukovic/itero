@@ -28,6 +28,7 @@ regular_packages=(
     "rclone"
     "apps"
     "bruno"
+    "chatgpt"
     "vscode"
     "codex"
     "pi"
