@@ -59,6 +59,8 @@ Before installing, set up your disk partitions following these:
 
 `itero-theme` manages themes and accent colors. Accent colors use Itero palette names (such as `blue`, `mauve`, and `lavender`) and are synced bidirectionally with the system accent setting (GNOME/macOS). Each theme maps those names to its own palette, so the resulting color may not visually match the system's built-in accent color.
 
+To also apply theme and accent changes on another machine, set `ITERO_THEME_SYNC_HOST="username@192.168.1.100"` (or an SSH alias) in `.env`. The destination needs key-based SSH access and Itero at `~/.local/share/itero`. Leave the variable empty on the destination. Unavailable hosts are skipped with a warning; there are no retries.
+
 ### Adding a new theme
 
 1. Create `themes/<name>/palette.toml` as the single color source:

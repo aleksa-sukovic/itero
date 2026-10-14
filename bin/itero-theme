@@ -210,6 +210,13 @@ set_theme() {
     update_gnome "$theme" "$accent_name" "$cursor_theme"
 
     echo "Theme: $theme (accent: $accent_name)"
+
+    if [[ -n "${ITERO_THEME_SYNC_HOST:-}" ]]; then
+        local remote_command
+        printf -v remote_command '~/.local/share/itero/bin/itero-theme %q --accent %q' "$theme" "$accent_name"
+        ssh -n -o BatchMode=yes -o ConnectTimeout=3 -- "$ITERO_THEME_SYNC_HOST" "$remote_command" || \
+            echo "Could not sync theme to $ITERO_THEME_SYNC_HOST" >&2
+    fi
 }
 
 # Parse arguments
