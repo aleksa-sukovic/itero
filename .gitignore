@@ -14,6 +14,7 @@ config/vicinae/settings.default.json
 config/shell/zshrc.local
 config/shell/functions.local
 config/tmux/tmux.conf
+config/herdr/config.toml
 config/starship/starship.toml
 config/lazygit/config.yml
 config/lazydocker/config.yml

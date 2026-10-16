@@ -134,6 +134,14 @@ update_tmux() {
     fi
 }
 
+# Reload the theme in the default Herdr session when it is running.
+update_herdr() {
+    if command_exists herdr; then
+        env -u HERDR_SESSION -u HERDR_SOCKET_PATH \
+            herdr server reload-config >/dev/null 2>&1 || true
+    fi
+}
+
 # Link the generated btop theme.
 update_btop() {
     local theme_file="$ITERO_PATH/config/btop/btop.theme"
@@ -206,6 +214,7 @@ set_theme() {
     update_yazi
     update_terminals
     update_tmux
+    update_herdr
     update_btop
     update_gnome "$theme" "$accent_name" "$cursor_theme"
 

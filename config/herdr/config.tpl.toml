@@ -1,0 +1,32 @@
+onboarding = false
+
+[theme]
+name = "terminal"
+
+[theme.custom]
+accent = "{{ accent }}"
+panel_bg = "{{ background }}"
+sidebar_bg = "{{ dark_background }}"
+active_row_bg = "{{ lighter_background }}"
+selection_bg = "{{ selection }}"
+surface0 = "{{ lighter_background }}"
+surface1 = "{{ selection }}"
+surface_dim = "{{ dark_background }}"
+overlay0 = "{{ muted }}"
+overlay1 = "{{ dark_foreground }}"
+text = "{{ foreground }}"
+subtext0 = "{{ light_foreground }}"
+mauve = "{{ mauve }}"
+green = "{{ green }}"
+yellow = "{{ yellow }}"
+red = "{{ red }}"
+blue = "{{ blue }}"
+teal = "{{ teal }}"
+peach = "{{ peach }}"
+
+[keys]
+prefix = "ctrl+b"
+
+[ui]
+mobile_width_threshold = 64
+hide_tab_bar_when_single_tab = true
