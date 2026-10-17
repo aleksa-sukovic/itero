@@ -26,7 +26,21 @@ peach = "{{ peach }}"
 
 [keys]
 prefix = "ctrl+b"
+focus_agent = "prefix+alt+1..9"
+split_vertical = ["prefix+v", "prefix+percent"]
+split_horizontal = ["prefix+minus", "prefix+double_quote"]
 
 [ui]
 mobile_width_threshold = 64
 hide_tab_bar_when_single_tab = true
+pane_outer_borders = false
+pane_gaps = false
+pane_scrollbars = false
+show_agent_labels_on_pane_borders = true
+
+[ui.sidebar.agents]
+row_gap = 1
+rows = [["state_icon", "machine", "workspace"], ["agent", "terminal_title_stripped"]]
+
+[ui.toast]
+delivery = "herdr"
