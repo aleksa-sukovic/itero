@@ -26,6 +26,7 @@ peach = "{{ peach }}"
 
 [keys]
 prefix = "ctrl+b"
+switch_workspace = "prefix+shift+1..9"
 focus_agent = "prefix+alt+1..9"
 split_vertical = ["prefix+v", "prefix+percent"]
 split_horizontal = ["prefix+minus", "prefix+double_quote"]
