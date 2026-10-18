@@ -1,5 +1,6 @@
 [tools]
 node = "24"
+bun = "latest"
 pre-commit = "latest"
 uv = "latest"
 rust = { version = "latest", components = "rustc,cargo,rustfmt,rust-std,rust-docs,rust-analyzer,clippy,rust-src" }
