@@ -34,6 +34,7 @@ split_horizontal = ["prefix+minus", "prefix+double_quote"]
 [ui]
 mobile_width_threshold = 64
 hide_tab_bar_when_single_tab = true
+tab_bar_right = [{ type = "hostname" }, { type = "zoom" }]
 pane_outer_borders = false
 pane_gaps = false
 pane_scrollbars = false
