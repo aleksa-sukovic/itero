@@ -99,9 +99,10 @@ if [ ! -f "$ITERO_PATH/.env" ]; then
     exit 0
 fi
 
-# Load environment variables from .env
+# Load shared versions and machine-specific overrides
 chmod 600 "$ITERO_PATH/.env"
 set -a
+source "$ITERO_PATH/versions.env"
 source "$ITERO_PATH/.env"
 set +a
 

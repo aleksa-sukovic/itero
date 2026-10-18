@@ -1,14 +1,11 @@
 #!/bin/bash
 
-NERD_FONTS_VERSION="v3.5.0"
-NERD_FONTS_URL="https://github.com/ryanoasis/nerd-fonts/releases/download/${NERD_FONTS_VERSION}"
+NERD_FONTS_URL="https://github.com/ryanoasis/nerd-fonts/releases/download/${ITERO_APP_VERSION_NERD_FONTS}"
 NERD_FONTS=("JetBrainsMono")
 
-CATPPUCCIN_CURSORS_VERSION="v2.0.0"
-CATPPUCCIN_CURSORS_URL="https://github.com/catppuccin/cursors/releases/download/${CATPPUCCIN_CURSORS_VERSION}"
+CATPPUCCIN_CURSORS_URL="https://github.com/catppuccin/cursors/releases/download/${ITERO_APP_VERSION_CATPPUCCIN_CURSORS}"
 
-PHINGER_CURSORS_VERSION="3328966123"
-PHINGER_CURSORS_URL="https://github.com/rehanzo/phinger-cursors-gruvbox-material/releases/download/${PHINGER_CURSORS_VERSION}/phinger-cursors-variants.tar.bz2"
+PHINGER_CURSORS_URL="https://github.com/rehanzo/phinger-cursors-gruvbox-material/releases/download/${ITERO_APP_VERSION_PHINGER_CURSORS}/phinger-cursors-variants.tar.bz2"
 
 ROSE_PINE_CURSOR_URL="https://github.com/rose-pine/cursors/releases/latest/download/BreezeX-RosePine-Linux.tar.xz"
 ROSE_PINE_DAWN_CURSOR_URL="https://github.com/rose-pine/cursors/releases/latest/download/BreezeX-RosePineDawn-Linux.tar.xz"

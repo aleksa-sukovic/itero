@@ -9,7 +9,7 @@ git clone https://github.com/aleksa-sukovic/itero ~/.local/share/itero
 ~/.local/share/itero/bin/itero
 ```
 
-On first run, Itero creates an `.env` file from `.env.example` and prompts for machine-specific values. After editing `.env`, proceed with incremental setup in the following order, restarting the system after each step:
+On first run, Itero creates an `.env` file from `.env.example` and prompts for machine-specific values. Versions for dependencies not managed by the system package manager are defined in the git-tracked `versions.env` file and can be overridden in `.env`. After editing `.env`, proceed with incremental setup in the following order, restarting the system after each step:
 
 ```bash
 ITC=common,nvidia,keychron,wezterm,starship,fonts,shell itero
