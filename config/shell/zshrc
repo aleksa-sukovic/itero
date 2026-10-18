@@ -55,6 +55,8 @@ alias v="nvim"
 
 alias tlrc="tldr"
 
+alias codex="codex --no-daemon"
+
 # Tmux
 alias t="tmux attach -t main || tmux new -s main"
 alias ts="tmux new -A -s"
