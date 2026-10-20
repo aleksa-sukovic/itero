@@ -152,13 +152,15 @@ update_btop() {
     ln -nsf "$theme_file" "$HOME/.config/btop/themes/current.theme"
 }
 
-# Apply GNOME cursor and accent settings.
+# Apply GNOME appearance, cursor and accent settings.
 update_gnome() {
     local theme="$1"
     local accent_name="$2"
     local cursor_theme="$3"
+    local mode="$4"
 
     if is_linux && command_exists gsettings; then
+        gsettings set org.gnome.desktop.interface color-scheme "prefer-$mode"
         gsettings set org.gnome.desktop.interface cursor-theme "default"
         [[ -n "$cursor_theme" ]] && \
             gsettings set org.gnome.desktop.interface cursor-theme "$cursor_theme"
@@ -216,7 +218,7 @@ set_theme() {
     update_tmux
     update_herdr
     update_btop
-    update_gnome "$theme" "$accent_name" "$cursor_theme"
+    update_gnome "$theme" "$accent_name" "$cursor_theme" "$mode"
 
     echo "Theme: $theme (accent: $accent_name)"
 
