@@ -1,7 +1,7 @@
 [opener]
 open = [
-    { run = 'open "$@"', orphan = true, desc = "Open", for = "macos" },
-    { run = 'xdg-open "$@"', orphan = true, desc = "Open", for = "linux" },
+    { run = "open %s", desc = "Open", for = "macos" },
+    { run = "xdg-open %s1", desc = "Open", for = "linux" },
 ]
 
 [open]
