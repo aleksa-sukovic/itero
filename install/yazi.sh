@@ -1,32 +1,27 @@
 if is_linux; then
-    yazi_dir="$HOME/.local/share/yazi-nightly"
+    if ! command_exists mise; then
+        log_warn "Mise is required to install Yazi"
+        return 1
+    fi
 
-    if [ ! -x "$yazi_dir/yazi" ] || [ ! -x "$yazi_dir/ya" ] || should_update; then
-        yazi_archive="yazi-$(uname -m)-unknown-linux-gnu.zip"
-        yazi_url="https://github.com/sxyazi/yazi/releases/download/nightly/$yazi_archive"
-        yazi_tmp_dir="$(mktemp -d)"
-
-        log_info "Installing Yazi nightly..."
-        if ! curl --fail --location --silent --show-error "$yazi_url" \
-            -o "$yazi_tmp_dir/$yazi_archive" \
-            || ! unzip -q "$yazi_tmp_dir/$yazi_archive" -d "$yazi_tmp_dir" \
-            || [ ! -x "$yazi_tmp_dir/${yazi_archive%.zip}/yazi" ] \
-            || [ ! -x "$yazi_tmp_dir/${yazi_archive%.zip}/ya" ]; then
-            rm -rf "$yazi_tmp_dir"
-            log_warn "Failed to install Yazi nightly"
+    if ! mise which yazi --tool yazi@latest &>/dev/null || should_update; then
+        log_info "Installing Yazi with Mise..."
+        if ! mise install -yq yazi@latest; then
+            log_warn "Failed to install Yazi with Mise"
             return 1
         fi
+        log_ok "Installed Yazi with Mise"
+    fi
 
-        rm -rf "$yazi_dir"
-        mkdir -p "$(dirname "$yazi_dir")"
-        mv "$yazi_tmp_dir/${yazi_archive%.zip}" "$yazi_dir"
-        rm -rf "$yazi_tmp_dir"
-        log_ok "Installed Yazi nightly"
+    if ! yazi_bin="$(mise which yazi --tool yazi@latest)" \
+        || ! ya_bin="$(mise which ya --tool yazi@latest)"; then
+        log_warn "Failed to locate Yazi binaries installed by Mise"
+        return 1
     fi
 
     mkdir -p "$HOME/.local/bin"
-    ln -nsf "$yazi_dir/yazi" "$HOME/.local/bin/yazi"
-    ln -nsf "$yazi_dir/ya" "$HOME/.local/bin/ya"
+    ln -nsf "$yazi_bin" "$HOME/.local/bin/yazi"
+    ln -nsf "$ya_bin" "$HOME/.local/bin/ya"
 
     install_desktop "$ITERO_CONFIG/yazi/yazi.desktop"
 elif is_macos; then
@@ -43,9 +38,11 @@ if should_update; then
     fi
 fi
 
-if file_has_changed "$ITERO_CONFIG/yazi/package.toml" true; then
+if file_has_changed "$ITERO_CONFIG/yazi/package.toml" false; then
     if ! ya pkg install; then
         log_warn "Failed to install yazi packages"
         return 1
     fi
+
+    file_has_changed "$ITERO_CONFIG/yazi/package.toml" true
 fi

@@ -29,6 +29,9 @@ if is_linux; then
         wl-clipboard \
         ffmpeg \
         ffmpeg-devel \
+        mediainfo \
+        perl-Image-ExifTool \
+        poppler-utils \
         7zip \
         ImageMagick \
         nautilus-python \
@@ -80,6 +83,8 @@ elif is_macos; then
         jq \
         yq \
         ffmpeg \
+        mediainfo \
+        exiftool \
         p7zip \
         poppler \
         imagemagick

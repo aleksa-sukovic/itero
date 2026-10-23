@@ -1,11 +1,10 @@
-[opener]
-open = [
-    { run = "open %s", desc = "Open", for = "macos" },
-    { run = "xdg-open %s1", desc = "Open", for = "linux" },
-]
+[preview]
+image_delay = 0
+max_width = 1200
+max_height = 1200
 
-[open]
-prepend_rules = [
-    { mime = "image/*", use = "open" },
-    { mime = "application/pdf", use = "open" },
+[plugin]
+prepend_fetchers = [
+    { url = "*", run = "git", group = "git" },
+    { url = "*/", run = "git", group = "git" },
 ]
