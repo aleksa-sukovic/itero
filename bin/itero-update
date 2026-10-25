@@ -6,7 +6,7 @@ ITERO_PATH="${ITERO_PATH:-$HOME/.local/share/itero}"
 usage() {
     echo "Usage: itero-update [--firmware]"
     echo ""
-    echo "Update system and Flatpak packages."
+    echo "Update system, Flatpak, Homebrew, and globally configured Mise packages."
     echo ""
     echo "Options:"
     echo "  --firmware    Also check for and install firmware updates"
@@ -31,21 +31,38 @@ esac
 
 source "$ITERO_PATH/lib/helpers.sh"
 
-if ! is_linux; then
-    log_warn "itero-update currently supports Linux only"
+if is_linux; then
+    log_info "Updating system packages..."
+    sudo dnf upgrade --refresh
+
+    if command_exists flatpak; then
+        log_info "Updating Flatpak applications..."
+        flatpak update
+    fi
+elif ! is_macos; then
+    log_warn "itero-update supports Linux and macOS only"
     exit 1
 fi
 
-log_info "Updating system packages..."
-sudo dnf upgrade --refresh
+if command_exists brew; then
+    log_info "Updating Homebrew packages..."
+    brew update
+    HOMEBREW_NO_AUTO_UPDATE=1 brew upgrade
+elif is_macos; then
+    log_warn "Homebrew is unavailable; skipping Homebrew packages"
+fi
 
-if command_exists flatpak; then
-    log_info "Updating Flatpak applications..."
-    flatpak update
+if command_exists mise; then
+    log_info "Updating globally configured Mise tools..."
+    mise upgrade --global --no-prune
+else
+    log_warn "Mise is unavailable; skipping Mise tools"
 fi
 
 if [ "$update_firmware" = true ]; then
-    if command_exists fwupdmgr; then
+    if ! is_linux; then
+        log_warn "Firmware updates are supported on Linux only; skipping firmware updates"
+    elif command_exists fwupdmgr; then
         log_info "Checking for firmware updates..."
         fwupdmgr refresh --force
         fwupdmgr update
