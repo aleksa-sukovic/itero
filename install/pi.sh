@@ -1,5 +1,6 @@
-if ! command_exists pi || should_update; then
-    npm install -g --ignore-scripts @earendil-works/pi-coding-agent
+if ! mise exec -- pi --version &>/dev/null || should_update; then
+    mise exec -- npm install -g --ignore-scripts @earendil-works/pi-coding-agent
+    mise reshim
 fi
 
 link_mirror "$ITERO_CONFIG/pi" "$HOME/.pi/agent"
