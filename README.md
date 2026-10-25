@@ -53,7 +53,7 @@ Before installing, set up your disk partitions following these:
 
 ## Update
 
-`itero-update` updates system and Flatpak packages. Run `itero` separately to update Itero itself and apply its configuration or `itero --update` to force-update existing configuration files.
+Use `itero-update` to update system packages (DNF/Flatpak on Linux and Homebrew where installed) and globally configured Mise tools. Use `itero` to update Itero itself and apply its configuration, or `itero --update` to also refresh Itero-managed packages and assets.
 
 ## Themes
 

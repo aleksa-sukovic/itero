@@ -7,9 +7,8 @@ if is_linux; then
     sudo rm -rf /etc/yum.repos.d/_copr:copr.fedorainfracloud.org:phracek:PyCharm.repo
     sudo rm -rf /etc/yum.repos.d/google-chrome.repo
 
-    # Update system
+    # Refresh package metadata
     sudo dnf makecache -q
-    sudo dnf upgrade -y
 
     # Install packages
     dnf_install \

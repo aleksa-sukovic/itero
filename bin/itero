@@ -51,7 +51,7 @@ usage() {
     echo "Install and configure Itero components."
     echo ""
     echo "Options:"
-    echo "  --update              Upgrade packages where supported"
+    echo "  --update              Refresh Itero-managed packages, assets, and configuration"
     echo "  --help, -h            Show this help message"
     echo ""
     echo "Environment:"

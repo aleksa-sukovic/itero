@@ -8,8 +8,4 @@ elif is_macos; then
 fi
 
 link_file "$ITERO_CONFIG/mise/config.toml" "$HOME/.config/mise/config.toml"
-mise install -yq || return 1
-
-if should_update; then
-    mise upgrade --global --no-prune -yq
-fi
+mise install -yq
