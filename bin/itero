@@ -18,7 +18,7 @@ regular_packages=(
     "mise"
     "nvim"
     "tmux"
-    "ttyd"
+    "ngrok"
     "yazi"
     "lazygit"
     "github"
