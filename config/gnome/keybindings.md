@@ -5,20 +5,22 @@ applications and web apps, and `Super+Ctrl` for system and window-manager action
 
 ## System
 
-| Shortcut           | Action                  |
-| ------------------ | ----------------------- |
-| `Super+,`          | Open GNOME Settings     |
-| `Super+.`          | Toggle Do Not Disturb   |
-| `Super+/`          | Open Quick Settings     |
-| `Super+M`          | Open notifications      |
-| `Super+S`          | Open the overview       |
-| `Super+Space`      | Open Vicinae            |
-| `Super+Ctrl+/`     | Lock the screen         |
-| `Super+Ctrl+E`     | Open the emoji picker   |
-| `Super+Ctrl+V`     | Open clipboard history  |
-| `Super+Ctrl+Alt+V` | Clear clipboard history |
-| `Super+Ctrl+C`     | Capture a screenshot    |
-| `Super+Shift+/`    | Cycle the wallpaper     |
+| Shortcut             | Action                  |
+| -------------------- | ----------------------- |
+| `Super+,`            | Open GNOME Settings     |
+| `Super+.`            | Toggle Do Not Disturb   |
+| `Super+/`            | Open Quick Settings     |
+| `Super+M`            | Open notifications      |
+| `Super+S`            | Open the overview       |
+| `Super+Space`        | Open Vicinae            |
+| `Super+Ctrl+/`       | Lock the screen         |
+| `Super+Ctrl+E`       | Open the emoji picker   |
+| `Super+Ctrl+V`       | Open clipboard history  |
+| `Super+Ctrl+Alt+V`   | Clear clipboard history |
+| `Super+Ctrl+C`       | Capture a screenshot    |
+| `Super+Ctrl+X`       | Toggle dictation        |
+| `Super+Ctrl+Shift+X` | Cancel dictation        |
+| `Super+Shift+/`      | Cycle the wallpaper     |
 
 ## Applications
 

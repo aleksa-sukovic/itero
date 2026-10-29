@@ -1,0 +1,43 @@
+{
+  "audioInputDeviceId": "",
+  "autoPasteEnabled": true,
+  "autoVocabCaptureEnabled": false,
+  "cancelRecordingShortcut": "Ctrl+Shift+Super+X",
+  "clipboardBehaviour": "bypass",
+  "defaultPlaybackBehavior": "pause",
+  "deviceSelectionCounts": {},
+  "enableSoundEffects": true,
+  "errorLoggingEnabled": false,
+  "language": "en",
+  "launchAtLogin": true,
+  "linux": {
+    "asrBackend": "auto",
+    "autoUnloadModels": false,
+    "cleanupGpuLayers": 99,
+    "historyEnabled": true,
+    "languageModelID": "s1-mini",
+    "pasteKeys": {
+      "default": "shift+insert"
+    },
+    "saveRecordingAudio": false,
+    "textCommit": true,
+    "vocabularyBackend": "auto",
+    "voiceModelID": "cohere-transcribe-q4"
+  },
+  "p2t": false,
+  "priorityInputDevices": {},
+  "pushToTalkShortcut": "",
+  "recordingIndicatorStyle": "pill",
+  "recordingPreservationPeriod": 0,
+  "restoreClipboardTimeDelay": 1.0,
+  "selectedDeviceID": "",
+  "showRecordingIndicator": true,
+  "soundEffectTheme": "simple",
+  "soundEffectVolume": 1.0,
+  "toggleRecordingShortcut": "Ctrl+Super+X",
+  "tone": "semi-formal",
+  "useDefaultAudioDevice": true,
+  "useDefaultInputDevice": true,
+  "userExcludedInputDevices": {},
+  "voiceModelActiveDelay": 60
+}

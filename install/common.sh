@@ -13,6 +13,8 @@ if is_linux; then
     # Install packages
     dnf_install \
         dnf5-plugins \
+        curl \
+        zstd \
         zsh \
         zsh-syntax-highlighting \
         tldr \
