@@ -3,6 +3,7 @@ if ! mise exec -- pi --version &>/dev/null || should_update; then
     mise reshim
 fi
 
+init_local "$ITERO_CONFIG/pi/settings.default.json" "$HOME/.pi/agent/settings.json"
 link_mirror "$ITERO_CONFIG/pi" "$HOME/.pi/agent"
 
 pi_extensions=(

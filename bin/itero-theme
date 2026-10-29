@@ -68,14 +68,20 @@ replace_in_file() {
     fi
 }
 
-# Update Pi's theme when its settings file exists.
-update_pi() {
-    local mode="$1"
-    local settings_file="$HOME/.pi/agent/settings.json"
+# Update Codex's configured syntax theme.
+update_codex() {
+    local theme="$1"
+    local config_file="${CODEX_HOME:-$HOME/.codex}/config.toml"
+    local theme_file="$THEMES_DIR/$theme/codex.txt"
 
-    [[ -f "$settings_file" ]] || return 0
+    [[ -f "$config_file" && -s "$theme_file" ]] || return 0
 
-    replace_in_file "s/(\"theme\"[[:space:]]*:[[:space:]]*\")[^\"]*(\")/\1${mode}\2/" "$settings_file"
+    local codex_theme="$(sed -n '1p' "$theme_file")"
+
+    if ! yq -i -p toml -o toml ".tui.theme = \"$codex_theme\"" "$config_file"; then
+        echo "Could not update the Codex syntax theme in $config_file" >&2
+        return 1
+    fi
 }
 
 # Update Bruno's theme mode when its preferences file exists.
@@ -211,7 +217,7 @@ set_theme() {
 
     # Update system & applications
     update_vscode "$theme"
-    update_pi "$mode"
+    update_codex "$theme"
     update_bruno "$mode"
     update_yazi
     update_terminals
