@@ -7,5 +7,5 @@ Type=Application
 Categories=System;FileTools;FileManager;
 Terminal=false
 StartupNotify=false
-MimeType=inode/directory;x-directory/normal;
+MimeType=inode/directory;
 NoDisplay=false
