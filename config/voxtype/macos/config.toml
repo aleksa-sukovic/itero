@@ -1,0 +1,23 @@
+engine = "parakeet"
+
+[hotkey]
+key = "FN"
+mode = "toggle"
+
+[audio]
+max_duration_secs = 300
+
+[audio.feedback]
+enabled = true
+
+[parakeet]
+model = "parakeet-tdt-0.6b-v3"
+
+[output.notification]
+on_transcription = false
+
+[meeting]
+enabled = true
+
+[text.replacements]
+ethero = "itero"

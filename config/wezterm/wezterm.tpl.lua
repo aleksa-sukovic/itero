@@ -76,6 +76,11 @@ config.leader = {
 }
 config.keys = {
     {
+        key = "Insert",
+        mods = "SHIFT",
+        action = wezterm.action.PasteFrom("Clipboard"),
+    },
+    {
         key = "c",
         mods = "LEADER",
         action = wezterm.action.SpawnTab("CurrentPaneDomain"),

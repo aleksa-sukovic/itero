@@ -1,0 +1,31 @@
+engine = "parakeet"
+
+[hotkey]
+enabled = false
+
+[audio]
+pause_media = true
+max_duration_secs = 300
+
+[audio.feedback]
+enabled = true
+
+[parakeet]
+model = "parakeet-tdt-0.6b-v3"
+
+[osd]
+enabled = false
+
+[output]
+mode = "paste"
+paste_keys = "shift+insert"
+driver_order = ["eitype", "clipboard"]
+
+[output.notification]
+on_transcription = false
+
+[meeting]
+enabled = true
+
+[text.replacements]
+ethero = "itero"

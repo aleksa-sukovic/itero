@@ -23,7 +23,10 @@ if is_linux; then
         fd-find \
         fzf \
         jq \
-        yq
+        yq \
+        gcc \
+        pkgconf-pkg-config \
+        libxkbcommon-devel
 
     dnf_install \
         ddcutil \
@@ -36,7 +39,8 @@ if is_linux; then
         7zip \
         ImageMagick \
         nautilus-python \
-        pulseaudio-utils
+        pulseaudio-utils \
+        pipewire-alsa
 
     # Enable RMP Fusion. See also: https://docs.fedoraproject.org/en-US/quick-docs/rpmfusion-setup/.
     fedora_release="$(rpm -E %fedora)"
