@@ -18,8 +18,6 @@ applications and web apps, and `Super+Ctrl` for system and window-manager action
 | `Super+Ctrl+V`       | Open clipboard history  |
 | `Super+Ctrl+Alt+V`   | Clear clipboard history |
 | `Super+Ctrl+C`       | Capture a screenshot    |
-| `Super+Ctrl+X`       | Toggle dictation        |
-| `Super+Ctrl+Shift+X` | Cancel dictation        |
 | `Super+Shift+/`      | Cycle the wallpaper     |
 
 ## Applications
