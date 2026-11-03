@@ -16,14 +16,24 @@ install_vicinae_extension() {
     local source_dir="$2"
     local destination_dir="$3"
     local build_dir
+    local build_source_dir
 
-    build_dir="$(mktemp -d)"
+    build_dir="$(mktemp -d)" || return 1
+    build_source_dir="$build_dir/extensions/$extension_name"
     mkdir -p "$(dirname "$destination_dir")"
     rm -rf "$destination_dir"
 
-    if ! cp -R "$source_dir"/. "$build_dir" || ! (
-        cd "$build_dir"
-        npm ci --quiet --no-fund --no-audit
+    if ! (
+        mkdir -p "$build_source_dir" || exit 1
+        cp -R "$source_dir"/. "$build_source_dir" || exit 1
+
+        # Preserve the repository folder structure for extensions that inherit ../../tsconfig.json
+        if [[ -f "$source_dir/../../tsconfig.json" ]]; then
+            cp "$source_dir/../../tsconfig.json" "$build_dir/tsconfig.json" || exit 1
+        fi
+
+        cd "$build_source_dir" || exit 1
+        npm ci --quiet --no-fund --no-audit || exit 1
         npm run build --silent -- --out "$destination_dir"
     ); then
         rm -rf "$build_dir"
