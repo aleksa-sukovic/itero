@@ -31,6 +31,13 @@ fi
 rm -f "$HOME/.config/yazi/theme.toml"
 link_mirror "$ITERO_CONFIG/yazi" "$HOME/.config/yazi"
 
+if file_has_changed "$ITERO_CONFIG/yazi/package.toml" false; then
+    if ! ya pkg install; then
+        log_warn "Failed to install yazi packages"
+        return 1
+    fi
+fi
+
 if should_update; then
     if ! ya pkg upgrade --discard; then
         log_warn "Failed to upgrade Yazi packages"
@@ -38,11 +45,5 @@ if should_update; then
     fi
 fi
 
-if file_has_changed "$ITERO_CONFIG/yazi/package.toml" false; then
-    if ! ya pkg install; then
-        log_warn "Failed to install yazi packages"
-        return 1
-    fi
-
-    file_has_changed "$ITERO_CONFIG/yazi/package.toml" true
-fi
+# Remember revisions written by both installation and upgrades.
+file_has_changed "$ITERO_CONFIG/yazi/package.toml" true || return 0
