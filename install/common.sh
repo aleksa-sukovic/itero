@@ -88,7 +88,7 @@ elif is_macos; then
         jq \
         yq \
         ffmpeg \
-        mediainfo \
+        media-info \
         exiftool \
         p7zip \
         poppler \

@@ -32,7 +32,7 @@ rm -f "$HOME/.config/yazi/theme.toml"
 link_mirror "$ITERO_CONFIG/yazi" "$HOME/.config/yazi"
 
 if file_has_changed "$ITERO_CONFIG/yazi/package.toml" false; then
-    if ! ya pkg install; then
+    if ! ya pkg install --discard; then
         log_warn "Failed to install yazi packages"
         return 1
     fi

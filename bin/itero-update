@@ -47,7 +47,7 @@ fi
 if command_exists brew; then
     log_info "Updating Homebrew packages..."
     brew update
-    HOMEBREW_NO_AUTO_UPDATE=1 brew upgrade
+    HOMEBREW_NO_AUTO_UPDATE=1 HOMEBREW_NO_ASK=1 brew upgrade
 elif is_macos; then
     log_warn "Homebrew is unavailable; skipping Homebrew packages"
 fi

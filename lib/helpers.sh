@@ -42,12 +42,12 @@ brew_install() {
         brew_command="upgrade"
     fi
 
-    if HOMEBREW_NO_AUTO_UPDATE=1 brew "$brew_command" "${brew_args[@]}" "$@"; then
+    if HOMEBREW_NO_AUTO_UPDATE=1 HOMEBREW_NO_ASK=1 brew "$brew_command" "${brew_args[@]}" "$@"; then
         return 0
     fi
 
     if [ "$brew_command" = "upgrade" ]; then
-        HOMEBREW_NO_AUTO_UPDATE=1 brew install "${brew_args[@]}" "$@"
+        HOMEBREW_NO_AUTO_UPDATE=1 HOMEBREW_NO_ASK=1 brew install "${brew_args[@]}" "$@"
     fi
 }
 
