@@ -13,11 +13,17 @@ dnf_install \
 sudo systemctl enable --now \
     virtqemud.socket \
     virtqemud-ro.socket \
+    virtnetworkd-ro.socket \
     virtnetworkd.socket \
+    virtstoraged-ro.socket \
     virtstoraged.socket \
+    virtnodedevd-ro.socket \
     virtnodedevd.socket \
+    virtnwfilterd-ro.socket \
     virtnwfilterd.socket \
+    virtsecretd-ro.socket \
     virtsecretd.socket \
+    virtinterfaced-ro.socket \
     virtinterfaced.socket || return 1
 
 if ! id -nG "$USER" | tr " " "\n" | grep -qx "libvirt"; then
