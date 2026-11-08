@@ -23,6 +23,7 @@ regular_packages=(
     "lazygit"
     "github"
     "lazydocker"
+    "k9s"
     "snapshots"
     "syncthing"
     "rclone"
