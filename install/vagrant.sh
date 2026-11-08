@@ -12,6 +12,7 @@ dnf_install \
 # Enable local libvirt sockets: https://libvirt.org/daemons.html
 sudo systemctl enable --now \
     virtqemud.socket \
+    virtqemud-ro.socket \
     virtnetworkd.socket \
     virtstoraged.socket \
     virtnodedevd.socket \
