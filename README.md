@@ -28,14 +28,14 @@ On macOS, Itero supports a terminal-focused setup rather than full machine provi
 ```bash
 ITC=common,wezterm,starship,fonts,shell itero
 ITC=mise,nvim,tmux,yazi,lazygit,lazydocker,k9s itero
-ITC=fastfetch,btop,bruno,voxtype itero
+ITC=fastfetch,btop,bruno itero
 ITC=theme itero
 ```
 
 To manage a `/work` bind mount, set `ITERO_WORKDIR` in `.env` to the directory that should appear at `/work`. Itero configures `/work` through `/etc/synthetic.conf`, which takes effect after a reboot. To update all components at once, run:
 
 ```bash
-ITC=common,wezterm,starship,fonts,shell,mise,nvim,tmux,yazi,lazygit,lazydocker,k9s,fastfetch,btop,bruno,voxtype,theme itero
+ITC=common,wezterm,starship,fonts,shell,mise,nvim,tmux,yazi,lazygit,lazydocker,k9s,fastfetch,btop,bruno,theme itero
 ```
 
 ### Selective Install
